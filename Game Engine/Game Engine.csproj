@@ -46,11 +46,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Class1.cs" />
+    <Compile Include="Components\CameraComponent.cs" />
     <Compile Include="Components\CollisionComponent.cs" />
     <Compile Include="Components\EntityComponent.cs" />
+    <Compile Include="Components\HeighmapComponent.cs" />
     <Compile Include="Components\PositionComponent.cs" />
     <Compile Include="Components\RectangleComponent.cs" />
     <Compile Include="Components\TextureComponent.cs" />
+    <Compile Include="Components\TransformComponent.cs" />
     <Compile Include="Components\VelocityComponent.cs" />
     <Compile Include="Managers\GameContentManager.cs" />
     <Compile Include="Mediator\CollisionMediatorMessage.cs" />

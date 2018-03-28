@@ -26,7 +26,7 @@ namespace Game_Engine.Managers
 
         private static ComponentManager instance;
 
-        public ComponentManager()
+        private ComponentManager()
         {
             _componentsById = new Dictionary<int, List<EntityComponent>>();
             _componentsByType = new Dictionary<Type, Dictionary<int, EntityComponent>>();

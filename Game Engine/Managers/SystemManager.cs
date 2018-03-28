@@ -30,13 +30,16 @@ namespace Game_Engine.Managers
             DrawableSystems = new Queue<IDrawableSystem>();
         }
 
-        public static SystemManager Instance()
+        public static SystemManager Instance
         {
-            if(_instance == null)
+            get
             {
-                _instance = new SystemManager();
+                if (_instance == null)
+                {
+                    _instance = new SystemManager();
+                }
+                return _instance;
             }
-            return _instance;
         }
       
         public void addToUpdateableQueue(params IUpdateableSystem[] list)

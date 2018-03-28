@@ -12,7 +12,7 @@ namespace Game_Engine.Managers
         private static GameContentProvider _instance;
         private Dictionary<string, Texture2D> _TextureDict;
 
-        public GameContentProvider()
+        private GameContentProvider()
         {
             _TextureDict = new Dictionary<string, Texture2D>();
         }

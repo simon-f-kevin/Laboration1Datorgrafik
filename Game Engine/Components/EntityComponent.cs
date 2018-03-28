@@ -8,7 +8,7 @@ namespace Game_Engine.Components
 {
     public abstract class EntityComponent
     {
-        public int _EntityId { get; set; }
+        private int _EntityId { get; set; }
         public EntityComponent()
         {
 
