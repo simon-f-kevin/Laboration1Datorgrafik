@@ -11,7 +11,7 @@ namespace Assignment1
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-        string test = "hej";
+        Model model;
 
         public Game1()
         {
@@ -40,7 +40,7 @@ namespace Assignment1
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-
+            model = Content.Load<Model>("Chopper");
             // TODO: use this.Content to load your game content here
         }
 
