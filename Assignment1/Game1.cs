@@ -11,6 +11,7 @@ namespace Assignment1
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        string test = "hej";
 
         public Game1()
         {
