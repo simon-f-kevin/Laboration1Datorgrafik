@@ -32,11 +32,11 @@ namespace Game_Engine.Systems
                 //Position
                 if (kbState.IsKeyDown(Keys.Up))
                 {
-                    tc.PosZ += speed.VelZ * elapsedGameTime;
+                    tc.PosZ -= speed.VelZ * elapsedGameTime;
                 }
                 if (kbState.IsKeyDown(Keys.Down))
                 {
-                    tc.PosZ -= speed.VelZ * elapsedGameTime;
+                    tc.PosZ += speed.VelZ * elapsedGameTime;
                 }
                 if (kbState.IsKeyDown(Keys.Right))
                 {
@@ -54,21 +54,35 @@ namespace Game_Engine.Systems
                 {
                     tc.PosY += speed.VelY * elapsedGameTime;
                 }
-                //rotation
-                if(model.ModelType == ModelType.TopRotor)
+                if (kbState.IsKeyDown(Keys.A))
                 {
                     tc.RotationX += (ushort)(2 * elapsedGameTime);
-                    Quaternion rot = Quaternion.CreateFromAxisAngle(new Vector3(1f, 0, 0), (-elapsedGameTime * 0.01f));
-                    rot.Normalize();
-                    model.Rotation *= Matrix.CreateFromQuaternion(rot);
-                }
-                if(model.ModelType == ModelType.BackRotor)
-                {
-                    tc.RotationY += (ushort)(2 * elapsedGameTime);
                     Quaternion rot = Quaternion.CreateFromAxisAngle(new Vector3(0, 1f, 0), (-elapsedGameTime * 0.01f));
                     rot.Normalize();
                     model.Rotation *= Matrix.CreateFromQuaternion(rot);
                 }
+                if (kbState.IsKeyDown(Keys.D))
+                {
+                    tc.RotationX += (ushort)(2 * elapsedGameTime);
+                    Quaternion rot = Quaternion.CreateFromAxisAngle(new Vector3(0, -1f, 0), (-elapsedGameTime * 0.01f));
+                    rot.Normalize();
+                    model.Rotation *= Matrix.CreateFromQuaternion(rot);
+                }
+                //rotation
+                //if(model.ModelType == ModelType.TopRotor)
+                //{
+                //    tc.RotationX += (ushort)(2 * elapsedGameTime);
+                //    Quaternion rot = Quaternion.CreateFromAxisAngle(new Vector3(1f, 0, 0), (-elapsedGameTime * 0.01f));
+                //    rot.Normalize();
+                //    model.Rotation *= Matrix.CreateFromQuaternion(rot);
+                //}
+                //if(model.ModelType == ModelType.BackRotor)
+                //{
+                //    tc.RotationY += (ushort)(2 * elapsedGameTime);
+                //    Quaternion rot = Quaternion.CreateFromAxisAngle(new Vector3(0, 1f, 0), (-elapsedGameTime * 0.01f));
+                //    rot.Normalize();
+                //    model.Rotation *= Matrix.CreateFromQuaternion(rot);
+                //}
             }
         }
     }

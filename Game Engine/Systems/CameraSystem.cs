@@ -27,7 +27,7 @@ namespace Game_Engine.Systems
             _cameras = ComponentManager.Instance.getDictionary<CameraComponent>();
             foreach(CameraComponent cameraComp in _cameras.Values)
             {
-                if(cameraComp.View == null || cameraComp.Projection == null)
+                if(cameraComp.View == cameraComp.Projection)
                 {
                     cameraComp.View = Matrix.CreateLookAt(new Vector3(0, 0, 20), Vector3.Zero, Vector3.Up);
                     cameraComp.Projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver2, _graphicsDevice.Viewport.AspectRatio, cameraComp.NearPlane, cameraComp.FarPlane);

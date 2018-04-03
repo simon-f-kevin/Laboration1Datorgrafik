@@ -50,8 +50,6 @@
     <Compile Include="Components\EntityComponent.cs" />
     <Compile Include="Components\HeightmapComponent.cs" />
     <Compile Include="Components\ModelComponent.cs" />
-    <Compile Include="Components\RectangleComponent.cs" />
-    <Compile Include="Components\TextureComponent.cs" />
     <Compile Include="Components\TransformComponent.cs" />
     <Compile Include="Components\VelocityComponent.cs" />
     <Compile Include="Managers\GameContentManager.cs" />

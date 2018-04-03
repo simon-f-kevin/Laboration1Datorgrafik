@@ -12,9 +12,9 @@ namespace Game_Engine.Systems
 {
     public class ModelSystem : IDrawableSystem
     {
-        private Dictionary<int, EntityComponent> _tranfromations;
+        
         private Dictionary<int, EntityComponent> _models;
-        private Dictionary<int, EntityComponent> _cameras;
+        
 
         public void Draw(SpriteBatch spriteBatch)
         {
@@ -33,6 +33,16 @@ namespace Game_Engine.Systems
                             * Matrix.CreateTranslation(new Vector3(tc.PosX, tc.PosY, tc.PosZ));
                         effect.World = mesh.ParentBone.Transform * modelComp.ObjectWorld * Matrix.Identity;
                         effect.View = cc.View;
+                        effect.Projection = cc.Projection;
+
+                        effect.EnableDefaultLighting();
+                        effect.LightingEnabled = true;
+
+                        foreach(EffectPass pass in effect.CurrentTechnique.Passes)
+                        {
+                            pass.Apply();
+                            mesh.Draw();
+                        }
                     }
                 }
             }
