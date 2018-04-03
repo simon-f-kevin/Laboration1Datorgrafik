@@ -75,7 +75,7 @@ namespace Assignment1
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
-
+            var i = model.Meshes.Count;
             // TODO: Add your drawing code here
 
             base.Draw(gameTime);

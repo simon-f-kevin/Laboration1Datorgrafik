@@ -14,6 +14,9 @@ namespace Game_Engine.Components
         public ushort NearPlane { get; set; }
         public ushort FarPlane { get; set; }
 
+        public Matrix View { get; set; }
+        public Matrix Projection { get; set; }
+
         public CameraComponent(int id)
         {
             EntityID = id;

@@ -12,22 +12,12 @@ namespace Game_Engine.Components
     {
         public float VelX { get; set; }
         public float VelY { get; set; }
-        public float Acceleration { get; set; }
-        public float MaxVelX { get; set; }
-        public float MaxVelY { get; set; }
+        public float VelZ { get; set; }
 
         public VelocityComponent(int id)
         {
             EntityID = id;
         }
 
-        public void setValues(Vector2 velocity, Vector2 maxVel, float acceleration)
-        {
-            VelX = velocity.X;
-            VelY = velocity.Y;
-            MaxVelX = maxVel.X;
-            MaxVelY = maxVel.Y;
-            Acceleration = acceleration;
-        }
     }
 }

@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 
 namespace Game_Engine.Components
 {
-    public class HeighmapComponent : EntityComponent
+    public class HeightmapComponent : EntityComponent
     {
         public VertexBuffer VertexBuffer { get; set; }
         public IndexBuffer IndexBuffer { get; set; }
         public short[][] HeightData { get; set; }
-        public HeighmapComponent(int id)
+        public HeightmapComponent(int id)
         {
             EntityID = id;
         }
