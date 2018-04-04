@@ -30,8 +30,21 @@ namespace Game_Engine.Systems
                 if(cameraComp.View == cameraComp.Projection)
                 {
                     cameraComp.View = Matrix.CreateLookAt(new Vector3(0, 0, 20), Vector3.Zero, Vector3.Up);
-                    cameraComp.Projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver2, _graphicsDevice.Viewport.AspectRatio, cameraComp.NearPlane, cameraComp.FarPlane);
+                    cameraComp.Projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver2, cameraComp.AspectRatio, cameraComp.NearPlane, cameraComp.FarPlane);
                 }
+
+                ModelComponent model = ComponentManager.Instance.GetComponentsById<ModelComponent>(cameraComp.EntityID);
+                TransformComponent transform = ComponentManager.Instance.GetComponentsById<TransformComponent>(cameraComp.EntityID);
+                Vector3 cameraPosition = new Vector3(0, 0, 20);
+                cameraPosition = Vector3.Transform(cameraPosition, Matrix.CreateFromQuaternion(model.Quaternion));
+                cameraPosition += new Vector3(transform.PosX, transform.PosY, transform.PosZ);
+
+                Vector3 cameraUp = Vector3.Up;
+                cameraUp = Vector3.Transform(cameraUp, Matrix.CreateFromQuaternion(model.Quaternion));
+
+                cameraComp.View = Matrix.CreateLookAt(cameraPosition, new Vector3(transform.PosX, transform.PosY, transform.PosZ), cameraUp);
+                cameraComp.Projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver2, cameraComp.AspectRatio, cameraComp.NearPlane, cameraComp.FarPlane);
+                Console.WriteLine(cameraPosition);
             }
         }
     }

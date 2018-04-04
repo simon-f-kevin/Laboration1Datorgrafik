@@ -69,6 +69,7 @@ namespace Assignment1
             modelComponent.Model = model;
             modelComponent.ObjectWorld = Matrix.Identity;
             modelComponent.Rotation = Matrix.Identity;
+            modelComponent.Quaternion = Quaternion.Identity;
             ComponentManager.Instance.addComponent(modelComponent);
 
             TransformComponent transformComponent = new TransformComponent(id);

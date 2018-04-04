@@ -25,6 +25,8 @@ namespace Game_Engine.Components
 
         public Matrix Rotation { get; set; }
 
+        public Quaternion Quaternion { get; set; }
+
 
 
         public ModelComponent(int id)
