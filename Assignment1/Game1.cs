@@ -140,7 +140,9 @@ namespace Assignment1
         {
             spriteBatch.Begin();
             GraphicsDevice.Clear(Color.CornflowerBlue);
-            var i = model.Meshes.Count;
+            DepthStencilState dss = new DepthStencilState();
+            dss.DepthBufferEnable = true;
+            GraphicsDevice.DepthStencilState = dss;
             // TODO: Add your drawing code here
             SystemManager.Instance.Draw(spriteBatch);
             spriteBatch.End();

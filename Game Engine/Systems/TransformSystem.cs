@@ -60,6 +60,7 @@ namespace Game_Engine.Systems
                     Quaternion rot = Quaternion.CreateFromAxisAngle(new Vector3(0, 1f, 0), (-elapsedGameTime * 0.01f));
                     rot.Normalize();
                     model.Rotation *= Matrix.CreateFromQuaternion(rot);
+                    model.Quaternion = rot;
                 }
                 if (kbState.IsKeyDown(Keys.D))
                 {
@@ -67,6 +68,7 @@ namespace Game_Engine.Systems
                     Quaternion rot = Quaternion.CreateFromAxisAngle(new Vector3(0, -1f, 0), (-elapsedGameTime * 0.01f));
                     rot.Normalize();
                     model.Rotation *= Matrix.CreateFromQuaternion(rot);
+                    model.Quaternion = rot;
                 }
                 //rotation
                 //if(model.ModelType == ModelType.TopRotor)

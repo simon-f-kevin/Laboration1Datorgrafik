@@ -38,11 +38,12 @@ namespace Game_Engine.Systems
                         effect.EnableDefaultLighting();
                         effect.LightingEnabled = true;
 
-                        foreach(EffectPass pass in effect.CurrentTechnique.Passes)
+                        foreach (EffectPass pass in effect.CurrentTechnique.Passes)
                         {
                             pass.Apply();
                             mesh.Draw();
                         }
+
                     }
                 }
             }
