@@ -14,8 +14,6 @@ namespace Game_Engine.Systems
     public class TransformSystem : IUpdateableSystem
     {
         private Dictionary<int, EntityComponent> _transformations;
-        private Dictionary<int, EntityComponent> _speeds;
-        private Dictionary<int, EntityComponent> _models;
 
         public void Update(GameTime gameTime)
         {
@@ -23,7 +21,6 @@ namespace Game_Engine.Systems
 
             var kbState = Keyboard.GetState();
             _transformations = ComponentManager.Instance.getDictionary<TransformComponent>();
-            _speeds = ComponentManager.Instance.getDictionary<VelocityComponent>();
             
             foreach(TransformComponent tc in _transformations.Values)
             {
@@ -56,7 +53,7 @@ namespace Game_Engine.Systems
                 }
                 if (kbState.IsKeyDown(Keys.A))
                 {
-                    tc.RotationX += (ushort)(2 * elapsedGameTime);
+                    //tc.RotationX += (ushort)(2 * elapsedGameTime);
                     Quaternion rot = Quaternion.CreateFromAxisAngle(new Vector3(0, 1f, 0), (-elapsedGameTime * 0.01f));
                     rot.Normalize();
                     model.Rotation *= Matrix.CreateFromQuaternion(rot);
@@ -64,27 +61,22 @@ namespace Game_Engine.Systems
                 }
                 if (kbState.IsKeyDown(Keys.D))
                 {
-                    tc.RotationX += (ushort)(2 * elapsedGameTime);
+                    //tc.RotationX += (ushort)(2 * elapsedGameTime);
                     Quaternion rot = Quaternion.CreateFromAxisAngle(new Vector3(0, -1f, 0), (-elapsedGameTime * 0.01f));
                     rot.Normalize();
                     model.Rotation *= Matrix.CreateFromQuaternion(rot);
                     model.Quaternion = rot;
                 }
                 //rotation
-                //if(model.ModelType == ModelType.TopRotor)
-                //{
-                //    tc.RotationX += (ushort)(2 * elapsedGameTime);
-                //    Quaternion rot = Quaternion.CreateFromAxisAngle(new Vector3(1f, 0, 0), (-elapsedGameTime * 0.01f));
-                //    rot.Normalize();
-                //    model.Rotation *= Matrix.CreateFromQuaternion(rot);
-                //}
-                //if(model.ModelType == ModelType.BackRotor)
-                //{
-                //    tc.RotationY += (ushort)(2 * elapsedGameTime);
-                //    Quaternion rot = Quaternion.CreateFromAxisAngle(new Vector3(0, 1f, 0), (-elapsedGameTime * 0.01f));
-                //    rot.Normalize();
-                //    model.Rotation *= Matrix.CreateFromQuaternion(rot);
-                //}
+
+                Quaternion rotorRot = Quaternion.CreateFromAxisAngle(new Vector3(0, -1f, 0), (-elapsedGameTime * 0.01f));
+                rotorRot.Normalize();
+                //model.Rotation *= Matrix.CreateFromQuaternion(rotorRot);
+
+                model.Model.Bones["Main_Rotor"].Transform = Matrix.CreateFromQuaternion(rotorRot) * Matrix.CreateTranslation(model.Model.Bones["Main_Rotor"].Transform.Translation);
+                model.Model.Bones["Back_Rotor"].Transform = Matrix.CreateRotationZ((float)Math.PI / 2f) * Matrix.CreateRotationX(tc.RotationY) * Matrix.CreateTranslation(model.Model.Bones["Back_Rotor"].Transform.Translation);
+                //
+                //model.Model.Bones["Body"].Transform = Matrix.CreateRotationY(0);// * Matrix.CreateTranslation(model.Model.Bones["Body"].Transform.Translation);
             }
         }
     }

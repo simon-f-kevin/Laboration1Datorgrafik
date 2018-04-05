@@ -14,9 +14,9 @@ namespace Game_Engine.Components
         public float PosY { get; set; }
         public float PosZ { get; set; }
         //Rotation
-        public ushort RotationX { get; set; }
-        public ushort RotationY { get; set; }
-        public ushort RotationZ { get; set; }
+        public float RotationX { get; set; }
+        public float RotationY { get; set; }
+        public float RotationZ { get; set; }
         //Scaling
         public short ScalingX { get; set; }
         public short ScalingY { get; set; }

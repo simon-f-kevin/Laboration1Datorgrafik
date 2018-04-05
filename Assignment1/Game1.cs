@@ -70,15 +70,17 @@ namespace Assignment1
             modelComponent.ObjectWorld = Matrix.Identity;
             modelComponent.Rotation = Matrix.Identity;
             modelComponent.Quaternion = Quaternion.Identity;
+            modelComponent.MainRotorBone = model.Bones["Main_Rotor"];
+            modelComponent.MainRotorBaseTransform = modelComponent.MainRotorBone.Transform;
             ComponentManager.Instance.addComponent(modelComponent);
 
             TransformComponent transformComponent = new TransformComponent(id);
             transformComponent.PosX = 0;
             transformComponent.PosY = 0;
             transformComponent.PosZ = 0;
-            transformComponent.RotationX = 0;
-            transformComponent.RotationY = 0;
-            transformComponent.RotationZ = 0;
+            transformComponent.RotationX = 1f;
+            transformComponent.RotationY = 0.9f;
+            transformComponent.RotationZ = 1f;
             transformComponent.ScalingX = 3;
             transformComponent.ScalingY = 3;
             transformComponent.ScalingZ = 3;
@@ -96,8 +98,6 @@ namespace Assignment1
             camera.FarPlane = 1000f;
             camera.FOV = 100;
             ComponentManager.Instance.addComponent(camera);
-
-
 
         }
 
@@ -143,6 +143,7 @@ namespace Assignment1
             DepthStencilState dss = new DepthStencilState();
             dss.DepthBufferEnable = true;
             GraphicsDevice.DepthStencilState = dss;
+
             // TODO: Add your drawing code here
             SystemManager.Instance.Draw(spriteBatch);
             spriteBatch.End();
