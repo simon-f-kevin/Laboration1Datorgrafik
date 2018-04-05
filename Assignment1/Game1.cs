@@ -43,7 +43,7 @@ namespace Assignment1
             heightmapSystem = new HeightmapSystem();
 
             SystemManager.Instance.addToUpdateableQueue(transformSystem, cameraSystem);
-            SystemManager.Instance.addToDrawableQueue(modelSystem);
+            SystemManager.Instance.addToDrawableQueue(modelSystem, heightmapSystem);
 
 
             base.Initialize();
@@ -58,8 +58,20 @@ namespace Assignment1
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
             model = Content.Load<Model>("Chopper");
+            Texture2D hm = Content.Load<Texture2D>("US_Canyon");
+
             CreateChopper();
             // TODO: use this.Content to load your game content here
+        }
+
+        public void CreateHeightMap(Texture2D hm)
+        {
+            int id = 2;
+            HeightmapComponent hc = new HeightmapComponent(id);
+            hc.device = GraphicsDevice;
+            heightmapSystem.CreateEverything(hm, hc);
+            ComponentManager.Instance.addComponent(hc);
+
         }
 
         private void CreateChopper()

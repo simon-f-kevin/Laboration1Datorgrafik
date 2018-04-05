@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework.Graphics;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,5 +17,19 @@ namespace Game_Engine.Components
         {
             EntityID = id;
         }
+
+        public GraphicsDevice device { get; set; }
+        public BasicEffect effect { get; set; }
+        public VertexPositionColor[] vertices { get; set; }
+        public Matrix viewMatrix { get; set; }
+        public Matrix projectionMatrix { get; set; }
+        public int[] indices { get; set; }
+
+        public Texture2D heightMap { get; set; }
+
+        public int terrainWidth = 4;
+        public int terrainHeight = 3;
+        public float[,] heightData;
+
     }
 }
