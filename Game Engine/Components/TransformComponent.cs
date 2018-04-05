@@ -9,22 +9,15 @@ namespace Game_Engine.Components
 {
     public class TransformComponent : EntityComponent
     {
-        //Position
-        public float PosX { get; set; }
-        public float PosY { get; set; }
-        public float PosZ { get; set; }
-        //Rotation
-        public float RotationX { get; set; }
-        public float RotationY { get; set; }
-        public float RotationZ { get; set; }
-        //Scaling
-        public short ScalingX { get; set; }
-        public short ScalingY { get; set; }
-        public short ScalingZ { get; set; }
-
-        public TransformComponent(int id)
+        public Vector3 scale {get; set;}
+        public Vector3 position;
+        public Matrix rotation {get; set;}
+        public TransformComponent(int id, Vector3 scale, Vector3 position)
         {
             EntityID = id;
+            this.scale = scale;
+            this.position = position;
+            rotation = Matrix.Identity;
         }
     }
 }

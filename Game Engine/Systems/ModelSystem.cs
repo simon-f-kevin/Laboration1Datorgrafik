@@ -12,38 +12,31 @@ namespace Game_Engine.Systems
 {
     public class ModelSystem : IDrawableSystem
     {
-        
-        private Dictionary<int, EntityComponent> _models;
-        
-
         public void Draw(SpriteBatch spriteBatch)
         {
-            _models = ComponentManager.Instance.getDictionary<ModelComponent>();
-
-            foreach(ModelComponent modelComp in _models.Values)
+            var ModelComponents = ComponentManager.Instance.getDictionary<ModelComponent>();
+            foreach(ModelComponent modelComponent in ModelComponents.Values)
             {
-                TransformComponent tc = ComponentManager.Instance.GetComponentsById<TransformComponent>(modelComp.EntityID);
-                CameraComponent cc = ComponentManager.Instance.GetComponentsById<CameraComponent>(modelComp.EntityID);
-
-                var boneTransform = new Matrix[modelComp.Model.Bones.Count];
-                modelComp.Model.CopyAbsoluteBoneTransformsTo(boneTransform);
-
-                foreach (ModelMesh mesh in modelComp.Model.Meshes)
+                var transformComponent = ComponentManager.Instance.GetComponentsById<TransformComponent>(modelComponent.EntityID);
+                var cameraComponent = ComponentManager.Instance.GetComponentsById<CameraComponent>(modelComponent.EntityID);
+                foreach (ModelMesh modelMesh in modelComponent.model.Meshes)
                 {
-                    foreach(BasicEffect effect in mesh.Effects)
+                    //System.Console.WriteLine(modelMesh.Name);
+                    foreach (BasicEffect effect in modelMesh.Effects)
                     {
-                        modelComp.ObjectWorld = Matrix.CreateScale(new Vector3(tc.ScalingX, tc.ScalingY, tc.ScalingZ))
-                            * modelComp.Rotation
-                            * Matrix.CreateTranslation(new Vector3(tc.PosX, tc.PosY, tc.PosZ));
-
-                        effect.World = boneTransform[mesh.ParentBone.Index] * modelComp.ObjectWorld; //mesh.ParentBone.Transform * modelComp.ObjectWorld * Matrix.Identity;
-                        effect.View = cc.View;
-                        effect.Projection = cc.Projection;
+                        modelComponent.objectWorld = Matrix.CreateScale(transformComponent.scale) * transformComponent.rotation * Matrix.CreateTranslation(transformComponent.position);
+                        effect.World = modelMesh.ParentBone.Transform * modelComponent.objectWorld * cameraComponent.world;
+                        effect.View = cameraComponent.view;
+                        effect.Projection = cameraComponent.projection;
 
                         effect.EnableDefaultLighting();
+                        effect.LightingEnabled = true;
 
-                        mesh.Draw();
-
+                        foreach (EffectPass pass in effect.CurrentTechnique.Passes)
+                        {
+                            pass.Apply();
+                            modelMesh.Draw();
+                        }
                     }
                 }
             }

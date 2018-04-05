@@ -26,6 +26,9 @@ namespace Assignment1
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+
+            IsFixedTimeStep = false;
+            graphics.SynchronizeWithVerticalRetrace = false;
         }
 
         /// <summary>
@@ -45,7 +48,6 @@ namespace Assignment1
             SystemManager.Instance.addToUpdateableQueue(transformSystem, cameraSystem);
             SystemManager.Instance.addToDrawableQueue(modelSystem, heightmapSystem);
 
-
             base.Initialize();
         }
 
@@ -58,59 +60,25 @@ namespace Assignment1
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
             model = Content.Load<Model>("Chopper");
-            Texture2D hm = Content.Load<Texture2D>("US_Canyon");
+            //Texture2D hm = Content.Load<Texture2D>("US_Canyon");
 
             CreateChopper();
+
             // TODO: use this.Content to load your game content here
         }
 
-        public void CreateHeightMap(Texture2D hm)
+        public void CreateChopper()
         {
-            int id = 2;
-            HeightmapComponent hc = new HeightmapComponent(id);
-            hc.device = GraphicsDevice;
-            heightmapSystem.CreateEverything(hm, hc);
-            ComponentManager.Instance.addComponent(hc);
+            int entityId = 1;
+            ModelComponent mc = new ModelComponent(entityId, model);
+            TransformComponent tc = new TransformComponent(entityId, new Vector3(3, 3, 3), new Vector3(0, 0, -50));
+            CameraComponent cc = new CameraComponent(entityId, GraphicsDevice);
+            VelocityComponent vc = new VelocityComponent(entityId);
 
-        }
-
-        private void CreateChopper()
-        {
-            int id = 1;
-            ModelComponent modelComponent = new ModelComponent(id);
-            modelComponent.Model = model;
-            modelComponent.ObjectWorld = Matrix.Identity;
-            modelComponent.Rotation = Matrix.Identity;
-            modelComponent.Quaternion = Quaternion.Identity;
-            modelComponent.MainRotorBone = model.Bones["Main_Rotor"];
-            modelComponent.MainRotorBaseTransform = modelComponent.MainRotorBone.Transform;
-            ComponentManager.Instance.addComponent(modelComponent);
-
-            TransformComponent transformComponent = new TransformComponent(id);
-            transformComponent.PosX = 0;
-            transformComponent.PosY = 0;
-            transformComponent.PosZ = 0;
-            transformComponent.RotationX = 1f;
-            transformComponent.RotationY = 0.9f;
-            transformComponent.RotationZ = 1f;
-            transformComponent.ScalingX = 3;
-            transformComponent.ScalingY = 3;
-            transformComponent.ScalingZ = 3;
-            ComponentManager.Instance.addComponent(transformComponent);
-
-            VelocityComponent velocity = new VelocityComponent(id);
-            velocity.VelX = 0.1f;
-            velocity.VelY = 0.1f;
-            velocity.VelZ = 0.1f;
-            ComponentManager.Instance.addComponent(velocity);
-
-            CameraComponent camera = new CameraComponent(id);
-            camera.AspectRatio = GraphicsDevice.Viewport.AspectRatio;
-            camera.NearPlane = 0.1f;
-            camera.FarPlane = 1000f;
-            camera.FOV = 100;
-            ComponentManager.Instance.addComponent(camera);
-
+            ComponentManager.Instance.addComponent(mc);
+            ComponentManager.Instance.addComponent(tc);
+            ComponentManager.Instance.addComponent(cc);
+            ComponentManager.Instance.addComponent(vc);
         }
 
         /// <summary>
@@ -131,12 +99,12 @@ namespace Assignment1
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
-
+            /*
             RasterizerState rasterizerState = new RasterizerState();
             rasterizerState.CullMode = CullMode.CullClockwiseFace;
             rasterizerState.FillMode = FillMode.Solid;
             GraphicsDevice.RasterizerState = rasterizerState;
-            SystemManager.Instance.Update(gameTime);
+*/          SystemManager.Instance.Update(gameTime);
 
 
             // TODO: Add your update logic here
@@ -150,15 +118,15 @@ namespace Assignment1
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            spriteBatch.Begin();
+            //spriteBatch.Begin();
             GraphicsDevice.Clear(Color.CornflowerBlue);
-            DepthStencilState dss = new DepthStencilState();
-            dss.DepthBufferEnable = true;
-            GraphicsDevice.DepthStencilState = dss;
+            //DepthStencilState dss = new DepthStencilState();
+            //dss.DepthBufferEnable = true;
+            //GraphicsDevice.DepthStencilState = dss;
 
             // TODO: Add your drawing code here
             SystemManager.Instance.Draw(spriteBatch);
-            spriteBatch.End();
+            //spriteBatch.End();
         }
     }
 }

@@ -1,82 +1,101 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Game_Engine.Components;
 using Game_Engine.Managers;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
 namespace Game_Engine.Systems
 {
     public class TransformSystem : IUpdateableSystem
     {
-        private Dictionary<int, EntityComponent> _transformations;
-
         public void Update(GameTime gameTime)
         {
-            float elapsedGameTime = (float)gameTime.ElapsedGameTime.TotalMilliseconds;
-
-            var kbState = Keyboard.GetState();
-            _transformations = ComponentManager.Instance.getDictionary<TransformComponent>();
-            
-            foreach(TransformComponent tc in _transformations.Values)
+            //throw new NotImplementedException();
+            var transformComponents = ComponentManager.Instance.getDictionary<TransformComponent>();
+            foreach(TransformComponent transformComponent in transformComponents.Values)
             {
-                VelocityComponent speed = ComponentManager.Instance.GetComponentsById<VelocityComponent>(tc.EntityID);
-                ModelComponent model = ComponentManager.Instance.GetComponentsById<ModelComponent>(tc.EntityID);
-                //Position
-                if (kbState.IsKeyDown(Keys.Up))
-                {
-                    tc.PosZ -= speed.VelZ * elapsedGameTime;
-                }
-                if (kbState.IsKeyDown(Keys.Down))
-                {
-                    tc.PosZ += speed.VelZ * elapsedGameTime;
-                }
-                if (kbState.IsKeyDown(Keys.Right))
-                {
-                    tc.PosX += speed.VelX * elapsedGameTime; 
-                }
-                if (kbState.IsKeyDown(Keys.Left))
-                {
-                    tc.PosX -= speed.VelX * elapsedGameTime;
-                }
-                if (kbState.IsKeyDown(Keys.LeftShift))
-                {
-                    tc.PosY -= speed.VelY * elapsedGameTime;
-                }
-                if (kbState.IsKeyDown(Keys.LeftControl))
-                {
-                    tc.PosY += speed.VelY * elapsedGameTime;
-                }
-                if (kbState.IsKeyDown(Keys.A))
-                {
-                    //tc.RotationX += (ushort)(2 * elapsedGameTime);
-                    Quaternion rot = Quaternion.CreateFromAxisAngle(new Vector3(0, 1f, 0), (-elapsedGameTime * 0.01f));
-                    rot.Normalize();
-                    model.Rotation *= Matrix.CreateFromQuaternion(rot);
-                    model.Quaternion = rot;
-                }
-                if (kbState.IsKeyDown(Keys.D))
-                {
-                    //tc.RotationX += (ushort)(2 * elapsedGameTime);
-                    Quaternion rot = Quaternion.CreateFromAxisAngle(new Vector3(0, -1f, 0), (-elapsedGameTime * 0.01f));
-                    rot.Normalize();
-                    model.Rotation *= Matrix.CreateFromQuaternion(rot);
-                    model.Quaternion = rot;
-                }
-                //rotation
+                VelocityComponent velocityComponent = ComponentManager.Instance.GetComponentsById<VelocityComponent>(transformComponent.EntityID);
+                float elapsedGameTime = (float)gameTime.ElapsedGameTime.TotalMilliseconds;
 
-                Quaternion rotorRot = Quaternion.CreateFromAxisAngle(new Vector3(0, -1f, 0), (-elapsedGameTime * 0.01f));
-                rotorRot.Normalize();
-                //model.Rotation *= Matrix.CreateFromQuaternion(rotorRot);
+                // -----
+                // Scale
+                // -----
 
-                model.Model.Bones["Main_Rotor"].Transform = Matrix.CreateFromQuaternion(rotorRot) * Matrix.CreateTranslation(model.Model.Bones["Main_Rotor"].Transform.Translation);
-                model.Model.Bones["Back_Rotor"].Transform = Matrix.CreateRotationZ((float)Math.PI / 2f) * Matrix.CreateRotationX(tc.RotationY) * Matrix.CreateTranslation(model.Model.Bones["Back_Rotor"].Transform.Translation);
-                //
-                //model.Model.Bones["Body"].Transform = Matrix.CreateRotationY(0);// * Matrix.CreateTranslation(model.Model.Bones["Body"].Transform.Translation);
+                // Enlarge (uniformly)
+                if (Keyboard.GetState().IsKeyDown(Keys.Add))
+                    transformComponent.scale *= 1.1f;
+
+                // Shrink (uniformly)
+                if (Keyboard.GetState().IsKeyDown(Keys.Subtract))
+                    transformComponent.scale *= 0.9f;
+
+                // --------
+                // Tanslate
+                // --------
+
+                // Left (Negative X)
+                if (Keyboard.GetState().IsKeyDown(Keys.A))
+                    transformComponent.position.X -= velocityComponent.speed.X * elapsedGameTime;
+
+                // Right (Positive X)
+                if (Keyboard.GetState().IsKeyDown(Keys.D))
+                    transformComponent.position.X += velocityComponent.speed.X * elapsedGameTime;
+
+                // Backward (Positive Z)
+                if (Keyboard.GetState().IsKeyDown(Keys.W))
+                    transformComponent.position.Z += velocityComponent.speed.Z * elapsedGameTime;
+
+                // Forward (Negative Z)
+                if (Keyboard.GetState().IsKeyDown(Keys.S))
+                    transformComponent.position.Z -= velocityComponent.speed.Z * elapsedGameTime;
+
+                // Up (Positive Y)
+                if (Keyboard.GetState().IsKeyDown(Keys.Space))
+                    transformComponent.position.Y += velocityComponent.speed.Y * elapsedGameTime;
+
+                // Down (Negative Y)
+                if (Keyboard.GetState().IsKeyDown(Keys.LeftShift))
+                    transformComponent.position.Y -= velocityComponent.speed.Y * elapsedGameTime;
+
+                // ------
+                // Rotate
+                // ------
+
+                Vector3 axis = new Vector3(0, 0, 0);
+                float angle = -elapsedGameTime * 0.01f;
+
+                // Clockwise around positive Y-axis
+                if (Keyboard.GetState().IsKeyDown(Keys.Left))
+                    axis = new Vector3(0, 1f, 0);
+
+                // Clockwise around negative Y-axis
+                if (Keyboard.GetState().IsKeyDown(Keys.Right))
+                    axis = new Vector3(0, -1f, 0);
+
+                // Clockwise around positive X-axis
+                if (Keyboard.GetState().IsKeyDown(Keys.Up))
+                    axis = new Vector3(1f, 0, 0);
+
+                // Clockwise around negative X-axis
+                if (Keyboard.GetState().IsKeyDown(Keys.Down))
+                    axis = new Vector3(-1f, 0, 0);
+
+                // Clockwise around positive Z-axis
+                if (Keyboard.GetState().IsKeyDown(Keys.C))
+                    axis = new Vector3(0, 0, 1f);
+
+                // Clockwise around negative Z-axis
+                if (Keyboard.GetState().IsKeyDown(Keys.Z))
+                    axis = new Vector3(0, 0, -1f);
+
+                Quaternion rot = Quaternion.CreateFromAxisAngle(axis, angle);
+                rot.Normalize();
+                transformComponent.rotation *= Matrix.CreateFromQuaternion(rot);
+
+                // Reset to original (zero) rotation
+                if (Keyboard.GetState().IsKeyDown(Keys.R))
+                    transformComponent.rotation = Matrix.Identity;
             }
         }
     }

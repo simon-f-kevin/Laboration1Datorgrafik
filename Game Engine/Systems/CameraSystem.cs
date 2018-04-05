@@ -7,44 +7,60 @@ using Game_Engine.Components;
 using Game_Engine.Managers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 
 namespace Game_Engine.Systems
 {
     public class CameraSystem : IUpdateableSystem
     {
-        
-        private GraphicsDevice _graphicsDevice;
+        private GraphicsDevice graphicsDevice;
 
-        private Dictionary<int, EntityComponent> _cameras;
-
-        public CameraSystem(GraphicsDevice gd)
+        public CameraSystem(GraphicsDevice graphicsDevice)
         {
-            _graphicsDevice = gd;
+            this.graphicsDevice = graphicsDevice;
+            
         }
 
         public void Update(GameTime gameTime)
         {
-            _cameras = ComponentManager.Instance.getDictionary<CameraComponent>();
-            foreach(CameraComponent cameraComp in _cameras.Values)
+            if (Keyboard.GetState().IsKeyDown(Keys.D1))
             {
-                if(cameraComp.View == cameraComp.Projection)
-                {
-                    cameraComp.View = Matrix.CreateLookAt(new Vector3(0, 0, 20), Vector3.Zero, Vector3.Up);
-                    cameraComp.Projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver2, cameraComp.AspectRatio, cameraComp.NearPlane, cameraComp.FarPlane);
-                }
+                RasterizerState rasterizerState = new RasterizerState();
+                rasterizerState.CullMode = CullMode.None;
+                rasterizerState.FillMode = graphicsDevice.RasterizerState.FillMode;
+                graphicsDevice.RasterizerState = rasterizerState;
+            }
 
-                ModelComponent model = ComponentManager.Instance.GetComponentsById<ModelComponent>(cameraComp.EntityID);
-                TransformComponent transform = ComponentManager.Instance.GetComponentsById<TransformComponent>(cameraComp.EntityID);
-                Vector3 cameraPosition = new Vector3(0, 0, 20);
-                cameraPosition = Vector3.Transform(cameraPosition, Matrix.CreateFromQuaternion(model.Quaternion));
-                cameraPosition += new Vector3(transform.PosX, transform.PosY, transform.PosZ);
+            if (Keyboard.GetState().IsKeyDown(Keys.D2))
+            {
+                RasterizerState rasterizerState = new RasterizerState();
+                rasterizerState.CullMode = CullMode.CullClockwiseFace;
+                rasterizerState.FillMode = graphicsDevice.RasterizerState.FillMode;
+                graphicsDevice.RasterizerState = rasterizerState;
+            }
 
-                Vector3 cameraUp = Vector3.Up;
-                cameraUp = Vector3.Transform(cameraUp, Matrix.CreateFromQuaternion(model.Quaternion));
+            if (Keyboard.GetState().IsKeyDown(Keys.D3))
+            {
+                RasterizerState rasterizerState = new RasterizerState();
+                rasterizerState.CullMode = CullMode.CullCounterClockwiseFace;
+                rasterizerState.FillMode = graphicsDevice.RasterizerState.FillMode;
+                graphicsDevice.RasterizerState = rasterizerState;
+            }
 
-                cameraComp.View = Matrix.CreateLookAt(cameraPosition, new Vector3(transform.PosX, transform.PosY, transform.PosZ), cameraUp);
-                cameraComp.Projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver2, cameraComp.AspectRatio, cameraComp.NearPlane, cameraComp.FarPlane);
-                Console.WriteLine(cameraPosition);
+            if (Keyboard.GetState().IsKeyDown(Keys.D4))
+            {
+                RasterizerState rasterizerState = new RasterizerState();
+                rasterizerState.FillMode = FillMode.WireFrame;
+                rasterizerState.CullMode = graphicsDevice.RasterizerState.CullMode;
+                graphicsDevice.RasterizerState = rasterizerState;
+            }
+
+            if (Keyboard.GetState().IsKeyDown(Keys.D5))
+            {
+                RasterizerState rasterizerState = new RasterizerState();
+                rasterizerState.FillMode = FillMode.Solid;
+                rasterizerState.CullMode = graphicsDevice.RasterizerState.CullMode;
+                graphicsDevice.RasterizerState = rasterizerState;
             }
         }
     }

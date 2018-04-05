@@ -10,13 +10,12 @@ namespace Game_Engine.Components
 {
     public class VelocityComponent : EntityComponent
     {
-        public float VelX { get; set; }
-        public float VelY { get; set; }
-        public float VelZ { get; set; }
+        public Vector3 speed { get; set; }
 
         public VelocityComponent(int id)
         {
             EntityID = id;
+            speed = new Vector3(0.1f, 0.1f, 0.1f);
         }
 
     }

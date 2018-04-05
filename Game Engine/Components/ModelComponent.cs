@@ -8,34 +8,16 @@ using System.Threading.Tasks;
 
 namespace Game_Engine.Components
 {
-    public enum ModelType
-    {
-        TopRotor,
-        BackRotor,
-        Body
-    }
+
     public class ModelComponent : EntityComponent
     {
-
-        public ModelType ModelType { get; set; }
-
-        public Model Model { get; set; }
-
-        public Matrix ObjectWorld { get; set; }
-
-        public Matrix Rotation { get; set; }
-
-        public Quaternion Quaternion { get; set; }
-
-        public ModelBone MainRotorBone { get; set; }
-
-        public Matrix MainRotorBaseTransform { get; set; }
-
-
-
-        public ModelComponent(int id)
+        public Matrix objectWorld { get; set; }
+        public Model model { get; set; }
+        public ModelComponent(int id, Model model)
         {
             EntityID = id;
+            objectWorld = Matrix.Identity;
+            this.model = model;
         }
     }
 }
