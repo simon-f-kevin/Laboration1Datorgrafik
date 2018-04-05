@@ -13,9 +13,8 @@ namespace Game_Engine.Components
     {
         public Matrix objectWorld { get; set; }
         public Model model { get; set; }
-        public ModelComponent(int id, Model model)
+        public ModelComponent(int id, Model model) : base(id)
         {
-            EntityID = id;
             objectWorld = Matrix.Identity;
             this.model = model;
         }

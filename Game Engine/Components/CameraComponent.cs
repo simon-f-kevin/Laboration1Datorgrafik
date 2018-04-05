@@ -16,9 +16,8 @@ namespace Game_Engine.Components
 
 
 
-        public CameraComponent(int id, GraphicsDevice graphicsDevice)
+        public CameraComponent(int id, GraphicsDevice graphicsDevice) : base(id)
         {
-            EntityID = id;
             world = Matrix.Identity;
             view = Matrix.CreateLookAt(new Vector3(0, 0, 20), new Vector3(0, 0, 0), Vector3.Up);
             projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver2, graphicsDevice.Viewport.AspectRatio, 0.1f, 1000f);

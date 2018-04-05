@@ -12,11 +12,9 @@ namespace Game_Engine.Components
     {
         public Vector3 speed { get; set; }
 
-        public VelocityComponent(int id)
+        public VelocityComponent(int id) : base(id)
         {
-            EntityID = id;
             speed = new Vector3(0.1f, 0.1f, 0.1f);
         }
-
     }
 }

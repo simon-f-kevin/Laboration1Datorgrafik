@@ -21,9 +21,9 @@ namespace Game_Engine.Components
         public float[,] heightData;
 
 
-        public HeightmapComponent(int id)
+        public HeightmapComponent(int id) : base(id)
         {
-            EntityID = id;
+
         }
     }
 }

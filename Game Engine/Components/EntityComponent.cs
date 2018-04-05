@@ -9,9 +9,9 @@ namespace Game_Engine.Components
     public abstract class EntityComponent
     {
         private int _EntityId { get; set; }
-        public EntityComponent()
+        protected EntityComponent(int entityID)
         {
-
+            _EntityId = entityID;
         }
         public int EntityID
         {
