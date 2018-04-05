@@ -27,6 +27,10 @@ namespace Game_Engine.Components
 
         public Quaternion Quaternion { get; set; }
 
+        public ModelBone MainRotorBone { get; set; }
+
+        public Matrix MainRotorBaseTransform { get; set; }
+
 
 
         public ModelComponent(int id)

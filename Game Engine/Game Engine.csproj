@@ -53,13 +53,8 @@
     <Compile Include="Components\TransformComponent.cs" />
     <Compile Include="Components\VelocityComponent.cs" />
     <Compile Include="Managers\GameContentManager.cs" />
-    <Compile Include="Mediator\CollisionMediatorMessage.cs" />
-    <Compile Include="Mediator\IMediator.cs" />
-    <Compile Include="Mediator\IMediatorMessage.cs" />
     <Compile Include="Managers\ComponentManager.cs" />
     <Compile Include="Managers\SystemManager.cs" />
-    <Compile Include="Mediator\IMediatorReciever.cs" />
-    <Compile Include="Mediator\Mediator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Systems\CameraSystem.cs" />
     <Compile Include="Managers\GamePropertyManager.cs" />

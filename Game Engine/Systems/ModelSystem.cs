@@ -24,25 +24,25 @@ namespace Game_Engine.Systems
             {
                 TransformComponent tc = ComponentManager.Instance.GetComponentsById<TransformComponent>(modelComp.EntityID);
                 CameraComponent cc = ComponentManager.Instance.GetComponentsById<CameraComponent>(modelComp.EntityID);
-                foreach(ModelMesh mesh in modelComp.Model.Meshes)
+
+                var boneTransform = new Matrix[modelComp.Model.Bones.Count];
+                modelComp.Model.CopyAbsoluteBoneTransformsTo(boneTransform);
+
+                foreach (ModelMesh mesh in modelComp.Model.Meshes)
                 {
                     foreach(BasicEffect effect in mesh.Effects)
                     {
                         modelComp.ObjectWorld = Matrix.CreateScale(new Vector3(tc.ScalingX, tc.ScalingY, tc.ScalingZ))
                             * modelComp.Rotation
                             * Matrix.CreateTranslation(new Vector3(tc.PosX, tc.PosY, tc.PosZ));
-                        effect.World = mesh.ParentBone.Transform * modelComp.ObjectWorld * Matrix.Identity;
+
+                        effect.World = boneTransform[mesh.ParentBone.Index] * modelComp.ObjectWorld; //mesh.ParentBone.Transform * modelComp.ObjectWorld * Matrix.Identity;
                         effect.View = cc.View;
                         effect.Projection = cc.Projection;
 
                         effect.EnableDefaultLighting();
-                        effect.LightingEnabled = true;
 
-                        foreach (EffectPass pass in effect.CurrentTechnique.Passes)
-                        {
-                            pass.Apply();
-                            mesh.Draw();
-                        }
+                        mesh.Draw();
 
                     }
                 }
