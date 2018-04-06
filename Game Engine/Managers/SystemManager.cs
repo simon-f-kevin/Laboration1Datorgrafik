@@ -60,11 +60,11 @@ namespace Game_Engine.Managers
         {
             DrawableSystems.Clear();
         }
-        public void clearUpdateableQueue()
+        public void ClearUpdateableQueue()
         {
             UpdateableSystems.Clear();
         }
-        public void removeFromUpdateableQueue(params IUpdateableSystem[] list)
+        public void RemoveFromUpdateableQueue(params IUpdateableSystem[] list)
         {
             for(int i = 0; i < list.Length; i++)
             {
@@ -90,13 +90,13 @@ namespace Game_Engine.Managers
             }
         }
 
-        public void Draw(SpriteBatch spriteBatch)
+        public void Draw()
         {
             int size = DrawableSystems.Count;
             for(int i = 0; i < size; i++)
             {
                 IDrawableSystem system = DrawableSystems.Dequeue();
-                system.Draw(spriteBatch);
+                system.Draw();
                 DrawableSystems.Enqueue(system);
             }
         }
