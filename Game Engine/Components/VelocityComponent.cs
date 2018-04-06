@@ -10,11 +10,14 @@ namespace Game_Engine.Components
 {
     public class VelocityComponent : EntityComponent
     {
-        public Vector3 speed { get; set; }
+        public Vector3 MovementSpeed { get; set; }
 
-        public VelocityComponent(int id) : base(id)
+        public Vector3 RotationSpeed { get; set; }
+
+        public VelocityComponent(int id, Vector3 move, Vector3 rot) : base(id)
         {
-            speed = new Vector3(0.1f, 0.1f, 0.1f);
+            MovementSpeed = move;
+            RotationSpeed = rot;
         }
     }
 }

@@ -82,7 +82,7 @@ namespace Game_Engine.Managers
             return _freeIds.Dequeue();
         }
 
-        public void addComponent(EntityComponent component)
+        public void AddComponent(EntityComponent component)
         {
             Dictionary<int, EntityComponent> tempDict;
             if (!_componentsByType.TryGetValue(component.GetType(), out tempDict))

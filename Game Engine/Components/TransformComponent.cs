@@ -11,6 +11,7 @@ namespace Game_Engine.Components
     {
         public Vector3 scale {get; set;}
         public Vector3 position;
+        public Vector3 rotationVector; 
         public Matrix rotation {get; set;}
         public TransformComponent(int id, Vector3 scale, Vector3 position) : base(id)
         {

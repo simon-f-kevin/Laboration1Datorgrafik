@@ -71,14 +71,15 @@ namespace Assignment1
         {
             int entityId = 1;
             ModelComponent mc = new ModelComponent(entityId, model);
-            TransformComponent tc = new TransformComponent(entityId, new Vector3(3, 3, 3), new Vector3(0, 0, -50));
+            TransformComponent tc = new TransformComponent(entityId, new Vector3(50, 50, 50), new Vector3(0, 0, -500));
             CameraComponent cc = new CameraComponent(entityId, GraphicsDevice);
-            VelocityComponent vc = new VelocityComponent(entityId);
+            VelocityComponent vc = new VelocityComponent(entityId, new Vector3(0.01f, 0.01f, 0.01f), new Vector3(0.008f, 0.008f, 0.008f));
+            
 
-            ComponentManager.Instance.addComponent(mc);
-            ComponentManager.Instance.addComponent(tc);
-            ComponentManager.Instance.addComponent(cc);
-            ComponentManager.Instance.addComponent(vc);
+            ComponentManager.Instance.AddComponent(mc);
+            ComponentManager.Instance.AddComponent(tc);
+            ComponentManager.Instance.AddComponent(cc);
+            ComponentManager.Instance.AddComponent(vc);
         }
 
         /// <summary>

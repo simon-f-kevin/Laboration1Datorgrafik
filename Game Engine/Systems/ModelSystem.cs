@@ -17,6 +17,8 @@ namespace Game_Engine.Systems
             var ModelComponents = ComponentManager.Instance.getDictionary<ModelComponent>();
             foreach(ModelComponent modelComponent in ModelComponents.Values)
             {
+                var boneTransformations = new Matrix[modelComponent.model.Bones.Count];
+                modelComponent.model.CopyAbsoluteBoneTransformsTo(boneTransformations);
                 var transformComponent = ComponentManager.Instance.GetComponentsById<TransformComponent>(modelComponent.EntityID);
                 var cameraComponent = ComponentManager.Instance.GetComponentsById<CameraComponent>(modelComponent.EntityID);
                 foreach (ModelMesh modelMesh in modelComponent.model.Meshes)
@@ -24,8 +26,9 @@ namespace Game_Engine.Systems
                     //System.Console.WriteLine(modelMesh.Name);
                     foreach (BasicEffect effect in modelMesh.Effects)
                     {
-                        modelComponent.objectWorld = Matrix.CreateScale(transformComponent.scale) * transformComponent.rotation * Matrix.CreateTranslation(transformComponent.position);
-                        effect.World = modelMesh.ParentBone.Transform * modelComponent.objectWorld * cameraComponent.world;
+                        
+                        //modelComponent.objectWorld = Matrix.CreateScale(transformComponent.scale) * transformComponent.rotation * Matrix.CreateTranslation(transformComponent.position);
+                        effect.World = boneTransformations[modelMesh.ParentBone.Index];
                         effect.View = cameraComponent.view;
                         effect.Projection = cameraComponent.projection;
 
