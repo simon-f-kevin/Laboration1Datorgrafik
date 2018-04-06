@@ -71,10 +71,13 @@ namespace Assignment1
 
         public void CreateChopper(int entityId)
         {
-            
+
+            var view = Matrix.CreateLookAt(new Vector3(0, 0, 20), new Vector3(0, 0, 0), Vector3.Up);
+            var projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver2, GraphicsDevice.Viewport.AspectRatio, 0.1f, 1000f);
+
             ModelComponent mc = new ModelComponent(entityId, chopperModel);
             TransformComponent tc = new TransformComponent(entityId, new Vector3(50, 50, 50), new Vector3(0, 0, -100));
-            CameraComponent cc = new CameraComponent(entityId, GraphicsDevice);
+            CameraComponent cc = new CameraComponent(entityId, view, projection);
             VelocityComponent vc = new VelocityComponent(entityId, new Vector3(0.01f, 0.01f, 0.01f), new Vector3(0.008f, 0.008f, 0.008f));
             
 
@@ -85,10 +88,10 @@ namespace Assignment1
         }
         public void CreateHeightMap(int entityId)
         {
-            //Matrix viewMatrix = Matrix.CreateLookAt(new Vector3(60, 80, -80), new Vector3(0, 0, 0), new Vector3(0, 1, 0));
-            //Matrix projectionMatrix = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver4, GraphicsDevice.Viewport.AspectRatio, 1.0f, 300.0f);
+            Matrix viewMatrix = Matrix.CreateLookAt(new Vector3(60, 80, -80), new Vector3(0, 0, 0), new Vector3(0, 1, 0));
+            Matrix projectionMatrix = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver4, GraphicsDevice.Viewport.AspectRatio, 1.0f, 300.0f);
 
-            CameraComponent cc = new CameraComponent(entityId, GraphicsDevice);//, viewMatrix, projectionMatrix);
+            CameraComponent cc = new CameraComponent(entityId, viewMatrix, projectionMatrix);
             HeightmapComponent hm = new HeightmapComponent(entityId, heightmapTexture, 4, 3);
             LoadHeightData(hm);
             SetUpVertices(hm);

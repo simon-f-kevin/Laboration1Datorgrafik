@@ -22,12 +22,12 @@ namespace Game_Engine.Systems
                 // Movement
                 // ------
 
-                // Move left
-                if (Keyboard.GetState().IsKeyDown(Keys.Left))
-                    modelComponent.model.Bones[0].Transform *= Matrix.CreateTranslation(velocityComponent.MovementSpeed.X, 0, 0) * Matrix.CreateRotationX(0) * Matrix.CreateTranslation(velocityComponent.MovementSpeed.X, 0, 0);
-
                 // Move right
                 if (Keyboard.GetState().IsKeyDown(Keys.Right))
+                    modelComponent.model.Bones[0].Transform *= Matrix.CreateTranslation(velocityComponent.MovementSpeed.X, 0, 0) * Matrix.CreateRotationX(0) * Matrix.CreateTranslation(velocityComponent.MovementSpeed.X, 0, 0);
+
+                // Move left
+                if (Keyboard.GetState().IsKeyDown(Keys.Left))
                     modelComponent.model.Bones[0].Transform *= Matrix.CreateTranslation(-velocityComponent.MovementSpeed.X, 0, 0) * Matrix.CreateRotationX(0) * Matrix.CreateTranslation(-velocityComponent.MovementSpeed.X, 0, 0);
 
                 // Move forward
