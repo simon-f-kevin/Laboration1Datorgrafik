@@ -16,14 +16,16 @@ namespace Game_Engine.Components
 
         public Texture2D heightMap { get; set; }
 
-        public int terrainWidth = 4;
-        public int terrainHeight = 3;
-        public float[,] heightData;
+        public int terrainWidth { get; set; }
+        public int terrainHeight { get; set; }
+        public float[,] heightData { get; set; }
 
 
-        public HeightmapComponent(int id) : base(id)
+        public HeightmapComponent(int id, Texture2D heightMap, int width, int height) : base(id)
         {
-
+            this.heightMap = heightMap;
+            this.terrainWidth = width;
+            this.terrainHeight = height;
         }
     }
 }

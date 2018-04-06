@@ -9,6 +9,6 @@ namespace Game_Engine.Systems
 {
     public interface IDrawableSystem
     {
-        void Draw(SpriteBatch spriteBatch);
+        void Draw();
     }
 }

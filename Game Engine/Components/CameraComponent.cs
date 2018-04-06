@@ -22,5 +22,11 @@ namespace Game_Engine.Components
             view = Matrix.CreateLookAt(new Vector3(0, 0, 20), new Vector3(0, 0, 0), Vector3.Up);
             projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver2, graphicsDevice.Viewport.AspectRatio, 0.1f, 1000f);
         }
+        public CameraComponent(int id, GraphicsDevice graphicsDevice, Matrix View, Matrix Projection) : base(id)
+        {
+            world = Matrix.Identity;
+            this.view = View;
+            this.projection = Projection;
+        }
     }
 }

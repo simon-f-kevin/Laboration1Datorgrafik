@@ -12,7 +12,7 @@ namespace Game_Engine.Systems
 {
     public class ModelSystem : IDrawableSystem
     {
-        public void Draw(SpriteBatch spriteBatch)
+        public void Draw()
         {
             var ModelComponents = ComponentManager.Instance.getDictionary<ModelComponent>();
             foreach(ModelComponent modelComponent in ModelComponents.Values)
