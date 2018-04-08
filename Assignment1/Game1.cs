@@ -64,7 +64,7 @@ namespace Assignment1
             heightmapTexture = Content.Load<Texture2D>("US_Canyon");
 
             CreateChopper(1);
-            //CreateHeightMap(2);
+            CreateHeightMap(2);
 
             // TODO: use this.Content to load your game content here
         }
@@ -80,7 +80,6 @@ namespace Assignment1
             CameraComponent cc = new CameraComponent(entityId, view, projection);
             VelocityComponent vc = new VelocityComponent(entityId, new Vector3(0.01f, 0.01f, 0.01f), new Vector3(0.008f, 0.008f, 0.008f));
             
-
             ComponentManager.Instance.AddComponent(mc);
             ComponentManager.Instance.AddComponent(tc);
             ComponentManager.Instance.AddComponent(cc);
@@ -88,10 +87,15 @@ namespace Assignment1
         }
         public void CreateHeightMap(int entityId)
         {
+            //Original from tutorial
             Matrix viewMatrix = Matrix.CreateLookAt(new Vector3(60, 80, -80), new Vector3(0, 0, 0), new Vector3(0, 1, 0));
             Matrix projectionMatrix = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver4, GraphicsDevice.Viewport.AspectRatio, 1.0f, 300.0f);
+            
+            //Identical to chopper
+            Matrix view = Matrix.CreateLookAt(new Vector3(0, 0, 20), new Vector3(0, 0, 0), Vector3.Up);
+            Matrix projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver2, GraphicsDevice.Viewport.AspectRatio, 0.1f, 1000f);
 
-            CameraComponent cc = new CameraComponent(entityId, viewMatrix, projectionMatrix);
+            CameraComponent cc = new CameraComponent(entityId, view, projection);
             HeightmapComponent hm = new HeightmapComponent(entityId, heightmapTexture, 4, 3);
             LoadHeightData(hm);
             SetUpVertices(hm);
