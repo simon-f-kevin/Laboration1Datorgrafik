@@ -1,12 +1,8 @@
-﻿using System;
-using Game_Engine.Components;
-using Game_Engine.Managers;
-using Game_Engine.Systems;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-namespace Assignment1
+namespace Assignment2
 {
     /// <summary>
     /// This is the main type for your game.
@@ -15,20 +11,11 @@ namespace Assignment1
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-        Model model;
-
-        TransformSystem transformSystem;
-        ModelSystem modelSystem;
-        CameraSystem cameraSystem;
-        HeightmapSystem heightmapSystem;
 
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
-
-            IsFixedTimeStep = false;
-            graphics.SynchronizeWithVerticalRetrace = false;
         }
 
         /// <summary>
@@ -40,13 +27,6 @@ namespace Assignment1
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            transformSystem = new TransformSystem();
-            cameraSystem = new CameraSystem(this.GraphicsDevice);
-            modelSystem = new ModelSystem();
-            heightmapSystem = new HeightmapSystem(GraphicsDevice);
-
-            SystemManager.Instance.addToUpdateableQueue(transformSystem, cameraSystem);
-            SystemManager.Instance.addToDrawableQueue(modelSystem, heightmapSystem);
 
             base.Initialize();
         }
@@ -59,27 +39,8 @@ namespace Assignment1
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            model = Content.Load<Model>("Chopper");
-            //Texture2D hm = Content.Load<Texture2D>("US_Canyon");
-
-            CreateChopper();
 
             // TODO: use this.Content to load your game content here
-        }
-
-        public void CreateChopper()
-        {
-            int entityId = 1;
-            ModelComponent mc = new ModelComponent(entityId, model);
-            TransformComponent tc = new TransformComponent(entityId, new Vector3(50, 50, 50), new Vector3(0, 0, -500));
-            CameraComponent cc = new CameraComponent(entityId, GraphicsDevice);
-            VelocityComponent vc = new VelocityComponent(entityId, new Vector3(0.01f, 0.01f, 0.01f), new Vector3(0.008f, 0.008f, 0.008f));
-            
-
-            ComponentManager.Instance.AddComponent(mc);
-            ComponentManager.Instance.AddComponent(tc);
-            ComponentManager.Instance.AddComponent(cc);
-            ComponentManager.Instance.AddComponent(vc);
         }
 
         /// <summary>
@@ -100,13 +61,6 @@ namespace Assignment1
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
-            /*
-            RasterizerState rasterizerState = new RasterizerState();
-            rasterizerState.CullMode = CullMode.CullClockwiseFace;
-            rasterizerState.FillMode = FillMode.Solid;
-            GraphicsDevice.RasterizerState = rasterizerState;
-*/          SystemManager.Instance.Update(gameTime);
-
 
             // TODO: Add your update logic here
 
@@ -119,15 +73,11 @@ namespace Assignment1
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            //spriteBatch.Begin();
             GraphicsDevice.Clear(Color.CornflowerBlue);
-            //DepthStencilState dss = new DepthStencilState();
-            //dss.DepthBufferEnable = true;
-            //GraphicsDevice.DepthStencilState = dss;
 
             // TODO: Add your drawing code here
-            SystemManager.Instance.Draw();
-            //spriteBatch.End();
+
+            base.Draw(gameTime);
         }
     }
 }
