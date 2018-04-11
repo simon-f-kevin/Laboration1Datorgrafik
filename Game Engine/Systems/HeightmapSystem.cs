@@ -13,9 +13,11 @@ namespace Game_Engine.Systems
     public class HeightmapSystem : IDrawableSystem
     {
         GraphicsDevice device;
+        BasicEffect effect;
         public HeightmapSystem(GraphicsDevice device)
         {
             this.device = device;
+            effect = new BasicEffect(device);
             /* //This part is required to see the primitives
             RasterizerState rs = new RasterizerState();
             rs.CullMode = CullMode.None;
@@ -25,9 +27,7 @@ namespace Game_Engine.Systems
         }
         public void Draw()
         {
-            //throw new NotImplementedException();
             var heightmapComponents = ComponentManager.Instance.getDictionary<HeightmapComponent>();
-            BasicEffect effect = new BasicEffect(device);
             foreach(HeightmapComponent heightmapComponent in heightmapComponents.Values)
             {
                 CameraComponent cameraComponent = ComponentManager.Instance.GetComponentsById<CameraComponent>(heightmapComponent.EntityID);
@@ -37,11 +37,14 @@ namespace Game_Engine.Systems
                 effect.Projection = cameraComponent.projection;
                 effect.World = worldMatrix;
 
+                
                 foreach (EffectPass pass in effect.CurrentTechnique.Passes)
                 {
                     pass.Apply();
-                    device.DrawUserIndexedPrimitives(PrimitiveType.TriangleList, heightmapComponent.vertices, 0, heightmapComponent.vertices.Length, heightmapComponent.indices, 0, heightmapComponent.indices.Length / 3, VertexPositionColor.VertexDeclaration);
+                    device.DrawUserIndexedPrimitives(PrimitiveType.TriangleList, heightmapComponent.vertices, 0, heightmapComponent.vertices.Length,
+                    heightmapComponent.indices, 0, heightmapComponent.indices.Length / 3, VertexPositionColor.VertexDeclaration);
                 }
+                GC.Collect();
             }
         }
     }

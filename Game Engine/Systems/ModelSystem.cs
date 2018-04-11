@@ -12,12 +12,14 @@ namespace Game_Engine.Systems
 {
     public class ModelSystem : IDrawableSystem
     {
+        Matrix[] boneTransformations;
         public void Draw()
         {
             var ModelComponents = ComponentManager.Instance.getDictionary<ModelComponent>();
+            
             foreach(ModelComponent modelComponent in ModelComponents.Values)
             {
-                var boneTransformations = new Matrix[modelComponent.model.Bones.Count];
+                boneTransformations = new Matrix[modelComponent.model.Bones.Count];
                 modelComponent.model.CopyAbsoluteBoneTransformsTo(boneTransformations);
                 var transformComponent = ComponentManager.Instance.GetComponentsById<TransformComponent>(modelComponent.EntityID);
                 var cameraComponent = ComponentManager.Instance.GetComponentsById<CameraComponent>(modelComponent.EntityID);
@@ -35,13 +37,10 @@ namespace Game_Engine.Systems
                         effect.EnableDefaultLighting();
                         effect.LightingEnabled = true;
 
-                        foreach (EffectPass pass in effect.CurrentTechnique.Passes)
-                        {
-                            pass.Apply();
-                            modelMesh.Draw();
-                        }
+                        modelMesh.Draw();
                     }
                 }
+                GC.Collect();
             }
         }
     }

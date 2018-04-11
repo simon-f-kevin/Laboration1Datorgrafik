@@ -15,7 +15,8 @@ namespace Assignment1
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-        Model model;
+        Model chopperModel;
+        Texture2D heightmapTexture;
 
         TransformSystem transformSystem;
         ModelSystem modelSystem;
@@ -59,28 +60,105 @@ namespace Assignment1
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            model = Content.Load<Model>("Chopper");
-            //Texture2D hm = Content.Load<Texture2D>("US_Canyon");
+            chopperModel = Content.Load<Model>("Chopper");
+            heightmapTexture = Content.Load<Texture2D>("US_Canyon");
 
-            CreateChopper();
+            CreateChopper(1);
+            CreateHeightMap(1);
 
             // TODO: use this.Content to load your game content here
         }
 
-        public void CreateChopper()
+        public void CreateChopper(int entityId)
         {
-            int entityId = 1;
-            ModelComponent mc = new ModelComponent(entityId, model);
-            TransformComponent tc = new TransformComponent(entityId, new Vector3(50, 50, 50), new Vector3(0, 0, -500));
-            CameraComponent cc = new CameraComponent(entityId, GraphicsDevice);
+
+            var view = Matrix.CreateLookAt(new Vector3(0, 0, 20), new Vector3(0, 0, 0), Vector3.Up);
+            var view2 = Matrix.CreateLookAt(new Vector3(60, 80, -80), new Vector3(0, 0, 0), new Vector3(0, 1, 0));
+            var projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver2, GraphicsDevice.Viewport.AspectRatio, 0.1f, 1000f);
+
+            ModelComponent mc = new ModelComponent(entityId, chopperModel);
+            TransformComponent tc = new TransformComponent(entityId, new Vector3(50, 50, 50), new Vector3(0, 0, -100));
+            CameraComponent cc = new CameraComponent(entityId, view, projection);
             VelocityComponent vc = new VelocityComponent(entityId, new Vector3(0.01f, 0.01f, 0.01f), new Vector3(0.008f, 0.008f, 0.008f));
             
-
             ComponentManager.Instance.AddComponent(mc);
             ComponentManager.Instance.AddComponent(tc);
             ComponentManager.Instance.AddComponent(cc);
             ComponentManager.Instance.AddComponent(vc);
         }
+        public void CreateHeightMap(int entityId)
+        {
+            //Original from tutorial
+            Matrix viewMatrix = Matrix.CreateLookAt(new Vector3(60, 80, -80), new Vector3(0, 0, 0), new Vector3(0, 1, 0));
+            Matrix projectionMatrix = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver4, GraphicsDevice.Viewport.AspectRatio, 1.0f, 300.0f);
+            
+            //Identical to chopper
+            Matrix view = Matrix.CreateLookAt(new Vector3(0, 0, 20), new Vector3(0, 0, 0), Vector3.Up);
+            Matrix projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver2, GraphicsDevice.Viewport.AspectRatio, 0.1f, 1000f);
+
+            //CameraComponent cc = new CameraComponent(entityId, view, projection);
+            HeightmapComponent hm = new HeightmapComponent(entityId, heightmapTexture, 4, 3);
+            LoadHeightData(hm);
+            SetUpVertices(hm);
+            SetUpIndices(hm);
+
+            ComponentManager.Instance.AddComponent(hm);
+            //ComponentManager.Instance.AddComponent(cc);
+
+        }
+        #region Helper functions for the HeightmapComponent
+        private void SetUpVertices(HeightmapComponent hm)
+        {
+            hm.vertices = new VertexPositionColor[hm.terrainWidth * hm.terrainHeight];
+            for (int x = 0; x < hm.terrainWidth; x++)
+            {
+                for (int y = 0; y < hm.terrainHeight; y++)
+                {
+                    hm.vertices[x + y * hm.terrainWidth].Position = new Vector3(x, hm.heightData[x, y], -y);
+                    hm.vertices[x + y * hm.terrainWidth].Color = Color.White;
+                }
+            }
+        }
+
+        private void SetUpIndices(HeightmapComponent hm)
+        {
+            hm.indices = new int[(hm.terrainWidth - 1) * (hm.terrainHeight - 1) * 6];
+            int counter = 0;
+            for (int y = 0; y < hm.terrainHeight - 1; y++)
+            {
+                for (int x = 0; x < hm.terrainWidth - 1; x++)
+                {
+                    int lowerLeft = x + y * hm.terrainWidth;
+                    int lowerRight = (x + 1) + y * hm.terrainWidth;
+                    int topLeft = x + (y + 1) * hm.terrainWidth;
+                    int topRight = (x + 1) + (y + 1) * hm.terrainWidth;
+
+                    hm.indices[counter++] = topLeft;
+                    hm.indices[counter++] = lowerRight;
+                    hm.indices[counter++] = lowerLeft;
+
+                    hm.indices[counter++] = topLeft;
+                    hm.indices[counter++] = topRight;
+                    hm.indices[counter++] = lowerRight;
+                }
+            }
+        }
+
+        private void LoadHeightData(HeightmapComponent hm)
+        {
+            hm.terrainWidth = hm.heightMap.Width;
+            hm.terrainHeight = hm.heightMap.Height;
+
+            Color[] heightMapColors = new Color[hm.terrainWidth * hm.terrainHeight];
+            hm.heightMap.GetData(heightMapColors);
+
+            hm.heightData = new float[hm.terrainWidth, hm.terrainHeight];
+            for (int x = 0; x < hm.terrainWidth; x++)
+                for (int y = 0; y < hm.terrainHeight; y++)
+                    hm.heightData[x, y] = heightMapColors[x + y * hm.terrainWidth].R / 5.0f;
+        }
+        #endregion
+
 
         /// <summary>
         /// UnloadContent will be called once per game and is the place to unload
