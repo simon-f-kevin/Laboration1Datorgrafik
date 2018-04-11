@@ -79,7 +79,7 @@ namespace Assignment1
             ModelComponent mc = new ModelComponent(entityId, chopperModel);
             TransformComponent tc = new TransformComponent(entityId, new Vector3(50, 50, 50), new Vector3(0, 0, -100));
             CameraComponent cc = new CameraComponent(entityId, view, projection);
-            VelocityComponent vc = new VelocityComponent(entityId, new Vector3(0.01f, 0.01f, 0.01f), new Vector3(0.008f, 0.008f, 0.008f));
+            VelocityComponent vc = new VelocityComponent(entityId, new Vector3(0.51f, 0.51f, 0.51f), new Vector3(0.098f, 0.098f, 0.098f));
             
             ComponentManager.Instance.AddComponent(mc);
             ComponentManager.Instance.AddComponent(tc);

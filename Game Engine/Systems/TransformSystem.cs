@@ -52,23 +52,23 @@ namespace Game_Engine.Systems
                 // --------
 
                 //Quaternion rot = Quaternion.CreateFromAxisAngle(new Vector3(), (-elapsedGameTime * 0.01f));
-                // Left (Positive Y)
                 if (Keyboard.GetState().IsKeyDown(Keys.A))
-                    modelComponent.model.Bones[0].Transform *= Matrix.CreateTranslation(-modelComponent.model.Bones[0].Transform.Translation) * Matrix.CreateFromQuaternion(Quaternion.CreateFromAxisAngle(new Vector3(0, velocityComponent.RotationSpeed.Y ,0), (-elapsedGameTime * 1f))) * Matrix.CreateTranslation(modelComponent.model.Bones[0].Transform.Translation);
-                    
-
-                // Right (Negative Y)
+                    modelComponent.model.Bones[0].Transform = Matrix.CreateTranslation(new Vector3(0, 0, 0)) * Matrix.CreateRotationY(velocityComponent.RotationSpeed.Y) * modelComponent.model.Bones[0].Transform;
                 if (Keyboard.GetState().IsKeyDown(Keys.D))
-                    modelComponent.model.Bones[0].Transform *= Matrix.CreateTranslation(-modelComponent.model.Bones[0].Transform.Translation) * Matrix.CreateFromQuaternion(Quaternion.CreateFromAxisAngle(new Vector3(0, -velocityComponent.RotationSpeed.Y, 0), (-elapsedGameTime * 1f))) * Matrix.CreateTranslation(modelComponent.model.Bones[0].Transform.Translation);
-
-                // Backward ()
+                    modelComponent.model.Bones[0].Transform = Matrix.CreateTranslation(new Vector3(0, 0, 0)) * Matrix.CreateRotationY(-velocityComponent.RotationSpeed.Y) * modelComponent.model.Bones[0].Transform;
                 if (Keyboard.GetState().IsKeyDown(Keys.W))
-                    modelComponent.model.Bones[0].Transform *= Matrix.CreateTranslation(-modelComponent.model.Bones[0].Transform.Translation) * Matrix.CreateFromQuaternion(Quaternion.CreateFromAxisAngle(new Vector3(-velocityComponent.RotationSpeed.X, 0, 0), (-elapsedGameTime * 1f))) * Matrix.CreateTranslation(modelComponent.model.Bones[0].Transform.Translation);
-
-                // Forward (Negative Z)
+                    modelComponent.model.Bones[0].Transform = Matrix.CreateTranslation(new Vector3(0, 0, 0)) * Matrix.CreateRotationX(-velocityComponent.RotationSpeed.X) * modelComponent.model.Bones[0].Transform;
                 if (Keyboard.GetState().IsKeyDown(Keys.S))
-                    modelComponent.model.Bones[0].Transform *= Matrix.CreateTranslation(-modelComponent.model.Bones[0].Transform.Translation) * Matrix.CreateFromQuaternion(Quaternion.CreateFromAxisAngle(new Vector3(velocityComponent.RotationSpeed.X, 0, 0), (-elapsedGameTime * 1f))) * Matrix.CreateTranslation(modelComponent.model.Bones[0].Transform.Translation);
-                
+                    modelComponent.model.Bones[0].Transform = Matrix.CreateTranslation(new Vector3(0, 0, 0)) * Matrix.CreateRotationX(velocityComponent.RotationSpeed.X) * modelComponent.model.Bones[0].Transform;
+                if (Keyboard.GetState().IsKeyDown(Keys.Q))
+                    modelComponent.model.Bones[0].Transform = Matrix.CreateTranslation(new Vector3(0, 0, 0)) * Matrix.CreateRotationZ(velocityComponent.RotationSpeed.Z) * modelComponent.model.Bones[0].Transform;
+                if (Keyboard.GetState().IsKeyDown(Keys.E))
+                    modelComponent.model.Bones[0].Transform = Matrix.CreateTranslation(new Vector3(0, 0, 0)) * Matrix.CreateRotationZ(-velocityComponent.RotationSpeed.Z) * modelComponent.model.Bones[0].Transform;
+
+
+                Quaternion rot = Quaternion.CreateFromAxisAngle(Vector3.Zero, -elapsedGameTime * 0.01f);
+                rot.Normalize();
+                transformComponent.rotation *= Matrix.CreateFromQuaternion(rot);
 
                 // Reset to original (zero) position and rotation
                 if (Keyboard.GetState().IsKeyDown(Keys.R))

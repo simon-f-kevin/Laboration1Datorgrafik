@@ -35,7 +35,7 @@ namespace Game_Engine.Systems
                 Matrix worldMatrix = Matrix.CreateTranslation(-heightmapComponent.terrainWidth / 2.0f, 0, heightmapComponent.terrainHeight / 2.0f);
                 effect.View = cameraComponent.view;
                 effect.Projection = cameraComponent.projection;
-                effect.World = worldMatrix;
+                effect.World = Matrix.CreateTranslation(new Vector3(-100, -35, 200));
 
                 
                 foreach (EffectPass pass in effect.CurrentTechnique.Passes)
