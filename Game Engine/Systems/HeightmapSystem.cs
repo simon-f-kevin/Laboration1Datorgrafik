@@ -32,7 +32,7 @@ namespace Game_Engine.Systems
             {
                 CameraComponent cameraComponent = ComponentManager.Instance.GetComponentsById<CameraComponent>(heightmapComponent.EntityID);
 
-                Matrix worldMatrix = Matrix.CreateTranslation(-heightmapComponent.terrainWidth / 2.0f, 0, heightmapComponent.terrainHeight / 2.0f);
+                Matrix worldMatrix = Matrix.CreateTranslation(-heightmapComponent.TerrainWidth / 2.0f, 0, heightmapComponent.TerratinHeight / 2.0f);
                 effect.View = cameraComponent.view;
                 effect.Projection = cameraComponent.projection;
                 effect.World = Matrix.CreateTranslation(new Vector3(-100, -35, 200));
@@ -41,8 +41,8 @@ namespace Game_Engine.Systems
                 foreach (EffectPass pass in effect.CurrentTechnique.Passes)
                 {
                     pass.Apply();
-                    device.DrawUserIndexedPrimitives(PrimitiveType.TriangleList, heightmapComponent.vertices, 0, heightmapComponent.vertices.Length,
-                    heightmapComponent.indices, 0, heightmapComponent.indices.Length / 3, VertexPositionColor.VertexDeclaration);
+                    device.DrawUserIndexedPrimitives(PrimitiveType.TriangleList, heightmapComponent.Vertices, 0, heightmapComponent.Vertices.Length,
+                    heightmapComponent.Indices, 0, heightmapComponent.Indices.Length / 3, VertexPositionColor.VertexDeclaration);
                 }
                 GC.Collect();
             }

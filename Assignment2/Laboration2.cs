@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Assignment2.Models;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
@@ -7,17 +8,21 @@ namespace Assignment2
     /// <summary>
     /// This is the main type for your game.
     /// </summary>
-    public class Game1 : Game
+    public class Laboration2 : Game
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
         Texture2D mapTexture;
+        Texture2D mapTextureImage;
         Model playerModel;
         Model treeModel;
         Model houseModel;
 
-        public Game1()
+        World world;
+        WorldTerrain worldTerrain;
+
+        public Laboration2()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
@@ -44,7 +49,11 @@ namespace Assignment2
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
+            mapTexture = Content.Load<Texture2D>("US_Canyon");
+            mapTextureImage = Content.Load<Texture2D>("grass");
 
+            world = new World(this.GraphicsDevice, mapTexture, mapTextureImage);
+            worldTerrain = new WorldTerrain(GraphicsDevice, mapTexture, new Texture2D[4] { mapTextureImage, mapTextureImage, mapTextureImage, mapTextureImage });
             // TODO: use this.Content to load your game content here
         }
 
@@ -81,6 +90,18 @@ namespace Assignment2
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // TODO: Add your drawing code here
+            //world.BasicEffect.View = Matrix.CreateLookAt(new Vector3(0, 0, 20), new Vector3(0, 0, 0), Vector3.Up); 
+            //world.BasicEffect.Projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver2, GraphicsDevice.Viewport.AspectRatio, 0.1f, 1000f); 
+            //world.BasicEffect.World = Matrix.CreateTranslation(new Vector3(0, -100, 256)); 
+
+            //foreach (EffectPass pass in world.BasicEffect.CurrentTechnique.Passes)
+            //{
+            //    pass.Apply();
+            //    world.Draw();
+            //}
+            worldTerrain.BasicEffect.View = Matrix.CreateLookAt(new Vector3(0, 0, 20), new Vector3(0, 0, 0), Vector3.Up);
+            worldTerrain.BasicEffect.Projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver2, GraphicsDevice.Viewport.AspectRatio, 0.1f, 1000f); 
+            worldTerrain.Draw();
 
             base.Draw(gameTime);
         }

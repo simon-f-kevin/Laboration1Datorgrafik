@@ -109,53 +109,53 @@ namespace Assignment1
         #region Helper functions for the HeightmapComponent
         private void SetUpVertices(HeightmapComponent hm)
         {
-            hm.vertices = new VertexPositionColor[hm.terrainWidth * hm.terrainHeight];
-            for (int x = 0; x < hm.terrainWidth; x++)
+            hm.Vertices = new VertexPositionColor[hm.TerrainWidth * hm.TerratinHeight];
+            for (int x = 0; x < hm.TerrainWidth; x++)
             {
-                for (int y = 0; y < hm.terrainHeight; y++)
+                for (int y = 0; y < hm.TerratinHeight; y++)
                 {
-                    hm.vertices[x + y * hm.terrainWidth].Position = new Vector3(x, hm.heightData[x, y], -y);
-                    hm.vertices[x + y * hm.terrainWidth].Color = Color.White;
+                    hm.Vertices[x + y * hm.TerrainWidth].Position = new Vector3(x, hm.HeightData[x, y], -y);
+                    hm.Vertices[x + y * hm.TerrainWidth].Color = Color.White;
                 }
             }
         }
 
         private void SetUpIndices(HeightmapComponent hm)
         {
-            hm.indices = new int[(hm.terrainWidth - 1) * (hm.terrainHeight - 1) * 6];
+            hm.Indices = new int[(hm.TerrainWidth - 1) * (hm.TerratinHeight - 1) * 6];
             int counter = 0;
-            for (int y = 0; y < hm.terrainHeight - 1; y++)
+            for (int y = 0; y < hm.TerratinHeight - 1; y++)
             {
-                for (int x = 0; x < hm.terrainWidth - 1; x++)
+                for (int x = 0; x < hm.TerrainWidth - 1; x++)
                 {
-                    int lowerLeft = x + y * hm.terrainWidth;
-                    int lowerRight = (x + 1) + y * hm.terrainWidth;
-                    int topLeft = x + (y + 1) * hm.terrainWidth;
-                    int topRight = (x + 1) + (y + 1) * hm.terrainWidth;
+                    int lowerLeft = x + y * hm.TerrainWidth;
+                    int lowerRight = (x + 1) + y * hm.TerrainWidth;
+                    int topLeft = x + (y + 1) * hm.TerrainWidth;
+                    int topRight = (x + 1) + (y + 1) * hm.TerrainWidth;
 
-                    hm.indices[counter++] = topLeft;
-                    hm.indices[counter++] = lowerRight;
-                    hm.indices[counter++] = lowerLeft;
+                    hm.Indices[counter++] = topLeft;
+                    hm.Indices[counter++] = lowerRight;
+                    hm.Indices[counter++] = lowerLeft;
 
-                    hm.indices[counter++] = topLeft;
-                    hm.indices[counter++] = topRight;
-                    hm.indices[counter++] = lowerRight;
+                    hm.Indices[counter++] = topLeft;
+                    hm.Indices[counter++] = topRight;
+                    hm.Indices[counter++] = lowerRight;
                 }
             }
         }
 
         private void LoadHeightData(HeightmapComponent hm)
         {
-            hm.terrainWidth = hm.heightMap.Width;
-            hm.terrainHeight = hm.heightMap.Height;
+            hm.TerrainWidth = hm.HeightMap.Width;
+            hm.TerratinHeight = hm.HeightMap.Height;
 
-            Color[] heightMapColors = new Color[hm.terrainWidth * hm.terrainHeight];
-            hm.heightMap.GetData(heightMapColors);
+            Color[] heightMapColors = new Color[hm.TerrainWidth * hm.TerratinHeight];
+            hm.HeightMap.GetData(heightMapColors);
 
-            hm.heightData = new float[hm.terrainWidth, hm.terrainHeight];
-            for (int x = 0; x < hm.terrainWidth; x++)
-                for (int y = 0; y < hm.terrainHeight; y++)
-                    hm.heightData[x, y] = heightMapColors[x + y * hm.terrainWidth].R / 5.0f;
+            hm.HeightData = new float[hm.TerrainWidth, hm.TerratinHeight];
+            for (int x = 0; x < hm.TerrainWidth; x++)
+                for (int y = 0; y < hm.TerratinHeight; y++)
+                    hm.HeightData[x, y] = heightMapColors[x + y * hm.TerrainWidth].R / 5.0f;
         }
         #endregion
 

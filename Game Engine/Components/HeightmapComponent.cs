@@ -10,22 +10,22 @@ namespace Game_Engine.Components
 {
     public class HeightmapComponent : EntityComponent
     {
-        public VertexPositionColor[] vertices { get; set; }
+        public VertexPositionColor[] Vertices { get; set; }
 
-        public int[] indices { get; set; }
+        public int[] Indices { get; set; }
 
-        public Texture2D heightMap { get; set; }
+        public Texture2D HeightMap { get; set; }
 
-        public int terrainWidth { get; set; }
-        public int terrainHeight { get; set; }
-        public float[,] heightData { get; set; }
+        public int TerrainWidth { get; set; }
+        public int TerratinHeight { get; set; }
+        public float[,] HeightData { get; set; }
 
 
         public HeightmapComponent(int id, Texture2D heightMap, int width, int height) : base(id)
         {
-            this.heightMap = heightMap;
-            this.terrainWidth = width;
-            this.terrainHeight = height;
+            this.HeightMap = heightMap;
+            this.TerrainWidth = width;
+            this.TerratinHeight = height;
         }
     }
 }
