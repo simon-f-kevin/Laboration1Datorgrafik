@@ -12,6 +12,11 @@ namespace Assignment2
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
+        Texture2D mapTexture;
+        Model playerModel;
+        Model treeModel;
+        Model houseModel;
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);

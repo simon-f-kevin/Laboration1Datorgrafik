@@ -26,7 +26,7 @@ namespace Game_Engine.Systems
                 // Move right
                 if (Keyboard.GetState().IsKeyDown(Keys.Right))
                     modelComponent.model.Bones[0].Transform *= Matrix.CreateTranslation(velocityComponent.MovementSpeed.X, 0, 0) * Matrix.CreateRotationX(0) * Matrix.CreateTranslation(velocityComponent.MovementSpeed.X, 0, 0);
-
+                    
                 // Move left
                 if (Keyboard.GetState().IsKeyDown(Keys.Left))
                     modelComponent.model.Bones[0].Transform *= Matrix.CreateTranslation(-velocityComponent.MovementSpeed.X, 0, 0) * Matrix.CreateRotationX(0) * Matrix.CreateTranslation(-velocityComponent.MovementSpeed.X, 0, 0);
@@ -78,6 +78,7 @@ namespace Game_Engine.Systems
                 transformComponent.rotationVector.Y += 0.9f;
                 transformComponent.rotationVector.X += 0.9f;
 
+                transformComponent.position = modelComponent.model.Bones[0].Transform.Translation;
                 modelComponent.model.Bones["Main_Rotor"].Transform = Matrix.CreateRotationY(transformComponent.rotationVector.Y) * Matrix.CreateTranslation(modelComponent.model.Bones["Main_Rotor"].Transform.Translation);
                 modelComponent.model.Bones["Back_Rotor"].Transform = Matrix.CreateRotationZ((float)Math.PI / 2f) * Matrix.CreateRotationX(transformComponent.rotationVector.X) * Matrix.CreateTranslation(modelComponent.model.Bones["Back_Rotor"].Transform.Translation);
             }

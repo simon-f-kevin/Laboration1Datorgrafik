@@ -14,11 +14,14 @@ namespace Game_Engine.Components
         public Matrix view { get; set; }
         public Matrix projection { get; set; }
 
-        public CameraComponent(int id, Matrix View, Matrix Projection) : base(id)
+        public bool Follow { get; set; }
+
+        public CameraComponent(int id, Matrix View, Matrix Projection, bool Follow) : base(id)
         {
             world = Matrix.Identity;
             this.view = View;
             this.projection = Projection;
+            this.Follow = Follow;
         }
     }
 }

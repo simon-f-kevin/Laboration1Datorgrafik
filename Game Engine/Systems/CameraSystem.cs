@@ -23,6 +23,22 @@ namespace Game_Engine.Systems
 
         public void Update(GameTime gameTime)
         {
+            var cameras = ComponentManager.Instance.getDictionary<CameraComponent>();
+            foreach(CameraComponent cameraComp in cameras.Values)
+            {
+                if (cameraComp.Follow)
+                {
+                    ModelComponent model = ComponentManager.Instance.GetComponentsById<ModelComponent>(cameraComp.EntityID);
+                    TransformComponent transform = ComponentManager.Instance.GetComponentsById<TransformComponent>(cameraComp.EntityID);
+                    
+                    //Console.WriteLine(cameraPosition);
+
+                    Vector3 cameraPosition = model.model.Bones[0].Transform.Translation + (model.model.Bones[0].Transform.Backward * 20f);
+                    Vector3 cameraLookAt = model.model.Bones[0].Transform.Translation + (model.model.Bones[0].Transform.Forward * 20f);
+
+                    cameraComp.view = Matrix.CreateLookAt(cameraPosition, cameraLookAt, Vector3.Up);
+                }
+            }
             if (Keyboard.GetState().IsKeyDown(Keys.D1))
             {
                 RasterizerState rasterizerState = new RasterizerState();
