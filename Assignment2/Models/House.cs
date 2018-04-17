@@ -22,14 +22,11 @@ namespace Assignment2.Models
 
         public void Draw(Matrix view, Matrix projection)
         {
-            var boneTransformations = new Matrix[model.Bones.Count];
             foreach (ModelMesh mesh in model.Meshes)
             {
                 foreach (BasicEffect effect in mesh.Effects)
                 {
-
-                    //modelComponent.objectWorld = Matrix.CreateScale(transformComponent.scale) * transformComponent.rotation * Matrix.CreateTranslation(transformComponent.position);
-                    effect.World = model.Bones[0].Transform;//boneTransformations[mesh.ParentBone.Index];
+                    effect.World = model.Bones[0].Transform;
                     effect.View = view;
                     effect.Projection = projection;
 
@@ -41,7 +38,6 @@ namespace Assignment2.Models
                     mesh.Draw();
                 }
             }
-            //model.Draw(model.Bones[0].Transform, view, projection);
         }
 
     }

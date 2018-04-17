@@ -27,10 +27,7 @@ namespace Assignment2.Models
             {
                 foreach (BasicEffect effect in mesh.Effects)
                 {
-
-                    //modelComponent.objectWorld = Matrix.CreateScale(transformComponent.scale) * transformComponent.rotation * Matrix.CreateTranslation(transformComponent.position);
-                    effect.World = model.Bones[0].Transform;//boneTransformations[mesh.ParentBone.Index];
-                    effect.View = view;
+                    effect.World = model.Bones[0].Transform;
                     effect.Projection = projection;
 
                     effect.EnableDefaultLighting();
@@ -41,7 +38,6 @@ namespace Assignment2.Models
                     mesh.Draw();
                 }
             }
-            //model.Draw(model.Bones[0].Transform, view, projection);
         }
     }
 }
