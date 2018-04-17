@@ -8,123 +8,26 @@ using System.Threading.Tasks;
 
 namespace Assignment2.Models
 {
-    public class World
+    public struct VertexTextures
     {
-        Texture2D HeightMapImage { get; set; }
+        public Vector3 Position;
+        public Vector3 Normal;
+        public Vector4 TextureCoordinate;
+        public Vector4 TetxureWeights;
 
-        Texture2D HeightMap { get; set; }
+        public static int Size = (3 + 3 + 4 + 4) * sizeof(float);
 
-        VertexPositionTexture[] Vertices { get; set; }
-
-        int Width { get; set; }
-
-        int Height { get; set; }
-
-        public BasicEffect BasicEffect { get; set; }
-
-        int[] Indices { get; set; }
-
-        GraphicsDevice graphicsDevice;
-
-        // array to read heightMap data
-        float[,] heightMapData;
-
-        public World(GraphicsDevice device, Texture2D heightMap, Texture2D heightMapTexture)
+        public static VertexElement[] VertexElements = new[]
         {
-            graphicsDevice = device;
-            HeightMap = heightMap;
-            HeightMapImage = heightMapTexture;
-            Width = HeightMap.Width;
-            Height = HeightMap.Height;
-            SetHeights();
-            SetVertices();
-            SetIndices();
-            SetEffects();
-        }
-
-        public void Create(int size, int gridSpacing, float minHeight, float maxHeight) { }
-
-        private void SetHeights()
-        {
-            Color[] greyValues = new Color[Width * Height];
-            HeightMap.GetData(greyValues);
-            heightMapData = new float[Width, Height];
-            for (int x = 0; x < Width; x++)
-            {
-                for (int y = 0; y < Height; y++)
-                {
-                    heightMapData[x, y] = greyValues[x + y * Width].G / 3.1f;
-                }
-            }
-        }
-
-        private void SetVertices()
-        {
-            Vertices = new VertexPositionTexture[Width * Height];
-            Vector2 texturePosition;
-            for (int x = 0; x < Width; x++)
-            {
-                for (int y = 0; y < Height; y++)
-                {
-                    texturePosition = new Vector2((float)x / 25.5f, (float)y / 25.5f);
-                    Vertices[x + y * Width] = new VertexPositionTexture(new Vector3(x, heightMapData[x, y], -y), texturePosition);
-                }
-            }
-        }
-
-        private void SetIndices()
-        {
-            // amount of triangles
-            Indices = new int[6 * (Width - 1) * (Height - 1)];
-            int number = 0;
-            // collect data for corners
-            for (int y = 0; y < Height - 1; y++)
-                for (int x = 0; x < Width - 1; x++)
-                {
-                    // create double triangles
-                    Indices[number] = x + (y + 1) * Width;      // up left
-                    Indices[number + 1] = x + y * Width + 1;        // down right
-                    Indices[number + 2] = x + y * Width;            // down left
-                    Indices[number + 3] = x + (y + 1) * Width;      // up left
-                    Indices[number + 4] = x + (y + 1) * Width + 1;  // up right
-                    Indices[number + 5] = x + y * Width + 1;        // down right
-                    number += 6;
-                }
-        }
-
-        private void SetEffects()
-        {
-            BasicEffect = new BasicEffect(graphicsDevice);
-            BasicEffect.Texture = HeightMapImage;
-            BasicEffect.TextureEnabled = true;
-        }
-
-        public void Draw()
-        {
-            graphicsDevice.DrawUserIndexedPrimitives(PrimitiveType.TriangleList, Vertices, 0, Vertices.Length, Indices, 0, Indices.Length / 3);
-        }
-    }
-
-    public class WorldTerrain
-    {
-        public struct VertexTextures
-        {
-            public Vector3 Position;
-            public Vector3 Normal;
-            public Vector4 TextureCoordinate;
-            public Vector4 TetxureWeights;
-
-            public static int Size = (3 + 3 + 4 + 4) * sizeof(float);
-
-            public static VertexElement[] VertexElements = new[]
-            {
                 new VertexElement(0, VertexElementFormat.Vector3, VertexElementUsage.Position, 0),
                 new VertexElement(sizeof(float)*3, VertexElementFormat.Vector3, VertexElementUsage.TextureCoordinate, 0),
                 new VertexElement(sizeof(float)*6, VertexElementFormat.Vector4, VertexElementUsage.TextureCoordinate, 1),
                 new VertexElement(sizeof(float)*10, VertexElementFormat.Vector4, VertexElementUsage.TextureCoordinate, 2)
             };
-        }
+    }
 
+    public class WorldTerrain
+    {
         public int Width { get; set; }
         public int Height { get; set; }
 
@@ -155,7 +58,6 @@ namespace Assignment2.Models
             InitNormal();
             BasicEffect = new BasicEffect(graphicsDevice);
         }
-
 
         private void SetHeights()
         {
@@ -224,7 +126,7 @@ namespace Assignment2.Models
                 for (int x = 0; x < Width - 1; x++)
                 {
                     // create double triangles
-                    Indices[number] = x + (y + 1) * Width;      // up left
+                    Indices[number] = x + (y + 1) * Width;          // up left
                     Indices[number + 1] = x + y * Width + 1;        // down right
                     Indices[number + 2] = x + y * Width;            // down left
                     Indices[number + 3] = x + (y + 1) * Width;      // up left
@@ -277,7 +179,6 @@ namespace Assignment2.Models
                 pass.Apply();
                 graphicsDevice.DrawUserIndexedPrimitives(PrimitiveType.TriangleList, vertices, 0, vertices.Length, Indices, 0, Indices.Length / 3, this.vertexDeclaration);
             }
-            
         }
     }
 }

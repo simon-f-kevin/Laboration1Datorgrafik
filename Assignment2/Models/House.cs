@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace Assignment2.Models
 {
-    class House
+    public class House
     {
+
     }
 }
