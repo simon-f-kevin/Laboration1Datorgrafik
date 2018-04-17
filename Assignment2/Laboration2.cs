@@ -1,7 +1,13 @@
 ﻿using Assignment2.Models;
+using Assignment2.Systems;
+using Game_Engine.Components;
+using Game_Engine.Managers;
+using Game_Engine.Systems;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System;
+using System.Collections.Generic;
 
 namespace Assignment2
 {
@@ -15,12 +21,15 @@ namespace Assignment2
 
         Texture2D mapTexture;
         Texture2D mapTextureImage;
+        Texture2D houseTexture;
         Model playerModel;
         Model treeModel;
         Model houseModel;
 
-        World world;
         WorldTerrain worldTerrain;
+        CameraSystem cameraSystem;
+        WorldDrawSystem worldDrawSystem;
+        WorldObjectsDrawSystem worldObjectsDrawSystem;
 
         public Laboration2()
         {
@@ -37,7 +46,9 @@ namespace Assignment2
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+            cameraSystem = new CameraSystem(this.GraphicsDevice);
 
+            SystemManager.Instance.addToUpdateableQueue(cameraSystem);
             base.Initialize();
         }
 
@@ -51,10 +62,37 @@ namespace Assignment2
             spriteBatch = new SpriteBatch(GraphicsDevice);
             mapTexture = Content.Load<Texture2D>("US_Canyon");
             mapTextureImage = Content.Load<Texture2D>("grass");
+            houseModel = Content.Load<Model>("farmhouse_obj");
+            houseTexture = Content.Load<Texture2D>("farmhouse-texture");
 
-            world = new World(this.GraphicsDevice, mapTexture, mapTextureImage);
-            worldTerrain = new WorldTerrain(GraphicsDevice, mapTexture, new Texture2D[4] { mapTextureImage, mapTextureImage, mapTextureImage, mapTextureImage });
-            // TODO: use this.Content to load your game content here
+            worldTerrain = new WorldTerrain(GraphicsDevice, mapTexture,
+                new Texture2D[4] { mapTextureImage, mapTextureImage, mapTextureImage, mapTextureImage });
+
+            List<House> houses = CreateHouses(houseModel, 1);
+
+            //systems
+            worldDrawSystem = new WorldDrawSystem(worldTerrain, GraphicsDevice);
+            worldObjectsDrawSystem = new WorldObjectsDrawSystem();
+            worldObjectsDrawSystem.Houses = houses;
+            SystemManager.Instance.addToDrawableQueue(worldDrawSystem, worldObjectsDrawSystem);
+
+            //Create components
+            int id = 1;
+            var view = Matrix.CreateLookAt(new Vector3(200, 0, 20), new Vector3(0, 0, 0), Vector3.Up);
+            var projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver2, GraphicsDevice.Viewport.AspectRatio, 0.1f, 1000f);
+            CameraComponent cameraComponent = new CameraComponent(id,view,  projection, false);
+            ComponentManager.Instance.AddComponent(cameraComponent);
+        }
+
+        private List<House> CreateHouses(Model houseModel, int nModels)
+        {
+            List<House> houses = new List<House>();
+            for(int i = 0; i < nModels; i++)
+            {
+                var house = new House(houseModel, new Vector3(100, 0, 20), houseTexture);
+                houses.Add(house);
+            }
+            return houses;
         }
 
         /// <summary>
@@ -77,7 +115,7 @@ namespace Assignment2
                 Exit();
 
             // TODO: Add your update logic here
-
+            SystemManager.Instance.Update(gameTime);
             base.Update(gameTime);
         }
 
@@ -89,19 +127,8 @@ namespace Assignment2
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            // TODO: Add your drawing code here
-            //world.BasicEffect.View = Matrix.CreateLookAt(new Vector3(0, 0, 20), new Vector3(0, 0, 0), Vector3.Up); 
-            //world.BasicEffect.Projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver2, GraphicsDevice.Viewport.AspectRatio, 0.1f, 1000f); 
-            //world.BasicEffect.World = Matrix.CreateTranslation(new Vector3(0, -100, 256)); 
-
-            //foreach (EffectPass pass in world.BasicEffect.CurrentTechnique.Passes)
-            //{
-            //    pass.Apply();
-            //    world.Draw();
-            //}
-            worldTerrain.BasicEffect.View = Matrix.CreateLookAt(new Vector3(0, 0, 20), new Vector3(0, 0, 0), Vector3.Up);
-            worldTerrain.BasicEffect.Projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver2, GraphicsDevice.Viewport.AspectRatio, 0.1f, 1000f); 
-            worldTerrain.Draw();
+            
+            SystemManager.Instance.Draw();
 
             base.Draw(gameTime);
         }

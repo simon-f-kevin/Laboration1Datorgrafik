@@ -164,7 +164,6 @@ namespace Assignment2.Models
 
         public void Draw()
         {
-            //BasicEffect.CurrentTechnique = BasicEffect.CurrentTechnique.;
             BasicEffect.World = Matrix.CreateTranslation(new Vector3(-100, -100, 300));
             BasicEffect.Texture = textures[0];
             BasicEffect.TextureEnabled = true;
