@@ -15,7 +15,8 @@ namespace Assignment2.Models
         public House(Model houseModel, Vector3 pos, Texture2D texture)
         {
             model = houseModel;
-            model.Bones[0].Transform = Matrix.CreateTranslation(pos);
+            //model.Bones[0].Transform = Matrix.CreateTranslation(pos);
+            worldMatrix = Matrix.CreateTranslation(pos);
             this.texture = texture;
         }
 
@@ -25,7 +26,7 @@ namespace Assignment2.Models
             {
                 foreach (BasicEffect effect in mesh.Effects)
                 {
-                    effect.World = model.Bones[0].Transform;
+                    effect.World = worldMatrix;/*model.Bones[0].Transform;*/
                     effect.View = view;
                     effect.Projection = projection;
 

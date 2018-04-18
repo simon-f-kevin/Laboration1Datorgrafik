@@ -70,7 +70,7 @@ namespace Assignment2
             worldTerrain = new WorldTerrain(GraphicsDevice, mapTexture,
                 new Texture2D[4] { mapTextureImage, mapTextureImage, mapTextureImage, mapTextureImage }, new Vector3(0,0,0));
 
-            List<House> houses = CreateHouses(houseModel, 1);
+            List<House> houses = CreateHouses(houseModel, 3);
 
             //systems
             worldDrawSystem = new WorldDrawSystem(worldTerrain, GraphicsDevice);
@@ -104,7 +104,7 @@ namespace Assignment2
             List<Vector2> positions = new List<Vector2>();
             for (int i = 0; i < nPositions; i++)
             {
-                positions.Add(new Vector2(0, heightmapData[i, i + 1]));
+                positions.Add(new Vector2(houseTexture.Width / 100 + (i * 20), heightmapData[i, i]));
             }
 
              return positions;
