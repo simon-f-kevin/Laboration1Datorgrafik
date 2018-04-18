@@ -22,6 +22,7 @@ namespace Assignment2
         Texture2D mapTexture;
         Texture2D mapTextureImage;
         Texture2D houseTexture;
+        Texture2D treeTexture;
         Model playerModel;
         Model treeModel;
         Model houseModel;
@@ -31,7 +32,7 @@ namespace Assignment2
         WorldDrawSystem worldDrawSystem;
         WorldObjectsDrawSystem worldObjectsDrawSystem;
 
-        List<Vector2> modelPositions;
+        List<Vector3> modelPositions;
 
         public Laboration2()
         {
@@ -66,24 +67,42 @@ namespace Assignment2
             mapTextureImage = Content.Load<Texture2D>("grass");
             houseModel = Content.Load<Model>("farmhouse_obj");
             houseTexture = Content.Load<Texture2D>("farmhouse-texture");
+            treeModel = Content.Load<Model>("lowpolytree");
+            treeTexture = Content.Load<Texture2D>("Tree");
 
             worldTerrain = new WorldTerrain(GraphicsDevice, mapTexture,
                 new Texture2D[4] { mapTextureImage, mapTextureImage, mapTextureImage, mapTextureImage }, new Vector3(0,0,0));
 
-            List<House> houses = CreateHouses(houseModel, 3);
+            List<House> houses = CreateHouses(houseModel, 100);
+            List<Tree> trees = CreateTrees(houseModel, 1);
 
             //systems
             worldDrawSystem = new WorldDrawSystem(worldTerrain, GraphicsDevice);
             worldObjectsDrawSystem = new WorldObjectsDrawSystem();
             worldObjectsDrawSystem.Houses = houses;
+            //worldObjectsDrawSystem.Trees = trees;
+
             SystemManager.Instance.addToDrawableQueue(worldDrawSystem, worldObjectsDrawSystem);
 
             //Create engine components
             int id = 1;
-            var view = Matrix.CreateLookAt(new Vector3(100, 50, 10), new Vector3(0, 0, 0), Vector3.Up);
+            var view = Matrix.CreateLookAt(new Vector3(100, 0, 10), new Vector3(0, 0, 0), Vector3.Up);
             var projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver2, GraphicsDevice.Viewport.AspectRatio, 0.1f, 1000f);
             CameraComponent cameraComponent = new CameraComponent(id,view,  projection, false);
             ComponentManager.Instance.AddComponent(cameraComponent);
+        }
+
+        private List<Tree> CreateTrees(Model treeModel, int nModels)
+        {
+            List<Tree> trees = new List<Tree>();
+            var heightmapData = worldTerrain.GetHeightmapData();
+            modelPositions = GeneratePositions(heightmapData, nModels);
+            for (int i = 0; i < nModels; i++)
+            {
+                var house = new Tree(treeModel, modelPositions[i], treeTexture);
+                trees.Add(house);
+            }
+            return trees;
         }
 
         private List<House> CreateHouses(Model houseModel, int nModels)
@@ -93,18 +112,25 @@ namespace Assignment2
             modelPositions = GeneratePositions(heightmapData, nModels);
             for(int i = 0; i < nModels; i++)
             {
-                var house = new House(houseModel, new Vector3(modelPositions[i], 0), houseTexture);
+                var house = new House(houseModel, modelPositions[i], houseTexture);
                 houses.Add(house);
             }
             return houses;
         }
 
-        private List<Vector2> GeneratePositions(float[,] heightmapData, int nPositions)
+        private List<Vector3> GeneratePositions(float[,] heightmapData, int nPositions)
         {
-            List<Vector2> positions = new List<Vector2>();
+            List<Vector3> positions = new List<Vector3>();
+
+            Random rnd = new Random();
+            int x = 0;
+            int z = 0;
             for (int i = 0; i < nPositions; i++)
             {
-                positions.Add(new Vector2(houseTexture.Width / 100 + (i * 20), heightmapData[i, i]));
+                x += 10;
+                z += 10;
+                positions.Add(new Vector3(x, heightmapData[Math.Abs(x), Math.Abs(z)], z-150));
+                Console.WriteLine(x.ToString() + " " + z.ToString());
             }
 
              return positions;

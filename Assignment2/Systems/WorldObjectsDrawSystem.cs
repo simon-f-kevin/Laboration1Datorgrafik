@@ -32,6 +32,10 @@ namespace Assignment2.Systems
                 {
                     house.Draw(cameraComponent.view, cameraComponent.projection);
                 }
+                //foreach (var tree in Trees)
+                //{
+                //    tree.Draw(cameraComponent.view, cameraComponent.projection);
+                //}
             }
             
         }

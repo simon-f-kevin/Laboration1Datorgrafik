@@ -30,12 +30,13 @@ namespace Assignment2.Models
                     effect.Projection = projection;
 
                     effect.EnableDefaultLighting();
-                    effect.LightingEnabled = true;
+                    effect.LightingEnabled = false;
                     effect.Texture = texture;
                     effect.TextureEnabled = true;
 
-                    mesh.Draw();
+                    
                 }
+                mesh.Draw();
             }
         }
     }
