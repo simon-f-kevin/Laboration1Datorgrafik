@@ -64,8 +64,8 @@ namespace Assignment2
             spriteBatch = new SpriteBatch(GraphicsDevice);
             mapTexture = Content.Load<Texture2D>("US_Canyon");
             mapTextureImage = Content.Load<Texture2D>("grass");
-            houseModel = Content.Load<Model>("farmhouse_obj");
-            houseTexture = Content.Load<Texture2D>("farmhouse-texture");
+            houseModel = Content.Load<Model>("r/trees");
+            houseTexture = Content.Load<Texture2D>("TreeTexture");
 
             worldTerrain = new WorldTerrain(GraphicsDevice, mapTexture,
                 new Texture2D[4] { mapTextureImage, mapTextureImage, mapTextureImage, mapTextureImage }, new Vector3(0,0,0));
