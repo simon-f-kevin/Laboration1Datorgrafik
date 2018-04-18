@@ -8,9 +8,8 @@ using System.Threading.Tasks;
 
 namespace Assignment2.Models
 {
-    public class Tree
+    public class Tree : AbstractModel, IModel
     {
-        private Model model;
         private Texture2D texture;
 
         public Tree(Model treeModel, Vector3 pos, Texture2D texture)

@@ -31,25 +31,27 @@ namespace Assignment2.Models
         public int Width { get; set; }
         public int Height { get; set; }
 
+        public int minHeight;
+        public int maxHeight;
+
         public BasicEffect BasicEffect;
+
         private Texture2D HeightMap;
         private Texture2D[] textures;
-
         private float[,] heightmapData;
-        private int minHeight;
-        private int maxHeight;
         private VertexTextures[] vertices;
         private int[] Indices;
         private VertexDeclaration vertexDeclaration;
-
-        private Matrix worldMatrix;
+        //private Matrix worldMatrix;
         private GraphicsDevice graphicsDevice;
+        private Vector3 worldPosition;
 
-        public WorldTerrain(GraphicsDevice device, Texture2D heightMap, Texture2D[] textures)
+        public WorldTerrain(GraphicsDevice device, Texture2D heightMap, Texture2D[] textures, Vector3 worldPosition)
         {
             graphicsDevice = device;
             HeightMap = heightMap;
             this.textures = textures;
+            this.worldPosition = worldPosition;
             Width = HeightMap.Width;
             Height = HeightMap.Height;
             SetHeights();
@@ -57,6 +59,11 @@ namespace Assignment2.Models
             SetIndices();
             InitNormal();
             BasicEffect = new BasicEffect(graphicsDevice);
+        }
+
+        public float[,] GetHeightmapData()
+        {
+            return heightmapData;
         }
 
         private void SetHeights()
@@ -164,7 +171,7 @@ namespace Assignment2.Models
 
         public void Draw()
         {
-            BasicEffect.World = Matrix.CreateTranslation(new Vector3(-100, -100, 300));
+            BasicEffect.World = Matrix.CreateTranslation(worldPosition);
             BasicEffect.Texture = textures[0];
             BasicEffect.TextureEnabled = true;
 

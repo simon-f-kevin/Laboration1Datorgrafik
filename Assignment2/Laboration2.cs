@@ -31,6 +31,8 @@ namespace Assignment2
         WorldDrawSystem worldDrawSystem;
         WorldObjectsDrawSystem worldObjectsDrawSystem;
 
+        List<Vector2> modelPositions;
+
         public Laboration2()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -66,7 +68,7 @@ namespace Assignment2
             houseTexture = Content.Load<Texture2D>("farmhouse-texture");
 
             worldTerrain = new WorldTerrain(GraphicsDevice, mapTexture,
-                new Texture2D[4] { mapTextureImage, mapTextureImage, mapTextureImage, mapTextureImage });
+                new Texture2D[4] { mapTextureImage, mapTextureImage, mapTextureImage, mapTextureImage }, new Vector3(0,0,0));
 
             List<House> houses = CreateHouses(houseModel, 1);
 
@@ -76,9 +78,9 @@ namespace Assignment2
             worldObjectsDrawSystem.Houses = houses;
             SystemManager.Instance.addToDrawableQueue(worldDrawSystem, worldObjectsDrawSystem);
 
-            //Create components
+            //Create engine components
             int id = 1;
-            var view = Matrix.CreateLookAt(new Vector3(200, 0, 20), new Vector3(0, 0, 0), Vector3.Up);
+            var view = Matrix.CreateLookAt(new Vector3(100, 50, 10), new Vector3(0, 0, 0), Vector3.Up);
             var projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver2, GraphicsDevice.Viewport.AspectRatio, 0.1f, 1000f);
             CameraComponent cameraComponent = new CameraComponent(id,view,  projection, false);
             ComponentManager.Instance.AddComponent(cameraComponent);
@@ -87,12 +89,25 @@ namespace Assignment2
         private List<House> CreateHouses(Model houseModel, int nModels)
         {
             List<House> houses = new List<House>();
+            var heightmapData = worldTerrain.GetHeightmapData();
+            modelPositions = GeneratePositions(heightmapData, nModels);
             for(int i = 0; i < nModels; i++)
             {
-                var house = new House(houseModel, new Vector3(100, 0, 20), houseTexture);
+                var house = new House(houseModel, new Vector3(modelPositions[i], 0), houseTexture);
                 houses.Add(house);
             }
             return houses;
+        }
+
+        private List<Vector2> GeneratePositions(float[,] heightmapData, int nPositions)
+        {
+            List<Vector2> positions = new List<Vector2>();
+            for (int i = 0; i < nPositions; i++)
+            {
+                positions.Add(new Vector2(0, heightmapData[i, i + 1]));
+            }
+
+             return positions;
         }
 
         /// <summary>
