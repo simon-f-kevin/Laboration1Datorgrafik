@@ -6,6 +6,7 @@ using Game_Engine.Systems;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using ModelDemo;
 using System;
 using System.Collections.Generic;
 
@@ -31,6 +32,9 @@ namespace Assignment2
         CameraSystem cameraSystem;
         WorldDrawSystem worldDrawSystem;
         WorldObjectsDrawSystem worldObjectsDrawSystem;
+
+        RobotArm _arm;
+        BasicEffect _effect;
 
         List<Vector3> modelPositions;
 
@@ -61,6 +65,15 @@ namespace Assignment2
         /// </summary>
         protected override void LoadContent()
         {
+
+            _arm = new RobotArm(GraphicsDevice);
+            _effect = new BasicEffect(GraphicsDevice);
+            _effect.VertexColorEnabled = true;
+
+            _effect.Projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver4, 16 / 9f, 0.01f, 1000f);
+            _effect.View = Matrix.CreateLookAt(new Vector3(10f, 10f, 10f), new Vector3(0, 0, 0), Vector3.Up);
+
+
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
             mapTexture = Content.Load<Texture2D>("US_Canyon");
@@ -156,6 +169,8 @@ namespace Assignment2
                 Exit();
 
             // TODO: Add your update logic here
+            _arm.Update(gameTime);
+
             SystemManager.Instance.Update(gameTime);
             base.Update(gameTime);
         }
@@ -170,6 +185,7 @@ namespace Assignment2
 
             
             SystemManager.Instance.Draw();
+            _arm.Draw(_effect, Matrix.Identity);
 
             base.Draw(gameTime);
         }

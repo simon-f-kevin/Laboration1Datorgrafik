@@ -41,7 +41,10 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Robot\CuboidMesh.cs" />
+    <Compile Include="Robot\IGameObject.cs" />
     <Compile Include="Laboration2.cs" />
+    <Compile Include="Robot\LowerArm.cs" />
     <Compile Include="Models\AbstractModel.cs" />
     <Compile Include="Models\House.cs" />
     <Compile Include="Models\IModel.cs" />
@@ -50,10 +53,12 @@
     <Compile Include="Models\WorldTerrain.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Robot\RobotArm.cs" />
     <Compile Include="Systems\PlayerRenderSystem.cs" />
     <Compile Include="Systems\TerrainCollisionDetectionSystem.cs" />
     <Compile Include="Systems\WorldDrawSystem.cs" />
     <Compile Include="Systems\WorldObjectsDrawSystem.cs" />
+    <Compile Include="Robot\UpperArm.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MonoGame.Framework">
