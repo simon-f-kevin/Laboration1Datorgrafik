@@ -95,7 +95,17 @@ namespace Assignment2
             worldObjectsDrawSystem.Houses = houses;
             //worldObjectsDrawSystem.Trees = trees;
 
+
             SystemManager.Instance.addToDrawableQueue(worldDrawSystem, worldObjectsDrawSystem);
+
+            //RobotSystem and components 
+            /*
+            RobotArmSystem robotArmSystem = new RobotArmSystem();
+            SystemManager.Instance.addToDrawableQueue(robotArmSystem);
+            SystemManager.Instance.addToUpdateableQueue(robotArmSystem);
+            CreateRobotArm(2);
+            */
+
 
             //Create engine components
             int id = 1;
@@ -103,6 +113,18 @@ namespace Assignment2
             var projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver2, GraphicsDevice.Viewport.AspectRatio, 0.1f, 1000f);
             CameraComponent cameraComponent = new CameraComponent(id,view,  projection, false);
             ComponentManager.Instance.AddComponent(cameraComponent);
+
+        }
+
+        private void CreateRobotArm(int entityId)
+        {
+            RobotArmComponent robotArmComponent = new RobotArmComponent(entityId);
+            LowerArmComponent lowerArmComponent = new LowerArmComponent(entityId);
+            CuboidMeshComponent cuboidMeshComponent = new CuboidMeshComponent(entityId, GraphicsDevice, 2, 1, 2, _effect);
+
+            ComponentManager.Instance.AddComponent(robotArmComponent);
+            ComponentManager.Instance.AddComponent(lowerArmComponent);
+            ComponentManager.Instance.AddComponent(cuboidMeshComponent);
         }
 
         private List<Tree> CreateTrees(Model treeModel, int nModels)

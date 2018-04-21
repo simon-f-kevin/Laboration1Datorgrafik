@@ -11,7 +11,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace Game_Engine.Systems
 {
-    class RobotArmSystem : IUpdateableSystem, IDrawableSystem
+    public class RobotArmSystem : IUpdateableSystem, IDrawableSystem
     {
         public void Update(GameTime gameTime)
         {
@@ -66,7 +66,7 @@ namespace Game_Engine.Systems
                 CMC.effect.World = CMC.World * world;
                 CMC.effect.CurrentTechnique.Passes[0].Apply();
 
-                CMC.GraphicsDevice.SetVertexBuffer(VertexBuffer);
+                CMC.GraphicsDevice.SetVertexBuffer(CMC.VertexBuffer);
                 CMC.GraphicsDevice.DrawPrimitives(PrimitiveType.TriangleList, 0, 36);
 
                 world *= CMC.World;
@@ -75,7 +75,7 @@ namespace Game_Engine.Systems
                 CMC.effect.World = CMC.World * world;
                 CMC.effect.CurrentTechnique.Passes[0].Apply();
 
-                CMC.GraphicsDevice.SetVertexBuffer(VertexBuffer);
+                CMC.GraphicsDevice.SetVertexBuffer(CMC.VertexBuffer);
                 CMC.GraphicsDevice.DrawPrimitives(PrimitiveType.TriangleList, 0, 36);
             }
 
