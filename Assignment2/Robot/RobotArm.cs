@@ -24,10 +24,17 @@ namespace ModelDemo
         public override void Update(GameTime gameTime)
         {
             if (Keyboard.GetState().IsKeyDown(Keys.Left))
+            {
                 _rotation = new Vector3(_rotation.X + 0.01f, _rotation.Y, _rotation.Z);
+                _position.X -= 0.01f;
+            }
 
             if (Keyboard.GetState().IsKeyDown(Keys.Right))
+            {
                 _rotation = new Vector3(_rotation.X - 0.01f, _rotation.Y, _rotation.Z);
+                _position.X += 0.01f;
+            }
+                
 
             World = Matrix.Identity *
                 Matrix.CreateFromQuaternion(Quaternion.CreateFromYawPitchRoll(_rotation.X, _rotation.Y, _rotation.Z)) *
