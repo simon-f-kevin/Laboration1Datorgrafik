@@ -78,24 +78,16 @@ namespace Assignment2
             worldTerrain = new WorldTerrain(GraphicsDevice, mapTexture,
                 new Texture2D[4] { mapTextureImage, mapTextureImage, mapTextureImage, mapTextureImage }, new Vector3(0,0,0));
 
-            List<House> houses = CreateHouses(houseModel, 100);
+            List<House> houses = CreateHouses(houseModel, 99);
             List<Tree> trees = CreateTrees(houseModel, 1);
 
             //systems
             worldDrawSystem = new WorldDrawSystem(worldTerrain, GraphicsDevice);
             worldObjectsDrawSystem = new WorldObjectsDrawSystem();
             worldObjectsDrawSystem.Houses = houses;
-            //worldObjectsDrawSystem.Trees = trees;
+            worldObjectsDrawSystem.Trees = trees;
 
             SystemManager.Instance.addToDrawableQueue(worldDrawSystem, worldObjectsDrawSystem);
-
-            //RobotSystem and components 
-            /*
-            RobotArmSystem robotArmSystem = new RobotArmSystem();
-            SystemManager.Instance.addToDrawableQueue(robotArmSystem);
-            SystemManager.Instance.addToUpdateableQueue(robotArmSystem);
-            CreateRobotArm(2);
-            */
 
 
             //Create engine components
@@ -133,11 +125,12 @@ namespace Assignment2
         {
             List<Tree> trees = new List<Tree>();
             var heightmapData = worldTerrain.GetHeightmapData();
-            modelPositions = GeneratePositions(heightmapData, nModels);
+            //modelPositions = GeneratePositions(heightmapData, nModels);
+            modelPositions[0] = new Vector3(0, heightmapData[0,0], 0);
             for (int i = 0; i < nModels; i++)
             {
-                var house = new Tree(treeModel, modelPositions[i], treeTexture);
-                trees.Add(house);
+                var tree = new Tree(houseModel, modelPositions[i], treeTexture);
+                trees.Add(tree);
             }
             return trees;
         }
@@ -166,7 +159,7 @@ namespace Assignment2
             {
                 x += 10;
                 z += 10;
-                positions.Add(new Vector3(x, heightmapData[Math.Abs(x), Math.Abs(z)] + 10, z-150));
+                positions.Add(new Vector3(x, heightmapData[(x),(z)] , z-800));
                 Console.WriteLine(x.ToString() + " " + z.ToString());
             }
 

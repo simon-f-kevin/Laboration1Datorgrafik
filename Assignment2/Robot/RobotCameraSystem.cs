@@ -30,8 +30,8 @@ namespace Assignment2.Robot
 
                     //Console.WriteLine(cameraPosition);
 
-                    Vector3 cameraPosition = robotArm._position - new Vector3(0,0,100);// model.model.Bones[0].Transform.Translation + (model.model.Bones[0].Transform.Backward * 20f);
-                    Vector3 cameraLookAt = robotArm._position; //model.model.Bones[0].Transform.Translation + (model.model.Bones[0].Transform.Forward * 20f);
+                    Vector3 cameraPosition = robotArm.World.Translation + robotArm.World.Backward * 20f;//model.model.Bones[0].Transform.Translation + (model.model.Bones[0].Transform.Backward * 20f);
+                    Vector3 cameraLookAt = robotArm.World.Translation + robotArm.World.Forward * 20f; //model.model.Bones[0].Transform.Translation + (model.model.Bones[0].Transform.Forward * 20f);
 
                     cameraComp.view = Matrix.CreateLookAt(cameraPosition, cameraLookAt, Vector3.Up);
                 }

@@ -21,22 +21,21 @@ namespace Assignment2.Models
 
         public void Draw(Matrix view, Matrix projection)
         {
-            var boneTransformations = new Matrix[model.Bones.Count];
             foreach (ModelMesh mesh in model.Meshes)
             {
                 foreach (BasicEffect effect in mesh.Effects)
                 {
-                    effect.World = model.Bones[0].Transform;
+                    effect.World = worldMatrix;
+                    effect.View = view;
                     effect.Projection = projection;
 
                     effect.EnableDefaultLighting();
-                    effect.LightingEnabled = false;
+                    effect.LightingEnabled = true;
                     effect.Texture = texture;
                     effect.TextureEnabled = true;
 
-                    
+                    mesh.Draw();
                 }
-                mesh.Draw();
             }
         }
     }

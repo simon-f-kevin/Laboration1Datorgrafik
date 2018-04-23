@@ -29,26 +29,26 @@ namespace Robot
 
         public override void Update(GameTime gameTime)
         {
-            if (Keyboard.GetState().IsKeyDown(Keys.Left))
+            if (Keyboard.GetState().IsKeyDown(Keys.Right))
             {
                 _rotation = new Vector3(_rotation.X + 0.01f, _rotation.Y, _rotation.Z);
                 _position.X -= movementSpeed;
             }
 
-            if (Keyboard.GetState().IsKeyDown(Keys.Right))
+            if (Keyboard.GetState().IsKeyDown(Keys.Left))
             {
-                _rotation = new Vector3(_rotation.X - 0.01f, _rotation.Y, _rotation.Z);
+                //_rotation = new Vector3(_rotation.X - 0.01f, _rotation.Y, _rotation.Z);
                 _position.X += movementSpeed;
             }
             if (Keyboard.GetState().IsKeyDown(Keys.Up))
             {
-                _rotation = new Vector3(_rotation.X + 0.01f, _rotation.Y, _rotation.Z);
+                //_rotation = new Vector3(_rotation.X + 0.01f, _rotation.Y, _rotation.Z);
                 _position.Z += movementSpeed;
             }
 
             if (Keyboard.GetState().IsKeyDown(Keys.Down))
             {
-                _rotation = new Vector3(_rotation.X - 0.01f, _rotation.Y, _rotation.Z);
+                //_rotation = new Vector3(_rotation.X - 0.01f, _rotation.Y, _rotation.Z);
                 _position.Z -= movementSpeed;
             }
 
@@ -65,8 +65,8 @@ namespace Robot
 
         private void SetYPosition()
         {
-            var yPos = heightMap[MathHelper.Clamp(0,(int)_position.X, heightMap.Length/2), MathHelper.Clamp(0,(int)_position.Y, heightMap.Length/2)];
-            _position.Y = yPos;
+            var yPos = heightMap[MathHelper.Clamp((int)_position.X,0, heightMap.Length/2), MathHelper.Clamp((int)_position.Y,0, heightMap.Length/2)];
+            _position.Y = yPos + 10;
         }
 
         public override void Draw(BasicEffect effect, Matrix world)
