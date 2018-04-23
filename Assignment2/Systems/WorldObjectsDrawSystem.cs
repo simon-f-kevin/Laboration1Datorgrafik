@@ -13,8 +13,7 @@ namespace Assignment2.Systems
 
     public class WorldObjectsDrawSystem : IDrawableSystem
     {
-        public List<House> Houses { get; set; }
-        public List<Tree> Trees { get; set; }
+        public List<House> Objects { get; set; }
 
         private Dictionary<int, EntityComponent> cameras;
 
@@ -28,13 +27,9 @@ namespace Assignment2.Systems
             cameras = ComponentManager.Instance.getDictionary<CameraComponent>();
             foreach(CameraComponent cameraComponent in cameras.Values)
             {
-                foreach (var house in Houses)
+                foreach (var obj in Objects)
                 {
-                    house.Draw(cameraComponent.view, cameraComponent.projection);
-                }
-                foreach (var tree in Trees)
-                {
-                    tree.Draw(cameraComponent.view, cameraComponent.projection);
+                    obj.Draw(cameraComponent.view, cameraComponent.projection);
                 }
             }
             

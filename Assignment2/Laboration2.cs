@@ -72,27 +72,26 @@ namespace Assignment2
             mapTextureImage = Content.Load<Texture2D>("grass");
             houseModel = Content.Load<Model>("farmhouse_obj");
             houseTexture = Content.Load<Texture2D>("farmhouse-texture");
-            treeModel = Content.Load<Model>("lowpolytree");
+            treeModel = Content.Load<Model>("farmhouse_obj");
             treeTexture = Content.Load<Texture2D>("Tree");
 
             worldTerrain = new WorldTerrain(GraphicsDevice, mapTexture,
                 new Texture2D[4] { mapTextureImage, mapTextureImage, mapTextureImage, mapTextureImage }, new Vector3(0,0,0));
 
-            List<House> houses = CreateHouses(houseModel, 99);
-            List<Tree> trees = CreateTrees(houseModel, 1);
+            List<House> houses = CreateHouses(houseModel, 100);
+            
 
             //systems
             worldDrawSystem = new WorldDrawSystem(worldTerrain, GraphicsDevice);
             worldObjectsDrawSystem = new WorldObjectsDrawSystem();
-            worldObjectsDrawSystem.Houses = houses;
-            worldObjectsDrawSystem.Trees = trees;
+            worldObjectsDrawSystem.Objects = houses;
 
             SystemManager.Instance.addToDrawableQueue(worldDrawSystem, worldObjectsDrawSystem);
 
 
             //Create engine components
             int id = 1;
-            var view = Matrix.CreateLookAt(new Vector3(50, 50, 10), new Vector3(0, 27, 0), Vector3.Up);
+            var view = Matrix.CreateLookAt(new Vector3(100, 0, 5), new Vector3(0, 27, 0), Vector3.Up);
             var projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver2, GraphicsDevice.Viewport.AspectRatio, 0.1f, 1000f);
             CameraComponent cameraComponent = new CameraComponent(id,view,  projection, true);
             ComponentManager.Instance.AddComponent(cameraComponent);
@@ -121,30 +120,18 @@ namespace Assignment2
             ComponentManager.Instance.AddComponent(cuboidMeshComponent);
         }
 
-        private List<Tree> CreateTrees(Model treeModel, int nModels)
-        {
-            List<Tree> trees = new List<Tree>();
-            var heightmapData = worldTerrain.GetHeightmapData();
-            //modelPositions = GeneratePositions(heightmapData, nModels);
-            modelPositions[0] = new Vector3(0, heightmapData[0,0], 0);
-            for (int i = 0; i < nModels; i++)
-            {
-                var tree = new Tree(houseModel, modelPositions[i], treeTexture);
-                trees.Add(tree);
-            }
-            return trees;
-        }
-
         private List<House> CreateHouses(Model houseModel, int nModels)
         {
             List<House> houses = new List<House>();
             var heightmapData = worldTerrain.GetHeightmapData();
             modelPositions = GeneratePositions(heightmapData, nModels);
-            for(int i = 0; i < nModels; i++)
+            houses.Add(new House(houseModel, modelPositions[0], treeTexture));
+            for (int i = 1; i < nModels; i++)
             {
                 var house = new House(houseModel, modelPositions[i], houseTexture);
                 houses.Add(house);
             }
+            
             return houses;
         }
 
@@ -153,14 +140,14 @@ namespace Assignment2
             List<Vector3> positions = new List<Vector3>();
 
             Random rnd = new Random();
-            int x = 0;
-            int z = 0;
+            int x = -10;
+            int z = -10;
             for (int i = 0; i < nPositions; i++)
             {
                 x += 10;
                 z += 10;
-                positions.Add(new Vector3(x, heightmapData[(x),(z)] , z-800));
-                Console.WriteLine(x.ToString() + " " + z.ToString());
+                positions.Add(new Vector3(x, heightmapData[Math.Abs(x) , Math.Abs(z)] + (houseModel.Meshes[0].BoundingSphere.Radius), z));
+                //Console.WriteLine(x.ToString() + " " + z.ToString());
             }
 
              return positions;
@@ -203,6 +190,7 @@ namespace Assignment2
             
             SystemManager.Instance.Draw();
             _arm.Draw(_effect, Matrix.Identity);
+            Console.WriteLine(_arm._position.ToString());
 
             base.Draw(gameTime);
         }

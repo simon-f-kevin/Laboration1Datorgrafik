@@ -29,24 +29,24 @@ namespace Robot
 
         public override void Update(GameTime gameTime)
         {
-            if (Keyboard.GetState().IsKeyDown(Keys.Right))
+            if (Keyboard.GetState().IsKeyDown(Keys.Left))
             {
-                _rotation = new Vector3(_rotation.X + 0.01f, _rotation.Y, _rotation.Z);
+                //_rotation = new Vector3(_rotation.X + 0.01f, _rotation.Y, _rotation.Z);
                 _position.X -= movementSpeed;
             }
 
-            if (Keyboard.GetState().IsKeyDown(Keys.Left))
+            if (Keyboard.GetState().IsKeyDown(Keys.Right))
             {
                 //_rotation = new Vector3(_rotation.X - 0.01f, _rotation.Y, _rotation.Z);
                 _position.X += movementSpeed;
             }
-            if (Keyboard.GetState().IsKeyDown(Keys.Up))
+            if (Keyboard.GetState().IsKeyDown(Keys.Down))
             {
                 //_rotation = new Vector3(_rotation.X + 0.01f, _rotation.Y, _rotation.Z);
                 _position.Z += movementSpeed;
             }
 
-            if (Keyboard.GetState().IsKeyDown(Keys.Down))
+            if (Keyboard.GetState().IsKeyDown(Keys.Up))
             {
                 //_rotation = new Vector3(_rotation.X - 0.01f, _rotation.Y, _rotation.Z);
                 _position.Z -= movementSpeed;
@@ -65,13 +65,18 @@ namespace Robot
 
         private void SetYPosition()
         {
-            var yPos = heightMap[MathHelper.Clamp((int)_position.X,0, heightMap.Length/2), MathHelper.Clamp((int)_position.Y,0, heightMap.Length/2)];
+            //if (_position.X < 0) _position.X = 0;
+            //if (_position.X > 1080) _position.X = 1080;
+            //if (_position.Z < 0) _position.Z = 0;
+            //if (_position.Z > 1080) _position.Z = 1080;
+            var yPos = heightMap[MathHelper.Clamp((int)_position.X,0, 1080), MathHelper.Clamp((int)_position.Y,0, 1080)]; //heightMap[(int)_position.X, (int)_position.Z];
             _position.Y = yPos + 10;
         }
 
         public override void Draw(BasicEffect effect, Matrix world)
         {
             effect.World = World * world;
+            effect.View = world;
             effect.CurrentTechnique.Passes[0].Apply();
 
             GraphicsDevice.SetVertexBuffer(VertexBuffer);

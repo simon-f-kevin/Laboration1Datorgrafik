@@ -171,7 +171,7 @@ namespace Assignment2.Models
 
         public void Draw()
         {
-            BasicEffect.World = Matrix.CreateTranslation(worldPosition);
+            BasicEffect.World = Matrix.CreateTranslation(new Vector3(-0, -0, 1080));
             BasicEffect.Texture = textures[0];
             BasicEffect.TextureEnabled = true;
 
