@@ -19,9 +19,8 @@ namespace Game_Engine.Systems
             foreach(RobotArmComponent rArm in arms.Values)
             {
                 var lArm = ComponentManager.Instance.GetComponentsById<LowerArmComponent>(rArm.EntityID);
+                var uArm = ComponentManager.Instance.GetComponentsById<UpperArmComponent>(rArm.EntityID);
                 var CMC = ComponentManager.Instance.GetComponentsById<CuboidMeshComponent>(rArm.EntityID);
-
-                if (lArm == null || CMC != null) continue;
 
                 //Robot Arm
                 if (Keyboard.GetState().IsKeyDown(Keys.Left))
@@ -45,6 +44,8 @@ namespace Game_Engine.Systems
                     Matrix.CreateTranslation(lArm._position) *
                     Matrix.CreateFromQuaternion(Quaternion.CreateFromYawPitchRoll(lArm._rotation.X, lArm._rotation.Y, lArm._rotation.Z)) *
                     Matrix.CreateTranslation(lArm._jointPos);
+                //Upper arm
+
             }
         }
 

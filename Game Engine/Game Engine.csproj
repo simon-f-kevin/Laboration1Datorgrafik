@@ -55,6 +55,7 @@
     <Compile Include="Components\ModelComponent.cs" />
     <Compile Include="Components\RobotArmComponent.cs" />
     <Compile Include="Components\TransformComponent.cs" />
+    <Compile Include="Components\UpperArmComponent.cs" />
     <Compile Include="Components\VelocityComponent.cs" />
     <Compile Include="Managers\GameContentManager.cs" />
     <Compile Include="Managers\ComponentManager.cs" />
