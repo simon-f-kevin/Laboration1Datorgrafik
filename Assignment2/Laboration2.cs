@@ -1,4 +1,5 @@
 ﻿using Assignment2.Models;
+using Assignment2.Robot;
 using Assignment2.Systems;
 using Game_Engine.Components;
 using Game_Engine.Managers;
@@ -6,7 +7,7 @@ using Game_Engine.Systems;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using ModelDemo;
+using Robot;
 using System;
 using System.Collections.Generic;
 
@@ -29,7 +30,7 @@ namespace Assignment2
         Model houseModel;
 
         WorldTerrain worldTerrain;
-        CameraSystem cameraSystem;
+        RobotCameraSystem cameraSystem;
         WorldDrawSystem worldDrawSystem;
         WorldObjectsDrawSystem worldObjectsDrawSystem;
 
@@ -53,9 +54,8 @@ namespace Assignment2
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            cameraSystem = new CameraSystem(this.GraphicsDevice);
-
-            SystemManager.Instance.addToUpdateableQueue(cameraSystem);
+            //cameraSystem = new CameraSystem(this.GraphicsDevice);
+            
             base.Initialize();
         }
 
@@ -65,14 +65,6 @@ namespace Assignment2
         /// </summary>
         protected override void LoadContent()
         {
-
-            _arm = new RobotArm(GraphicsDevice);
-            _effect = new BasicEffect(GraphicsDevice);
-            _effect.VertexColorEnabled = true;
-
-            _effect.Projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver4, 16 / 9f, 0.01f, 1000f);
-            _effect.View = Matrix.CreateLookAt(new Vector3(10f, 10f, 10f), new Vector3(0, 0, 0), Vector3.Up);
-
 
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
@@ -95,7 +87,6 @@ namespace Assignment2
             worldObjectsDrawSystem.Houses = houses;
             //worldObjectsDrawSystem.Trees = trees;
 
-
             SystemManager.Instance.addToDrawableQueue(worldDrawSystem, worldObjectsDrawSystem);
 
             //RobotSystem and components 
@@ -109,11 +100,22 @@ namespace Assignment2
 
             //Create engine components
             int id = 1;
-            var view = Matrix.CreateLookAt(new Vector3(100, 0, 10), new Vector3(0, 0, 0), Vector3.Up);
+            var view = Matrix.CreateLookAt(new Vector3(50, 50, 10), new Vector3(0, 27, 0), Vector3.Up);
             var projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver2, GraphicsDevice.Viewport.AspectRatio, 0.1f, 1000f);
-            CameraComponent cameraComponent = new CameraComponent(id,view,  projection, false);
+            CameraComponent cameraComponent = new CameraComponent(id,view,  projection, true);
             ComponentManager.Instance.AddComponent(cameraComponent);
 
+            _arm = new RobotArm(GraphicsDevice);
+            _arm.GetHeightMap(worldTerrain.GetHeightmapData());
+            _effect = new BasicEffect(GraphicsDevice);
+            _effect.VertexColorEnabled = true;
+
+            _effect.Projection = cameraComponent.projection;
+            _effect.View = cameraComponent.view;
+
+            cameraSystem = new RobotCameraSystem(_arm);
+
+            SystemManager.Instance.addToUpdateableQueue(cameraSystem);
         }
 
         private void CreateRobotArm(int entityId)
@@ -164,7 +166,7 @@ namespace Assignment2
             {
                 x += 10;
                 z += 10;
-                positions.Add(new Vector3(x, heightmapData[Math.Abs(x), Math.Abs(z)], z-150));
+                positions.Add(new Vector3(x, heightmapData[Math.Abs(x), Math.Abs(z)] + 10, z-150));
                 Console.WriteLine(x.ToString() + " " + z.ToString());
             }
 

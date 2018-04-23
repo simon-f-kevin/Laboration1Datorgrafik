@@ -1,0 +1,41 @@
+﻿using Game_Engine.Components;
+using Game_Engine.Managers;
+using Game_Engine.Systems;
+using Microsoft.Xna.Framework;
+using Robot;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Assignment2.Robot
+{
+    public class RobotCameraSystem : IUpdateableSystem
+    {
+        private RobotArm robotArm;
+        public RobotCameraSystem(RobotArm robotArm)
+        {
+            this.robotArm = robotArm;
+        }
+        public void Update(GameTime gameTime)
+        {
+            var cameras = ComponentManager.Instance.getDictionary<CameraComponent>();
+            foreach (CameraComponent cameraComp in cameras.Values)
+            {
+                if (cameraComp.Follow)
+                {
+                    //ModelComponent model = ComponentManager.Instance.GetComponentsById<ModelComponent>(cameraComp.EntityID);
+                    TransformComponent transform = ComponentManager.Instance.GetComponentsById<TransformComponent>(cameraComp.EntityID);
+
+                    //Console.WriteLine(cameraPosition);
+
+                    Vector3 cameraPosition = robotArm._position - new Vector3(0,0,100);// model.model.Bones[0].Transform.Translation + (model.model.Bones[0].Transform.Backward * 20f);
+                    Vector3 cameraLookAt = robotArm._position; //model.model.Bones[0].Transform.Translation + (model.model.Bones[0].Transform.Forward * 20f);
+
+                    cameraComp.view = Matrix.CreateLookAt(cameraPosition, cameraLookAt, Vector3.Up);
+                }
+            }
+        }
+    }
+}

@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-namespace ModelDemo
+namespace Robot
 {
     class LowerArm : CuboidMesh
     {
@@ -24,11 +24,11 @@ namespace ModelDemo
 
         public override void Update(GameTime gameTime)
         {
-            if (Keyboard.GetState().IsKeyDown(Keys.Down))
-                _rotation = new Vector3(_rotation.X, _rotation.Y, _rotation.Z + 0.01f);
+            //if (Keyboard.GetState().IsKeyDown(Keys.Down))
+            //    _rotation = new Vector3(_rotation.X, _rotation.Y, _rotation.Z + 0.01f);
 
-            if (Keyboard.GetState().IsKeyDown(Keys.Up))
-                _rotation = new Vector3(_rotation.X, _rotation.Y, _rotation.Z - 0.01f);
+            //if (Keyboard.GetState().IsKeyDown(Keys.Up))
+            //    _rotation = new Vector3(_rotation.X, _rotation.Y, _rotation.Z - 0.01f);
 
             World = Matrix.Identity *
                 Matrix.CreateTranslation(_position) *

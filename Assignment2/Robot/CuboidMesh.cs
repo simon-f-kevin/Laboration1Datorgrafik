@@ -5,9 +5,9 @@ using System.Text;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 
-namespace ModelDemo
+namespace Robot
 {
-    abstract class CuboidMesh : IGameObject
+    public abstract class CuboidMesh : IGameObject
     {
         protected GraphicsDevice GraphicsDevice;
         protected VertexBuffer VertexBuffer;

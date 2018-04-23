@@ -26,7 +26,7 @@ namespace Assignment2.Models
             {
                 foreach (BasicEffect effect in mesh.Effects)
                 {
-                    effect.World = worldMatrix;/*model.Bones[0].Transform;*/
+                    effect.World = worldMatrix;
                     effect.View = view;
                     effect.Projection = projection;
 

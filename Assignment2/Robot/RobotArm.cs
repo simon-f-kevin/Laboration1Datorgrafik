@@ -6,20 +6,25 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-namespace ModelDemo
+namespace Robot
 {
-    class RobotArm : CuboidMesh
+    public class RobotArm : CuboidMesh
     {
         private List<IGameObject> _children = new List<IGameObject>();
 
         private Vector3 _rotation = Vector3.Zero;
-        private Vector3 _position = Vector3.Zero;
-        private float movementSpeed = 0.05f;
+        public Vector3 _position = Vector3.Zero;
+        private float movementSpeed = 0.5f;
+        private float[,] heightMap;
 
         public RobotArm(GraphicsDevice graphics)
             : base(graphics, 2, 1, 2)
         {
             _children.Add(new LowerArm(graphics));
+        }
+        public void GetHeightMap(float[,] heightMap)
+        {
+            this.heightMap = heightMap;
         }
 
         public override void Update(GameTime gameTime)
@@ -47,6 +52,8 @@ namespace ModelDemo
                 _position.Z -= movementSpeed;
             }
 
+            SetYPosition();
+
 
             World = Matrix.Identity *
                 Matrix.CreateFromQuaternion(Quaternion.CreateFromYawPitchRoll(_rotation.X, _rotation.Y, _rotation.Z)) *
@@ -54,6 +61,12 @@ namespace ModelDemo
 
             foreach (IGameObject go in _children)
                 go.Update(gameTime);
+        }
+
+        private void SetYPosition()
+        {
+            var yPos = heightMap[MathHelper.Clamp(0,(int)_position.X, heightMap.Length/2), MathHelper.Clamp(0,(int)_position.Y, heightMap.Length/2)];
+            _position.Y = yPos;
         }
 
         public override void Draw(BasicEffect effect, Matrix world)
