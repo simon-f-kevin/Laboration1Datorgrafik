@@ -14,6 +14,7 @@ namespace ModelDemo
 
         private Vector3 _rotation = Vector3.Zero;
         private Vector3 _position = Vector3.Zero;
+        private float movementSpeed = 0.05f;
 
         public RobotArm(GraphicsDevice graphics)
             : base(graphics, 2, 1, 2)
@@ -26,15 +27,26 @@ namespace ModelDemo
             if (Keyboard.GetState().IsKeyDown(Keys.Left))
             {
                 _rotation = new Vector3(_rotation.X + 0.01f, _rotation.Y, _rotation.Z);
-                _position.X -= 0.01f;
+                _position.X -= movementSpeed;
             }
 
             if (Keyboard.GetState().IsKeyDown(Keys.Right))
             {
                 _rotation = new Vector3(_rotation.X - 0.01f, _rotation.Y, _rotation.Z);
-                _position.X += 0.01f;
+                _position.X += movementSpeed;
             }
-                
+            if (Keyboard.GetState().IsKeyDown(Keys.Up))
+            {
+                _rotation = new Vector3(_rotation.X + 0.01f, _rotation.Y, _rotation.Z);
+                _position.Z += movementSpeed;
+            }
+
+            if (Keyboard.GetState().IsKeyDown(Keys.Down))
+            {
+                _rotation = new Vector3(_rotation.X - 0.01f, _rotation.Y, _rotation.Z);
+                _position.Z -= movementSpeed;
+            }
+
 
             World = Matrix.Identity *
                 Matrix.CreateFromQuaternion(Quaternion.CreateFromYawPitchRoll(_rotation.X, _rotation.Y, _rotation.Z)) *
