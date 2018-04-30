@@ -36,7 +36,7 @@ namespace Assignment2.Models
 
         public BasicEffect BasicEffect;
 
-        private Texture2D HeightMap;
+        private Texture2D HeightMapTexture;
         private Texture2D[] textures;
         private float[,] heightmapData;
         private VertexTextures[] vertices;
@@ -49,11 +49,11 @@ namespace Assignment2.Models
         public WorldTerrain(GraphicsDevice device, Texture2D heightMap, Texture2D[] textures, Vector3 worldPosition)
         {
             graphicsDevice = device;
-            HeightMap = heightMap;
+            HeightMapTexture = heightMap;
             this.textures = textures;
             this.worldPosition = worldPosition;
-            Width = HeightMap.Width;
-            Height = HeightMap.Height;
+            Width = HeightMapTexture.Width;
+            Height = HeightMapTexture.Height;
             SetHeights();
             SetVertices();
             SetIndices();
@@ -69,7 +69,7 @@ namespace Assignment2.Models
         private void SetHeights()
         {
             Color[] greyValues = new Color[Width * Height];
-            HeightMap.GetData(greyValues);
+            HeightMapTexture.GetData(greyValues);
             heightmapData = new float[Width, Height];
             for (int x = 0; x < Width; x++)
             {
@@ -84,7 +84,7 @@ namespace Assignment2.Models
 
         private void SetVertices()
         {
-            vertices = new VertexTextures[Width * Height];
+            vertices = new VertexTextures[Height * Width];
             float step = (maxHeight - minHeight) / 3;
 
             for (int x = 0; x < Width; x++)

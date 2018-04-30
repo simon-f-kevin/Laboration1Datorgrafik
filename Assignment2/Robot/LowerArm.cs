@@ -17,7 +17,7 @@ namespace Robot
         private Vector3 _jointPos = new Vector3(0, 0.5f, 0);
 
         public LowerArm(GraphicsDevice graphics)
-            : base(graphics, 1f, 3f, 1f)
+            : base(graphics, 2f, 6f, 2f)
         {
             _children.Add(new UpperArm(graphics));
         }

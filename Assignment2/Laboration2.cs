@@ -1,5 +1,4 @@
 ﻿using Assignment2.Models;
-using Assignment2.Robot;
 using Assignment2.Systems;
 using Game_Engine.Components;
 using Game_Engine.Managers;
@@ -30,12 +29,12 @@ namespace Assignment2
         Model houseModel;
 
         WorldTerrain worldTerrain;
-        RobotCameraSystem cameraSystem;
+        PlayerCameraSystem cameraSystem;
         WorldDrawSystem worldDrawSystem;
         WorldObjectsDrawSystem worldObjectsDrawSystem;
 
-        RobotArm _arm;
-        BasicEffect _effect;
+        BasicEffect Effect;
+        Player torso;
 
         List<Vector3> modelPositions;
 
@@ -91,20 +90,19 @@ namespace Assignment2
 
             //Create engine components
             int id = 1;
-            var view = Matrix.CreateLookAt(new Vector3(100, 0, 5), new Vector3(0, 27, 0), Vector3.Up);
+            var view = Matrix.CreateLookAt(new Vector3(200, 50, 50), new Vector3(0, 0, 0), Vector3.Up);
             var projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver2, GraphicsDevice.Viewport.AspectRatio, 0.1f, 1000f);
-            CameraComponent cameraComponent = new CameraComponent(id,view,  projection, true);
+            CameraComponent cameraComponent = new CameraComponent(id,view,  projection, false);
             ComponentManager.Instance.AddComponent(cameraComponent);
 
-            _arm = new RobotArm(GraphicsDevice);
-            _arm.GetHeightMap(worldTerrain.GetHeightmapData());
-            _effect = new BasicEffect(GraphicsDevice);
-            _effect.VertexColorEnabled = true;
+            Effect = new BasicEffect(GraphicsDevice);
+            torso = new Player(Vector3.Zero, Vector3.Zero, new Vector3(50, 50, 50), GraphicsDevice);
+            torso.HeightMap = worldTerrain.GetHeightmapData();
+            Effect.VertexColorEnabled = true;
+            Effect.Projection = cameraComponent.projection;
+            Effect.View = cameraComponent.view;
 
-            _effect.Projection = cameraComponent.projection;
-            _effect.View = cameraComponent.view;
-
-            cameraSystem = new RobotCameraSystem(_arm);
+            cameraSystem = new PlayerCameraSystem(torso);
 
             SystemManager.Instance.addToUpdateableQueue(cameraSystem);
         }
@@ -113,7 +111,7 @@ namespace Assignment2
         {
             RobotArmComponent robotArmComponent = new RobotArmComponent(entityId);
             LowerArmComponent lowerArmComponent = new LowerArmComponent(entityId);
-            CuboidMeshComponent cuboidMeshComponent = new CuboidMeshComponent(entityId, GraphicsDevice, 2, 1, 2, _effect);
+            CuboidMeshComponent cuboidMeshComponent = new CuboidMeshComponent(entityId, GraphicsDevice, 2, 1, 2, Effect);
 
             ComponentManager.Instance.AddComponent(robotArmComponent);
             ComponentManager.Instance.AddComponent(lowerArmComponent);
@@ -173,7 +171,7 @@ namespace Assignment2
                 Exit();
 
             // TODO: Add your update logic here
-            _arm.Update(gameTime);
+            torso.Update();
 
             SystemManager.Instance.Update(gameTime);
             base.Update(gameTime);
@@ -187,10 +185,10 @@ namespace Assignment2
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            
+            torso.Draw(Effect, Matrix.Identity);
             SystemManager.Instance.Draw();
-            _arm.Draw(_effect, Matrix.Identity);
-            Console.WriteLine(_arm._position.ToString());
+            
+            Console.WriteLine(torso.Position.ToString());
 
             base.Draw(gameTime);
         }

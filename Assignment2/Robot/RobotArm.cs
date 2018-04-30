@@ -13,14 +13,15 @@ namespace Robot
         private List<IGameObject> _children = new List<IGameObject>();
 
         private Vector3 _rotation = Vector3.Zero;
-        public Vector3 _position = Vector3.Zero;
+        public Vector3 _position;
         private float movementSpeed = 0.5f;
         private float[,] heightMap;
 
-        public RobotArm(GraphicsDevice graphics)
-            : base(graphics, 2, 1, 2)
+        public RobotArm(GraphicsDevice graphics, Vector3 pos)
+            : base(graphics, 4, 2, 4)
         {
             _children.Add(new LowerArm(graphics));
+            _position = pos;
         }
         public void GetHeightMap(float[,] heightMap)
         {
