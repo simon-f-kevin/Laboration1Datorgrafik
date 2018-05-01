@@ -12,7 +12,7 @@ namespace Robot
         protected GraphicsDevice GraphicsDevice;
         protected VertexBuffer VertexBuffer;
 
-        public Matrix World = Matrix.Identity;
+        protected Matrix World = Matrix.Identity;
         private float _sizeX = 1f;
         private float _sizeY = 1f;
         private float _sizeZ = 1f;

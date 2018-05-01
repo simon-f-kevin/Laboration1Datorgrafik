@@ -35,6 +35,7 @@ namespace Assignment2
 
         BasicEffect Effect;
         Player torso;
+        RobotArm robotArm;
 
         List<Vector3> modelPositions;
 
@@ -92,10 +93,14 @@ namespace Assignment2
             int id = 1;
             var view = Matrix.CreateLookAt(new Vector3(200, 50, 50), new Vector3(0, 0, 0), Vector3.Up);
             var projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver2, GraphicsDevice.Viewport.AspectRatio, 0.1f, 1000f);
-            CameraComponent cameraComponent = new CameraComponent(id,view,  projection, false);
+            CameraComponent cameraComponent = new CameraComponent(id,view,  projection, true);
             ComponentManager.Instance.AddComponent(cameraComponent);
 
             Effect = new BasicEffect(GraphicsDevice);
+
+            robotArm = new RobotArm(GraphicsDevice);
+            robotArm.GetHeightMap(worldTerrain.GetHeightmapData());
+
             torso = new Player(Vector3.Zero, Vector3.Zero, new Vector3(50, 50, 50), GraphicsDevice);
             torso.HeightMap = worldTerrain.GetHeightmapData();
             Effect.VertexColorEnabled = true;
@@ -172,7 +177,7 @@ namespace Assignment2
 
             // TODO: Add your update logic here
             torso.Update();
-
+            robotArm.Update(gameTime);
             SystemManager.Instance.Update(gameTime);
             base.Update(gameTime);
         }
@@ -184,10 +189,10 @@ namespace Assignment2
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
-
             torso.Draw(Effect, Matrix.Identity);
+            robotArm.Draw(Effect, Matrix.Identity);
             SystemManager.Instance.Draw();
-            
+
             Console.WriteLine(torso.Position.ToString());
 
             base.Draw(gameTime);
