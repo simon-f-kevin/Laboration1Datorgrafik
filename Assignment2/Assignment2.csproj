@@ -56,8 +56,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Robot\RobotArm.cs" />
     <Compile Include="Systems\PlayerCameraSystem.cs" />
-    <Compile Include="Systems\PlayerRenderSystem.cs" />
-    <Compile Include="Systems\TerrainCollisionDetectionSystem.cs" />
     <Compile Include="Systems\WorldDrawSystem.cs" />
     <Compile Include="Systems\WorldObjectsDrawSystem.cs" />
     <Compile Include="Robot\UpperArm.cs" />

@@ -35,23 +35,25 @@ namespace Assignment2.Models
         public int maxHeight;
 
         public BasicEffect BasicEffect;
+        public Matrix HeightmapWorldMatrix;
+        public float[,] heightmapData;
 
         private Texture2D HeightMapTexture;
-        private Texture2D[] textures;
-        private float[,] heightmapData;
-        private VertexTextures[] vertices;
+        private Texture2D texture;
+        private VertexPositionNormalTexture[] Vertices;
+
+        //private VertexTextures[] vertices;
         private int[] Indices;
         private VertexDeclaration vertexDeclaration;
-        //private Matrix worldMatrix;
         private GraphicsDevice graphicsDevice;
-        private Vector3 worldPosition;
+        //private Vector3 worldPosition;
 
-        public WorldTerrain(GraphicsDevice device, Texture2D heightMap, Texture2D[] textures, Vector3 worldPosition)
+        public WorldTerrain(GraphicsDevice device, Texture2D heightMap, Texture2D texture, Vector3 worldPosition)
         {
             graphicsDevice = device;
             HeightMapTexture = heightMap;
-            this.textures = textures;
-            this.worldPosition = worldPosition;
+            this.texture = texture;
+            //this.worldPosition = worldPosition;
             Width = HeightMapTexture.Width;
             Height = HeightMapTexture.Height;
             SetHeights();
@@ -81,74 +83,91 @@ namespace Assignment2.Models
                 }
             }
         }
+        #region old set vertices
+        //private void SetVertices()
+        //{
+        //    vertices = new VertexTextures[Height * Width];
+        //    float step = (maxHeight - minHeight) / 3;
+
+        //    for (int x = 0; x < Width; x++)
+        //    {
+        //        for (int y = 0; y < Height; y++)
+        //        {
+        //            vertices[x + y * Width].Position = new Vector3(x, heightmapData[x, y], -y);
+        //            vertices[x + y * Width].TextureCoordinate.X = x;
+        //            vertices[x + y * Width].TextureCoordinate.Y = y;
+
+        //            vertices[x + y * Width].TetxureWeights = Vector4.Zero;
+
+        //            //normalize each weight between 0 and 1
+        //            vertices[x + y * Width].TetxureWeights.X =
+        //                MathHelper.Clamp(1.0f - Math.Abs(heightmapData[x, y]) / step, 0, 1);
+        //            vertices[x + y * Width].TetxureWeights.Y =
+        //                MathHelper.Clamp(1.0f - Math.Abs(heightmapData[x, y] - step) / step, 0, 1);
+        //            vertices[x + y * Width].TetxureWeights.Z =
+        //                MathHelper.Clamp(1.0f - Math.Abs(heightmapData[x, y] - 2 * step) / step, 0, 1);
+        //            vertices[x + y * Width].TetxureWeights.W =
+        //                MathHelper.Clamp(1.0f - Math.Abs(heightmapData[x, y] - 3 * step) / step, 0, 1);
+
+        //            //add to toal
+        //            float total = vertices[x + y * Width].TetxureWeights.X;
+        //            total += vertices[x + y * Width].TetxureWeights.Y;
+        //            total += vertices[x + y * Width].TetxureWeights.Z;
+        //            total += vertices[x + y * Width].TetxureWeights.W;
+
+        //            //divide by total
+        //            vertices[x + y * Width].TetxureWeights.X /= total;
+        //            vertices[x + y * Width].TetxureWeights.Y /= total;
+        //            vertices[x + y * Width].TetxureWeights.Z /= total;
+        //            vertices[x + y * Width].TetxureWeights.W /= total;
+        //        }
+        //    }
+        //    vertexDeclaration = new VertexDeclaration(VertexTextures.VertexElements);
+        //}
+        #endregion
 
         private void SetVertices()
         {
-            vertices = new VertexTextures[Height * Width];
+            Vertices = new VertexPositionNormalTexture[Width * Height];
             float step = (maxHeight - minHeight) / 3;
-
             for (int x = 0; x < Width; x++)
             {
                 for (int y = 0; y < Height; y++)
                 {
-                    vertices[x + y * Width].Position = new Vector3(x, heightmapData[x, y], -y);
-                    vertices[x + y * Width].TextureCoordinate.X = x;
-                    vertices[x + y * Width].TextureCoordinate.Y = y;
+                    Vertices[x + y * Width].Position = new Vector3(x, heightmapData[x, y], -y);
+                    Vertices[x + y * Width].TextureCoordinate.X = (float)x / Width;
+                    Vertices[x + y * Width].TextureCoordinate.Y = (float)y / Height;
 
-                    vertices[x + y * Width].TetxureWeights = Vector4.Zero;
-
-                    //normalize each weight between 0 and 1
-                    vertices[x + y * Width].TetxureWeights.X =
-                        MathHelper.Clamp(1.0f - Math.Abs(heightmapData[x, y]) / step, 0, 1);
-                    vertices[x + y * Width].TetxureWeights.Y =
-                        MathHelper.Clamp(1.0f - Math.Abs(heightmapData[x, y] - step) / step, 0, 1);
-                    vertices[x + y * Width].TetxureWeights.Z =
-                        MathHelper.Clamp(1.0f - Math.Abs(heightmapData[x, y] - 2 * step) / step, 0, 1);
-                    vertices[x + y * Width].TetxureWeights.W =
-                        MathHelper.Clamp(1.0f - Math.Abs(heightmapData[x, y] - 3 * step) / step, 0, 1);
-
-                    //add to toal
-                    float total = vertices[x + y * Width].TetxureWeights.X;
-                    total += vertices[x + y * Width].TetxureWeights.Y;
-                    total += vertices[x + y * Width].TetxureWeights.Z;
-                    total += vertices[x + y * Width].TetxureWeights.W;
-
-                    //divide by total
-                    vertices[x + y * Width].TetxureWeights.X /= total;
-                    vertices[x + y * Width].TetxureWeights.Y /= total;
-                    vertices[x + y * Width].TetxureWeights.Z /= total;
-                    vertices[x + y * Width].TetxureWeights.W /= total;
                 }
             }
-            vertexDeclaration = new VertexDeclaration(VertexTextures.VertexElements);
+            
         }
-
         private void SetIndices()
         {
             // amount of triangles
-            Indices = new int[6 * (Width - 1) * (Height - 1)];
+            Indices = new int[(Width - 1) * (Height - 1) * 6];
             int number = 0;
             // collect data for corners
             for (int y = 0; y < Height - 1; y++)
                 for (int x = 0; x < Width - 1; x++)
                 {
                     // create double triangles
-                    Indices[number] = x + (y + 1) * Width;          // up left
-                    Indices[number + 1] = x + y * Width + 1;        // down right
-                    Indices[number + 2] = x + y * Width;            // down left
-                    Indices[number + 3] = x + (y + 1) * Width;      // up left
-                    Indices[number + 4] = x + (y + 1) * Width + 1;  // up right
-                    Indices[number + 5] = x + y * Width + 1;        // down right
-                    number += 6;
+                    Indices[number++] = x + (y + 1) * Width;      // up left
+                    Indices[number++] = ((x + 1) + y * Width);        // down right
+                    Indices[number++] = (x + y * Width);            // down left
+
+                    Indices[number++] = x + (y + 1) * Width;      // up left
+                    Indices[number++] = ((x + 1) + (y + 1) * Width);  // up right
+                    Indices[number++] = ((x + 1) + y * Width);        // down right
                 }
         }
 
         //sets the vertices to the identity matrix
         private void InitNormal()
         {
-            for(int i = 0; i < vertices.Length; i++)
+            for(int i = 0; i < Vertices.Length; i++)
             {
-                vertices[i].Normal = Vector3.Zero;
+                Vertices[i].Normal = Vector3.Zero;
             }
             for (int i = 0; i < Indices.Length / 3; i++)
             {
@@ -156,23 +175,23 @@ namespace Assignment2.Models
                 int index1 = Indices[i * 3 + 1];
                 int index2 = Indices[i * 3 + 2];
 
-                Vector3 side0 = vertices[index0].Position - vertices[index2].Position;
-                Vector3 side1 = vertices[index0].Position - vertices[index1].Position;
+                Vector3 side0 = Vertices[index0].Position - Vertices[index2].Position;
+                Vector3 side1 = Vertices[index0].Position - Vertices[index1].Position;
                 Vector3 normal = Vector3.Cross(side0, side1);
 
-                vertices[index0].Normal += normal;
-                vertices[index1].Normal += normal;
-                vertices[index2].Normal += normal;
+                Vertices[index0].Normal += normal;
+                Vertices[index1].Normal += normal;
+                Vertices[index2].Normal += normal;
             }
 
-            for (int i = 0; i < vertices.Length; i++)
-                vertices[i].Normal.Normalize();
+            for (int i = 0; i < Vertices.Length; i++)
+                Vertices[i].Normal.Normalize();
         }
 
         public void Draw()
         {
-            BasicEffect.World = Matrix.CreateTranslation(new Vector3(-0, -0, 1080));
-            BasicEffect.Texture = textures[0];
+            BasicEffect.World = HeightmapWorldMatrix;//Matrix.CreateTranslation(new Vector3(-0, -0, 1080));
+            BasicEffect.Texture = texture;
             BasicEffect.TextureEnabled = true;
 
             //*/
@@ -183,7 +202,7 @@ namespace Assignment2.Models
             foreach (EffectPass pass in BasicEffect.CurrentTechnique.Passes)
             {
                 pass.Apply();
-                graphicsDevice.DrawUserIndexedPrimitives(PrimitiveType.TriangleList, vertices, 0, vertices.Length, Indices, 0, Indices.Length / 3, this.vertexDeclaration);
+                graphicsDevice.DrawUserIndexedPrimitives(PrimitiveType.TriangleList, Vertices, 0, Vertices.Length, Indices, 0, Indices.Length / 3);
             }
         }
     }

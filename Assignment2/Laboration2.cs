@@ -53,8 +53,6 @@ namespace Assignment2
         /// </summary>
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
-            //cameraSystem = new CameraSystem(this.GraphicsDevice);
             
             base.Initialize();
         }
@@ -76,8 +74,8 @@ namespace Assignment2
             treeTexture = Content.Load<Texture2D>("Tree");
 
             worldTerrain = new WorldTerrain(GraphicsDevice, mapTexture,
-                new Texture2D[4] { mapTextureImage, mapTextureImage, mapTextureImage, mapTextureImage }, new Vector3(0,0,0));
-
+                mapTextureImage, new Vector3(0,0,0));
+            worldTerrain.HeightmapWorldMatrix = Matrix.CreateTranslation(new Vector3(0, 0, 1080));
             List<House> houses = CreateHouses(houseModel, 100);
             
 
@@ -193,7 +191,7 @@ namespace Assignment2
             robotArm.Draw(Effect, Matrix.Identity);
             SystemManager.Instance.Draw();
 
-            Console.WriteLine(torso.Position.ToString());
+            //Console.WriteLine(torso.Position.ToString());
 
             base.Draw(gameTime);
         }
