@@ -71,7 +71,7 @@ namespace Robot
             
             CameraComponent cameraComp = (CameraComponent)ComponentManager.Instance.getDictionary<CameraComponent>().First().Value;
 
-            _position = cameraComp.world.Translation;
+            _position = cameraComp.World.Translation;
             _position.Z -= 20;
             _position.Y = yPos-35;
 

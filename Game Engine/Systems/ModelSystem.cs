@@ -31,8 +31,8 @@ namespace Game_Engine.Systems
                         
                         //modelComponent.objectWorld = Matrix.CreateScale(transformComponent.scale) * transformComponent.rotation * Matrix.CreateTranslation(transformComponent.position);
                         effect.World = boneTransformations[modelMesh.ParentBone.Index];
-                        effect.View = cameraComponent.view;
-                        effect.Projection = cameraComponent.projection;
+                        effect.View = cameraComponent.View;
+                        effect.Projection = cameraComponent.Projection;
 
                         effect.EnableDefaultLighting();
                         effect.LightingEnabled = true;

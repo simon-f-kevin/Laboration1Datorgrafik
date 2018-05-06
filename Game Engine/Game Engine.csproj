@@ -21,7 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <PlatformTarget>x86</PlatformTarget>
+    <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -30,6 +30,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="MonoGame.Framework, Version=3.6.0.1625, Culture=neutral, processorArchitecture=MSIL">
@@ -47,10 +48,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Class1.cs" />
+    <Compile Include="Components\BoundingBoxComponent.cs" />
     <Compile Include="Components\CameraComponent.cs" />
     <Compile Include="Components\CuboidMeshComponent.cs" />
     <Compile Include="Components\EntityComponent.cs" />
     <Compile Include="Components\HeightmapComponent.cs" />
+    <Compile Include="Components\HeightmapMeshComponent.cs" />
     <Compile Include="Components\LowerArmComponent.cs" />
     <Compile Include="Components\ModelComponent.cs" />
     <Compile Include="Components\RobotArmComponent.cs" />

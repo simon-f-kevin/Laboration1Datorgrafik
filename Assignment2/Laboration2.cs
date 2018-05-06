@@ -32,16 +32,23 @@ namespace Assignment2
         PlayerCameraSystem cameraSystem;
         WorldDrawSystem worldDrawSystem;
         WorldObjectsDrawSystem worldObjectsDrawSystem;
+        HeightmapSystem heightmapSystem;
 
         BasicEffect Effect;
         Player torso;
         RobotArm robotArm;
 
         List<Vector3> modelPositions;
+        float[,] HeightmapData;
 
         public Laboration2()
         {
-            graphics = new GraphicsDeviceManager(this);
+            graphics = new GraphicsDeviceManager(this)
+            {
+                PreferredBackBufferWidth = 1280,
+                PreferredBackBufferHeight = 720,
+                GraphicsProfile = GraphicsProfile.HiDef
+            };
             Content.RootDirectory = "Content";
         }
 
@@ -53,7 +60,6 @@ namespace Assignment2
         /// </summary>
         protected override void Initialize()
         {
-            
             base.Initialize();
         }
 
@@ -73,18 +79,24 @@ namespace Assignment2
             treeModel = Content.Load<Model>("farmhouse_obj");
             treeTexture = Content.Load<Texture2D>("Tree");
 
-            worldTerrain = new WorldTerrain(GraphicsDevice, mapTexture,
-                mapTextureImage, new Vector3(0,0,0));
-            worldTerrain.HeightmapWorldMatrix = Matrix.CreateTranslation(new Vector3(0, 0, 1080));
+            HeightmapComponent heightmapComponent = new HeightmapComponent(1, new Texture2D[2] { mapTexture, mapTextureImage }, 0, 0, GraphicsDevice);
+            HeightmapData = heightmapComponent.HeightData;
+            ComponentManager.Instance.AddComponent(heightmapComponent);
+
+            //worldTerrain = new WorldTerrain(GraphicsDevice, mapTexture,
+            //    mapTextureImage, new Vector3(0,0,0));
+            //worldTerrain.HeightmapWorldMatrix = Matrix.CreateTranslation(new Vector3(0, 0, 1080));
             List<House> houses = CreateHouses(houseModel, 100);
             
 
             //systems
-            worldDrawSystem = new WorldDrawSystem(worldTerrain, GraphicsDevice);
+            //worldDrawSystem = new WorldDrawSystem(worldTerrain, GraphicsDevice);
             worldObjectsDrawSystem = new WorldObjectsDrawSystem();
             worldObjectsDrawSystem.Objects = houses;
+            heightmapSystem = new HeightmapSystem(GraphicsDevice);
 
-            SystemManager.Instance.addToDrawableQueue(worldDrawSystem, worldObjectsDrawSystem);
+
+            SystemManager.Instance.addToDrawableQueue(worldObjectsDrawSystem, heightmapSystem);
 
 
             //Create engine components
@@ -97,13 +109,13 @@ namespace Assignment2
             Effect = new BasicEffect(GraphicsDevice);
 
             robotArm = new RobotArm(GraphicsDevice);
-            robotArm.GetHeightMap(worldTerrain.GetHeightmapData());
+            robotArm.GetHeightMap(HeightmapData);
 
             torso = new Player(Vector3.Zero, Vector3.Zero, new Vector3(50, 50, 50), GraphicsDevice);
-            torso.HeightMap = worldTerrain.GetHeightmapData();
+            torso.HeightMap = HeightmapData;
             Effect.VertexColorEnabled = true;
-            Effect.Projection = cameraComponent.projection;
-            Effect.View = cameraComponent.view;
+            Effect.Projection = cameraComponent.Projection;
+            Effect.View = cameraComponent.View;
 
             cameraSystem = new PlayerCameraSystem(torso);
 
@@ -124,8 +136,7 @@ namespace Assignment2
         private List<House> CreateHouses(Model houseModel, int nModels)
         {
             List<House> houses = new List<House>();
-            var heightmapData = worldTerrain.GetHeightmapData();
-            modelPositions = GeneratePositions(heightmapData, nModels);
+            modelPositions = GeneratePositions(HeightmapData, nModels);
             houses.Add(new House(houseModel, modelPositions[0], treeTexture));
             for (int i = 1; i < nModels; i++)
             {
@@ -141,13 +152,15 @@ namespace Assignment2
             List<Vector3> positions = new List<Vector3>();
 
             Random rnd = new Random();
-            int x = -10;
-            int z = -10;
+            int x = 0;
+            int z = 0;
+            float y = 0;
             for (int i = 0; i < nPositions; i++)
             {
                 x += 10;
                 z += 10;
-                positions.Add(new Vector3(x, heightmapData[Math.Abs(x) , Math.Abs(z)] + (houseModel.Meshes[0].BoundingSphere.Radius), z));
+                y = heightmapData[x, Math.Abs(z)] + (houseModel.Meshes[0].BoundingSphere.Radius);
+                positions.Add(new Vector3(x, y, z));
                 //Console.WriteLine(x.ToString() + " " + z.ToString());
             }
 

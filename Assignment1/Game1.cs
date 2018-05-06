@@ -97,7 +97,7 @@ namespace Assignment1
             Matrix projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver2, GraphicsDevice.Viewport.AspectRatio, 0.1f, 1000f);
 
             //CameraComponent cc = new CameraComponent(entityId, view, projection);
-            HeightmapComponent hm = new HeightmapComponent(entityId, heightmapTexture, 4, 3);
+            HeightmapComponent hm = new HeightmapComponent(entityId, heightmapTexture, 4, 3, GraphicsDevice);
             LoadHeightData(hm);
             SetUpVertices(hm);
             SetUpIndices(hm);
@@ -146,11 +146,11 @@ namespace Assignment1
 
         private void LoadHeightData(HeightmapComponent hm)
         {
-            hm.TerrainWidth = hm.HeightMap.Width;
-            hm.TerratinHeight = hm.HeightMap.Height;
+            hm.TerrainWidth = hm.HeightmapTexture.Width;
+            hm.TerratinHeight = hm.HeightmapTexture.Height;
 
             Color[] heightMapColors = new Color[hm.TerrainWidth * hm.TerratinHeight];
-            hm.HeightMap.GetData(heightMapColors);
+            hm.HeightmapTexture.GetData(heightMapColors);
 
             hm.HeightData = new float[hm.TerrainWidth, hm.TerratinHeight];
             for (int x = 0; x < hm.TerrainWidth; x++)

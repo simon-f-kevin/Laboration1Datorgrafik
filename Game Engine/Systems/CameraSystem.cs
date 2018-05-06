@@ -36,7 +36,10 @@ namespace Game_Engine.Systems
                     Vector3 cameraPosition = model.model.Bones[0].Transform.Translation + (model.model.Bones[0].Transform.Backward * 20f);
                     Vector3 cameraLookAt = model.model.Bones[0].Transform.Translation + (model.model.Bones[0].Transform.Forward * 20f);
 
-                    cameraComp.view = Matrix.CreateLookAt(cameraPosition, cameraLookAt, Vector3.Up);
+                    cameraComp.View = Matrix.CreateLookAt(cameraPosition, cameraLookAt, Vector3.Up);
+                    var clipProjection = Matrix.CreatePerspectiveFieldOfView(1.1f * MathHelper.PiOver2, graphicsDevice.Viewport.AspectRatio,
+                        0.5f * 0.1f, 1.3f * 1000f);
+                    cameraComp.BoundingFrustum.Matrix = cameraComp.View * clipProjection;
                 }
             }
             if (Keyboard.GetState().IsKeyDown(Keys.D1))

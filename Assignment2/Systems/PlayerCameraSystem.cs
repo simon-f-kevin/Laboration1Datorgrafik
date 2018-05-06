@@ -29,7 +29,7 @@ namespace Assignment2.Systems
                     Vector3 cameraPosition = player.WorldMatrix.Translation + player.WorldMatrix.Backward * 40f;//model.model.Bones[0].Transform.Translation + (model.model.Bones[0].Transform.Backward * 20f);
                     Vector3 cameraLookAt = player.WorldMatrix.Translation;//model.model.Bones[0].Transform.Translation + (model.model.Bones[0].Transform.Forward * 20f);
 
-                    cameraComp.view = Matrix.CreateLookAt(cameraPosition, cameraLookAt, Vector3.Up);
+                    cameraComp.View = Matrix.CreateLookAt(cameraPosition, cameraLookAt, Vector3.Up);
                     Console.WriteLine("campos " + cameraPosition);
                     //Console.WriteLine("cam lookat " + cameraLookAt);
                 }

@@ -29,7 +29,7 @@ namespace Assignment2.Systems
             {
                 foreach (var obj in Objects)
                 {
-                    obj.Draw(cameraComponent.view, cameraComponent.projection);
+                    obj.Draw(cameraComponent.View, cameraComponent.Projection);
                 }
             }
             
