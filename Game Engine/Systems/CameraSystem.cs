@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Game_Engine.Components;
 using Game_Engine.Managers;
+using Game_Engine.Robot;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -14,11 +15,17 @@ namespace Game_Engine.Systems
     public class CameraSystem : IUpdateableSystem
     {
         private GraphicsDevice graphicsDevice;
+        private RobotArm robot;
 
         public CameraSystem(GraphicsDevice graphicsDevice)
         {
             this.graphicsDevice = graphicsDevice;
             
+        }
+
+        public void SetModelToFollow(IGameObject player)
+        {
+            robot = (RobotArm)player;
         }
 
         public void Update(GameTime gameTime)
@@ -30,11 +37,11 @@ namespace Game_Engine.Systems
                 {
                     ModelComponent model = ComponentManager.Instance.GetComponentsById<ModelComponent>(cameraComp.EntityID);
                     TransformComponent transform = ComponentManager.Instance.GetComponentsById<TransformComponent>(cameraComp.EntityID);
-                    
+
                     //Console.WriteLine(cameraPosition);
 
-                    Vector3 cameraPosition = model.model.Bones[0].Transform.Translation + (model.model.Bones[0].Transform.Backward * 20f);
-                    Vector3 cameraLookAt = model.model.Bones[0].Transform.Translation + (model.model.Bones[0].Transform.Forward * 20f);
+                    Vector3 cameraPosition = robot._position + Matrix.Identity.Backward * 20f;//model.model.Bones[0].Transform.Translation + (model.model.Bones[0].Transform.Backward * 20f);
+                    Vector3 cameraLookAt = robot._position + Matrix.Identity.Forward * 20f;//model.model.Bones[0].Transform.Translation + (model.model.Bones[0].Transform.Forward * 20f);
 
                     cameraComp.View = Matrix.CreateLookAt(cameraPosition, cameraLookAt, Vector3.Up);
                     var clipProjection = Matrix.CreatePerspectiveFieldOfView(1.1f * MathHelper.PiOver2, graphicsDevice.Viewport.AspectRatio,

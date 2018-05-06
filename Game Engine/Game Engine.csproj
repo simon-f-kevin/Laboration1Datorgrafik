@@ -64,6 +64,11 @@
     <Compile Include="Managers\ComponentManager.cs" />
     <Compile Include="Managers\SystemManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Robot\CuboidMesh.cs" />
+    <Compile Include="Robot\IGameObject.cs" />
+    <Compile Include="Robot\LowerArm.cs" />
+    <Compile Include="Robot\RobotArm.cs" />
+    <Compile Include="Robot\UpperArm.cs" />
     <Compile Include="Systems\CameraSystem.cs" />
     <Compile Include="Managers\GamePropertyManager.cs" />
     <Compile Include="Systems\HeightmapSystem.cs" />

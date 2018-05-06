@@ -6,7 +6,7 @@ using Game_Engine.Systems;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Robot;
+using Game_Engine.Robot;
 using System;
 using System.Collections.Generic;
 
@@ -29,7 +29,7 @@ namespace Assignment2
         Model houseModel;
 
         WorldTerrain worldTerrain;
-        PlayerCameraSystem cameraSystem;
+        CameraSystem cameraSystem;
         WorldDrawSystem worldDrawSystem;
         WorldObjectsDrawSystem worldObjectsDrawSystem;
         HeightmapSystem heightmapSystem;
@@ -117,8 +117,9 @@ namespace Assignment2
             Effect.Projection = cameraComponent.Projection;
             Effect.View = cameraComponent.View;
 
-            cameraSystem = new PlayerCameraSystem(torso);
-
+            //cameraSystem = new PlayerCameraSystem(torso);
+            cameraSystem = new CameraSystem(GraphicsDevice);
+            cameraSystem.SetModelToFollow(robotArm);
             SystemManager.Instance.addToUpdateableQueue(cameraSystem);
         }
 
