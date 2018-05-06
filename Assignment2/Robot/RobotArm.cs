@@ -67,8 +67,8 @@ namespace Robot
 
         private void SetYPosition()
         {
-            var yPos = heightMap[MathHelper.Clamp( (int)_position.X, 0, heightMap.Length / 2), MathHelper.Clamp( (int)_position.Y, 0, heightMap.Length / 2)];
-            
+            //var yPos = heightMap[MathHelper.Clamp( (int)_position.X, 0, heightMap.Length / 2), MathHelper.Clamp( (int)_position.Y, 0, heightMap.Length / 2)];
+            var yPos = heightMap[(int)_position.X, Math.Abs((int)_position.Z)];
             CameraComponent cameraComp = (CameraComponent)ComponentManager.Instance.getDictionary<CameraComponent>().First().Value;
 
             _position = cameraComp.World.Translation;

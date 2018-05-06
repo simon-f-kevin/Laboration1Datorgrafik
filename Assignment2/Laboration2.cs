@@ -83,14 +83,14 @@ namespace Assignment2
             HeightmapData = heightmapComponent.HeightData;
             ComponentManager.Instance.AddComponent(heightmapComponent);
 
-            //worldTerrain = new WorldTerrain(GraphicsDevice, mapTexture,
-            //    mapTextureImage, new Vector3(0,0,0));
-            //worldTerrain.HeightmapWorldMatrix = Matrix.CreateTranslation(new Vector3(0, 0, 1080));
+            worldTerrain = new WorldTerrain(GraphicsDevice, mapTexture,
+                mapTextureImage, new Vector3(0, 0, 0));
+            worldTerrain.HeightmapWorldMatrix = Matrix.CreateTranslation(new Vector3(0, 0, 1080));
             List<House> houses = CreateHouses(houseModel, 100);
             
 
             //systems
-            //worldDrawSystem = new WorldDrawSystem(worldTerrain, GraphicsDevice);
+            worldDrawSystem = new WorldDrawSystem(worldTerrain, GraphicsDevice);
             worldObjectsDrawSystem = new WorldObjectsDrawSystem();
             worldObjectsDrawSystem.Objects = houses;
             heightmapSystem = new HeightmapSystem(GraphicsDevice);
@@ -153,12 +153,14 @@ namespace Assignment2
 
             Random rnd = new Random();
             int x = 0;
-            int z = 0;
+            int z = -100;
             float y = 0;
             for (int i = 0; i < nPositions; i++)
             {
                 x += 10;
                 z += 10;
+                //x = rnd.Next(mapTexture.Width/270);
+                //z = rnd.Next(mapTexture.Height/270);
                 y = heightmapData[x, Math.Abs(z)] + (houseModel.Meshes[0].BoundingSphere.Radius);
                 positions.Add(new Vector3(x, y, z));
                 //Console.WriteLine(x.ToString() + " " + z.ToString());
