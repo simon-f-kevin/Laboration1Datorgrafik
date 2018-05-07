@@ -24,13 +24,13 @@ namespace Game_Engine.Robot
             Initialize();
         }
 
-        public CuboidMesh(GraphicsDevice graphics, float sizeX, float sizeY, float sizeZ)
+        public CuboidMesh(GraphicsDevice graphics, Vector3 size)
         {
             GraphicsDevice = graphics;
 
-            _sizeX = sizeX;
-            _sizeY = sizeY;
-            _sizeZ = sizeZ;
+            _sizeX = size.X;
+            _sizeY = size.Y;
+            _sizeZ = size.Z;
 
             Initialize();
         }

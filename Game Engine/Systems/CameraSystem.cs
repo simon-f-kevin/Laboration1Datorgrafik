@@ -15,7 +15,7 @@ namespace Game_Engine.Systems
     public class CameraSystem : IUpdateableSystem
     {
         private GraphicsDevice graphicsDevice;
-        private RobotArm robot;
+        private RobotBody robot;
 
         public CameraSystem(GraphicsDevice graphicsDevice)
         {
@@ -25,7 +25,7 @@ namespace Game_Engine.Systems
 
         public void SetModelToFollow(IGameObject player)
         {
-            robot = (RobotArm)player;
+            robot = (RobotBody)player;
         }
 
         public void Update(GameTime gameTime)

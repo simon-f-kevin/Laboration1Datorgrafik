@@ -35,7 +35,7 @@ namespace Assignment2
 
         BasicEffect Effect;
         Player torso;
-        RobotArm robotArm;
+        RobotBody robotArm;
 
         List<Vector3> modelPositions;
         float[,] HeightmapData;
@@ -98,7 +98,7 @@ namespace Assignment2
 
             SystemManager.Instance.addToDrawableQueue(worldObjectsDrawSystem, heightmapSystem);
 
-            robotArm = new RobotArm(GraphicsDevice);
+            robotArm = new RobotBody(GraphicsDevice, new Vector3(2,4,2), houseTexture);
             robotArm.GetHeightMap(HeightmapData);
             var gubbepos = robotArm.Position;
 

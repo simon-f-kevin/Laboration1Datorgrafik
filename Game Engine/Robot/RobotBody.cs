@@ -10,7 +10,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace Game_Engine.Robot
 {
-    public class RobotArm : CuboidMesh
+    public class RobotBody : CuboidMesh
     {
         private List<IGameObject> _children = new List<IGameObject>();
 
@@ -18,11 +18,20 @@ namespace Game_Engine.Robot
         public Vector3 Position = Vector3.Zero;
         private float MovementSpeed = 0.5f;
         private float[,] HeightMap;
+        private Texture2D Texture;
 
-        public RobotArm(GraphicsDevice graphics)
-            : base(graphics, 2, 1, 2)
+        private float Left = 269;
+        private float Right = 89;
+
+        public RobotBody(GraphicsDevice graphics, Vector3 size, Texture2D texture)
+            : base(graphics, size)
         {
-            _children.Add(new LowerArm(graphics));
+            Texture = texture;
+            _children.Add(new Head(graphics, new Vector3(1f,2f,1f)));
+            _children.Add(new Limb(graphics, new Vector3(1, 2, 1), new Vector3(1.5f, 0, 0)));
+            _children.Add(new Limb(graphics, new Vector3(1, 2, 1), new Vector3(-1.5f, 0, 0)));
+            _children.Add(new Limb(graphics, new Vector3(1, 2, 1), new Vector3(0.7f, -2, 0), true));
+            _children.Add(new Limb(graphics, new Vector3(1, 2, 1), new Vector3(-0.7f, -2, 0), true));
         }
         public void GetHeightMap(float[,] heightMap)
         {
@@ -34,33 +43,27 @@ namespace Game_Engine.Robot
             if (Keyboard.GetState().IsKeyDown(Keys.Left))
             {
                 Position = new Vector3(Position.X - 0.5f, Position.Y, Position.Z);
-                Rotation.X += Matrix.CreateRotationX(0.45f).Translation.X;
+                Rotation = new Vector3(Left, Rotation.Y, Rotation.Z);
             }
 
             if (Keyboard.GetState().IsKeyDown(Keys.Right))
             {
                 Position = new Vector3(Position.X + 0.5f, Position.Y, Position.Z);
-                Rotation.X -= Matrix.CreateRotationX(0.45f).Translation.X;
+                Rotation = new Vector3(Right, Rotation.Y, Rotation.Z);
             }
             if (Keyboard.GetState().IsKeyDown(Keys.Down))
             {
                 Position = new Vector3(Position.X, Position.Y, Position.Z + 0.5f);
+                Rotation = new Vector3(179, Rotation.Y, Rotation.Z);
             }
 
             if (Keyboard.GetState().IsKeyDown(Keys.Up))
             {
                 Position = new Vector3(Position.X, Position.Y, Position.Z - 0.5f);
+                Rotation = new Vector3(0, Rotation.Y, Rotation.Z);
             }
 
-            
-            if (Keyboard.GetState().IsKeyDown(Keys.A))
-            {
-                Rotation = new Vector3(Rotation.X + 1, Rotation.Y, Rotation.Z);
-            }
-            if (Keyboard.GetState().IsKeyDown(Keys.D))
-            {
-                Rotation = new Vector3(Rotation.X - 1, Rotation.Y, Rotation.Z);
-            }
+
 
             var y = HeightMap[Math.Abs((int)Position.X), Math.Abs((int)Position.Z)];
             Position.Y = y;
@@ -113,10 +116,12 @@ namespace Game_Engine.Robot
         public override void Draw(BasicEffect effect, Matrix world)
         {
             effect.World = WorldMatrix * world;
+            effect.Texture = Texture;
+            effect.TextureEnabled = false;
             effect.CurrentTechnique.Passes[0].Apply();
 
             GraphicsDevice.SetVertexBuffer(VertexBuffer);
-            GraphicsDevice.DrawPrimitives(PrimitiveType.TriangleList, 0, 36);
+            GraphicsDevice.DrawPrimitives(PrimitiveType.TriangleList, 0, VertexBuffer.VertexCount);
 
             foreach (IGameObject go in _children)
                 go.Draw(effect, WorldMatrix * world);

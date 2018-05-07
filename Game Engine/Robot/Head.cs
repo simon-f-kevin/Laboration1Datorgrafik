@@ -8,31 +8,36 @@ using Microsoft.Xna.Framework.Input;
 
 namespace Game_Engine.Robot
 {
-    class LowerArm : CuboidMesh
+    class Head : CuboidMesh
     {
         private List<IGameObject> _children = new List<IGameObject>();
 
-        private Vector3 _rotation = Vector3.Zero;
-        private Vector3 _position = new Vector3(0, 1.5f, 0);
+        private Vector3 Rotation = Vector3.Zero;
+        private Vector3 _position = new Vector3(0, 2.5f, 0);
         private Vector3 _jointPos = new Vector3(0, 0.5f, 0);
 
-        public LowerArm(GraphicsDevice graphics)
-            : base(graphics, 1f, 3f, 1f)
+        public Head(GraphicsDevice graphics, Vector3 size)
+            : base(graphics, size)
         {
-            _children.Add(new UpperArm(graphics));
+            _children.Add(new Horn(graphics, new Vector3(0.5f, 2f, 0.5f)));
         }
+
+       
 
         public override void Update(GameTime gameTime)
         {
-            //if (Keyboard.GetState().IsKeyDown(Keys.Down))
-            //    _rotation = new Vector3(_rotation.X, _rotation.Y, _rotation.Z + 0.01f);
-
-            //if (Keyboard.GetState().IsKeyDown(Keys.Up))
-            //    _rotation = new Vector3(_rotation.X, _rotation.Y, _rotation.Z - 0.01f);
+            if (Keyboard.GetState().IsKeyDown(Keys.A))
+            {
+                Rotation = new Vector3(Rotation.X + 0.2f, Rotation.Y, Rotation.Z);
+            }
+            if (Keyboard.GetState().IsKeyDown(Keys.D))
+            {
+                Rotation = new Vector3(Rotation.X - 0.2f, Rotation.Y, Rotation.Z);
+            }
 
             WorldMatrix = Matrix.Identity *
                 Matrix.CreateTranslation(_position) *
-                Matrix.CreateFromQuaternion(Quaternion.CreateFromYawPitchRoll(_rotation.X, _rotation.Y, _rotation.Z)) *
+                Matrix.CreateFromQuaternion(Quaternion.CreateFromYawPitchRoll(Rotation.X, Rotation.Y, Rotation.Z)) *
                 Matrix.CreateTranslation(_jointPos);
 
             foreach (IGameObject go in _children)
