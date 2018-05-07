@@ -141,13 +141,16 @@ namespace Assignment2
             List<Vector3> positions = new List<Vector3>();
 
             Random rnd = new Random();
-            int x = -10;
-            int z = -10;
+            int x = 2;
+            int z = 2;
             for (int i = 0; i < nPositions; i++)
             {
-                x += 10;
-                z += 10;
-                positions.Add(new Vector3(x, heightmapData[Math.Abs(x) , Math.Abs(z)] + (houseModel.Meshes[0].BoundingSphere.Radius), z));
+                x = rnd.Next(x / 2, x + 5);
+                z = rnd.Next(z / 2, z + 5);
+                var y = heightmapData[Math.Abs(x), Math.Abs(z)];
+                positions.Add(new Vector3(x, y, -z));
+                x += 50;
+                z += 50;
                 //Console.WriteLine(x.ToString() + " " + z.ToString());
             }
 
