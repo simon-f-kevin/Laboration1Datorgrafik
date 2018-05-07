@@ -35,13 +35,10 @@ namespace Game_Engine.Systems
             {
                 if (cameraComp.Follow)
                 {
-                    ModelComponent model = ComponentManager.Instance.GetComponentsById<ModelComponent>(cameraComp.EntityID);
-                    TransformComponent transform = ComponentManager.Instance.GetComponentsById<TransformComponent>(cameraComp.EntityID);
-
                     //Console.WriteLine(cameraPosition);
 
-                    Vector3 cameraPosition = robot._position + Matrix.Identity.Backward * 20f;//model.model.Bones[0].Transform.Translation + (model.model.Bones[0].Transform.Backward * 20f);
-                    Vector3 cameraLookAt = robot._position + Matrix.Identity.Forward * 20f;//model.model.Bones[0].Transform.Translation + (model.model.Bones[0].Transform.Forward * 20f);
+                    Vector3 cameraPosition = robot.WorldMatrix.Translation + Vector3.Backward * 20f;//model.model.Bones[0].Transform.Translation + (model.model.Bones[0].Transform.Backward * 20f);
+                    Vector3 cameraLookAt = robot.WorldMatrix.Translation + Vector3.Forward * 20f;//model.model.Bones[0].Transform.Translation + (model.model.Bones[0].Transform.Forward * 20f);
 
                     cameraComp.View = Matrix.CreateLookAt(cameraPosition, cameraLookAt, Vector3.Up);
                     var clipProjection = Matrix.CreatePerspectiveFieldOfView(1.1f * MathHelper.PiOver2, graphicsDevice.Viewport.AspectRatio,
@@ -49,45 +46,7 @@ namespace Game_Engine.Systems
                     cameraComp.BoundingFrustum.Matrix = cameraComp.View * clipProjection;
                 }
             }
-            if (Keyboard.GetState().IsKeyDown(Keys.D1))
-            {
-                RasterizerState rasterizerState = new RasterizerState();
-                rasterizerState.CullMode = CullMode.None;
-                rasterizerState.FillMode = graphicsDevice.RasterizerState.FillMode;
-                graphicsDevice.RasterizerState = rasterizerState;
-            }
-
-            if (Keyboard.GetState().IsKeyDown(Keys.D2))
-            {
-                RasterizerState rasterizerState = new RasterizerState();
-                rasterizerState.CullMode = CullMode.CullClockwiseFace;
-                rasterizerState.FillMode = graphicsDevice.RasterizerState.FillMode;
-                graphicsDevice.RasterizerState = rasterizerState;
-            }
-
-            if (Keyboard.GetState().IsKeyDown(Keys.D3))
-            {
-                RasterizerState rasterizerState = new RasterizerState();
-                rasterizerState.CullMode = CullMode.CullCounterClockwiseFace;
-                rasterizerState.FillMode = graphicsDevice.RasterizerState.FillMode;
-                graphicsDevice.RasterizerState = rasterizerState;
-            }
-
-            if (Keyboard.GetState().IsKeyDown(Keys.D4))
-            {
-                RasterizerState rasterizerState = new RasterizerState();
-                rasterizerState.FillMode = FillMode.WireFrame;
-                rasterizerState.CullMode = graphicsDevice.RasterizerState.CullMode;
-                graphicsDevice.RasterizerState = rasterizerState;
-            }
-
-            if (Keyboard.GetState().IsKeyDown(Keys.D5))
-            {
-                RasterizerState rasterizerState = new RasterizerState();
-                rasterizerState.FillMode = FillMode.Solid;
-                rasterizerState.CullMode = graphicsDevice.RasterizerState.CullMode;
-                graphicsDevice.RasterizerState = rasterizerState;
-            }
+            
         }
     }
 }

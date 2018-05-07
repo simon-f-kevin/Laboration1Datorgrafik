@@ -15,10 +15,10 @@ namespace Game_Engine.Systems
         GraphicsDevice device;
         BasicEffect effect;
         
-        public HeightmapSystem(GraphicsDevice device)
+        public HeightmapSystem(GraphicsDevice device, BasicEffect effect)
         {
             this.device = device;
-            effect = new BasicEffect(device);
+            this.effect = effect;
             
         }
         public void Draw()

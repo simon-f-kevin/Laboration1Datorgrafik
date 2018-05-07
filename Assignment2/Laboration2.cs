@@ -24,7 +24,6 @@ namespace Assignment2
         Texture2D mapTextureImage;
         Texture2D houseTexture;
         Texture2D treeTexture;
-        Model playerModel;
         Model treeModel;
         Model houseModel;
 
@@ -72,6 +71,7 @@ namespace Assignment2
 
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
+            Effect = new BasicEffect(GraphicsDevice);
             mapTexture = Content.Load<Texture2D>("US_Canyon");
             mapTextureImage = Content.Load<Texture2D>("grass");
             houseModel = Content.Load<Model>("farmhouse_obj");
@@ -83,36 +83,37 @@ namespace Assignment2
             HeightmapData = heightmapComponent.HeightData;
             ComponentManager.Instance.AddComponent(heightmapComponent);
 
-            worldTerrain = new WorldTerrain(GraphicsDevice, mapTexture,
-                mapTextureImage, new Vector3(0, 0, 0));
-            worldTerrain.HeightmapWorldMatrix = Matrix.CreateTranslation(new Vector3(0, 0, 1080));
-            List<House> houses = CreateHouses(houseModel, 100);
+            //worldTerrain = new WorldTerrain(GraphicsDevice, mapTexture,
+            //    mapTextureImage, new Vector3(0, 0, 0));
+            //worldTerrain.HeightmapWorldMatrix = Matrix.CreateTranslation(new Vector3(0, 0, 1080));
+            List<House> houses = CreateHouses(houseModel, 200);
             
 
             //systems
-            worldDrawSystem = new WorldDrawSystem(worldTerrain, GraphicsDevice);
+            //worldDrawSystem = new WorldDrawSystem(worldTerrain, GraphicsDevice);
             worldObjectsDrawSystem = new WorldObjectsDrawSystem();
             worldObjectsDrawSystem.Objects = houses;
-            heightmapSystem = new HeightmapSystem(GraphicsDevice);
+            heightmapSystem = new HeightmapSystem(GraphicsDevice, Effect);
 
 
             SystemManager.Instance.addToDrawableQueue(worldObjectsDrawSystem, heightmapSystem);
 
+            robotArm = new RobotArm(GraphicsDevice);
+            robotArm.GetHeightMap(HeightmapData);
+            var gubbepos = robotArm.Position;
 
             //Create engine components
             int id = 1;
-            var view = Matrix.CreateLookAt(new Vector3(200, 50, 50), new Vector3(0, 0, 0), Vector3.Up);
+            var view = Matrix.CreateLookAt(gubbepos + Vector3.Forward * 20, gubbepos, Vector3.Up);
             var projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver2, GraphicsDevice.Viewport.AspectRatio, 0.1f, 1000f);
             CameraComponent cameraComponent = new CameraComponent(id,view,  projection, true);
             ComponentManager.Instance.AddComponent(cameraComponent);
 
-            Effect = new BasicEffect(GraphicsDevice);
+            
 
-            robotArm = new RobotArm(GraphicsDevice);
-            robotArm.GetHeightMap(HeightmapData);
 
-            torso = new Player(Vector3.Zero, Vector3.Zero, new Vector3(50, 50, 50), GraphicsDevice);
-            torso.HeightMap = HeightmapData;
+            //torso = new Player(Vector3.Zero, Vector3.Zero, new Vector3(50, 50, 50), GraphicsDevice);
+            //torso.HeightMap = HeightmapData;
             Effect.VertexColorEnabled = true;
             Effect.Projection = cameraComponent.Projection;
             Effect.View = cameraComponent.View;
@@ -153,21 +154,20 @@ namespace Assignment2
             List<Vector3> positions = new List<Vector3>();
 
             Random rnd = new Random();
-            int x = 0;
-            int z = -100;
-            float y = 0;
+            int x = 2;
+            int z = 2;
             for (int i = 0; i < nPositions; i++)
             {
-                x += 10;
-                z += 10;
-                //x = rnd.Next(mapTexture.Width/270);
-                //z = rnd.Next(mapTexture.Height/270);
-                y = heightmapData[x, Math.Abs(z)] + (houseModel.Meshes[0].BoundingSphere.Radius);
-                positions.Add(new Vector3(x, y, z));
+                x = rnd.Next(x / 2, x + 5);
+                z = rnd.Next(z / 2, z + 5);
+                var y = heightmapData[Math.Abs(x), Math.Abs(z)];
+                positions.Add(new Vector3(x, y, -z));
+                x += 50;
+                z += 50;
                 //Console.WriteLine(x.ToString() + " " + z.ToString());
             }
 
-             return positions;
+            return positions;
         }
 
         /// <summary>
@@ -190,7 +190,7 @@ namespace Assignment2
                 Exit();
 
             // TODO: Add your update logic here
-            torso.Update();
+            //torso.Update();
             robotArm.Update(gameTime);
             SystemManager.Instance.Update(gameTime);
             base.Update(gameTime);
@@ -203,7 +203,7 @@ namespace Assignment2
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
-            torso.Draw(Effect, Matrix.Identity);
+            //torso.Draw(Effect, Matrix.Identity);
             robotArm.Draw(Effect, Matrix.Identity);
             SystemManager.Instance.Draw();
 

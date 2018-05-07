@@ -97,7 +97,7 @@ namespace Assignment1
             Matrix projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver2, GraphicsDevice.Viewport.AspectRatio, 0.1f, 1000f);
 
             //CameraComponent cc = new CameraComponent(entityId, view, projection);
-            HeightmapComponent hm = new HeightmapComponent(entityId, heightmapTexture, 4, 3, GraphicsDevice);
+            HeightmapComponent hm = new HeightmapComponent(entityId, null, 4, 3, GraphicsDevice);
             LoadHeightData(hm);
             SetUpVertices(hm);
             SetUpIndices(hm);
