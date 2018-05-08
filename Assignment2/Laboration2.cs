@@ -83,14 +83,10 @@ namespace Assignment2
             HeightmapData = heightmapComponent.HeightData;
             ComponentManager.Instance.AddComponent(heightmapComponent);
 
-            //worldTerrain = new WorldTerrain(GraphicsDevice, mapTexture,
-            //    mapTextureImage, new Vector3(0, 0, 0));
-            //worldTerrain.HeightmapWorldMatrix = Matrix.CreateTranslation(new Vector3(0, 0, 1080));
-            List<House> houses = CreateHouses(houseModel, 200);
+            List<House> houses = CreateHouses(houseModel, 2000);
             
 
             //systems
-            //worldDrawSystem = new WorldDrawSystem(worldTerrain, GraphicsDevice);
             worldObjectsDrawSystem = new WorldObjectsDrawSystem();
             worldObjectsDrawSystem.Objects = houses;
             heightmapSystem = new HeightmapSystem(GraphicsDevice, Effect);
@@ -98,7 +94,7 @@ namespace Assignment2
 
             SystemManager.Instance.addToDrawableQueue(worldObjectsDrawSystem, heightmapSystem);
 
-            robotArm = new RobotBody(GraphicsDevice, new Vector3(2,4,2), houseTexture);
+            robotArm = new RobotBody(GraphicsDevice, new Vector3(2,4,2), treeTexture);
             robotArm.GetHeightMap(HeightmapData);
             var gubbepos = robotArm.Position;
 
@@ -109,30 +105,12 @@ namespace Assignment2
             CameraComponent cameraComponent = new CameraComponent(id,view,  projection, true);
             ComponentManager.Instance.AddComponent(cameraComponent);
 
-            
-
-
-            //torso = new Player(Vector3.Zero, Vector3.Zero, new Vector3(50, 50, 50), GraphicsDevice);
-            //torso.HeightMap = HeightmapData;
-            Effect.VertexColorEnabled = true;
             Effect.Projection = cameraComponent.Projection;
             Effect.View = cameraComponent.View;
 
-            //cameraSystem = new PlayerCameraSystem(torso);
             cameraSystem = new CameraSystem(GraphicsDevice);
             cameraSystem.SetModelToFollow(robotArm);
             SystemManager.Instance.addToUpdateableQueue(cameraSystem);
-        }
-
-        private void CreateRobotArm(int entityId)
-        {
-            RobotArmComponent robotArmComponent = new RobotArmComponent(entityId);
-            LowerArmComponent lowerArmComponent = new LowerArmComponent(entityId);
-            CuboidMeshComponent cuboidMeshComponent = new CuboidMeshComponent(entityId, GraphicsDevice, 2, 1, 2, Effect);
-
-            ComponentManager.Instance.AddComponent(robotArmComponent);
-            ComponentManager.Instance.AddComponent(lowerArmComponent);
-            ComponentManager.Instance.AddComponent(cuboidMeshComponent);
         }
 
         private List<House> CreateHouses(Model houseModel, int nModels)
@@ -203,11 +181,9 @@ namespace Assignment2
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
-            //torso.Draw(Effect, Matrix.Identity);
+            
             robotArm.Draw(Effect, Matrix.Identity);
             SystemManager.Instance.Draw();
-
-            //Console.WriteLine(torso.Position.ToString());
 
             base.Draw(gameTime);
         }

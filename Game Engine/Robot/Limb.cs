@@ -16,11 +16,11 @@ namespace Game_Engine.Robot
         private Vector3 JointPos = new Vector3(0, 1.5f, 0);
         private bool isLeg = false;
 
-        public Limb(GraphicsDevice graphics, Vector3 size, Vector3 position) : base(graphics, size)
+        public Limb(GraphicsDevice graphics, Vector3 size, Vector3 position, Texture2D texture) : base(graphics, size, texture)
         {
             JointPos = position;
         }
-        public Limb(GraphicsDevice graphics, Vector3 size, Vector3 position, bool isLeg) : base(graphics, size)
+        public Limb(GraphicsDevice graphics, Vector3 size, Vector3 position, Texture2D texture, bool isLeg) : base(graphics, size, texture)
         {
             JointPos = position;
             if (isLeg == true) this.isLeg = true;
@@ -42,10 +42,9 @@ namespace Game_Engine.Robot
         {
             effect.World = WorldMatrix * world;
             effect.CurrentTechnique.Passes[0].Apply();
-
+            effect.Texture = Texture;
             GraphicsDevice.SetVertexBuffer(VertexBuffer);
-            GraphicsDevice.DrawPrimitives(PrimitiveType.TriangleList, 0, 36);
-
+            GraphicsDevice.DrawPrimitives(PrimitiveType.TriangleList, 0, VertexBuffer.VertexCount);
         }
 
     }

@@ -16,10 +16,10 @@ namespace Game_Engine.Robot
         private Vector3 _position = new Vector3(0, 2.5f, 0);
         private Vector3 _jointPos = new Vector3(0, 0.5f, 0);
 
-        public Head(GraphicsDevice graphics, Vector3 size)
-            : base(graphics, size)
+        public Head(GraphicsDevice graphics, Vector3 size, Texture2D texture)
+            : base(graphics, size, texture)
         {
-            _children.Add(new Horn(graphics, new Vector3(0.5f, 2f, 0.5f)));
+            _children.Add(new Horn(graphics, new Vector3(0.5f, 2f, 0.5f), texture));
         }
 
        
@@ -48,9 +48,9 @@ namespace Game_Engine.Robot
         {
             effect.World = WorldMatrix * world;
             effect.CurrentTechnique.Passes[0].Apply();
-
+            effect.Texture = Texture;
             GraphicsDevice.SetVertexBuffer(VertexBuffer);
-            GraphicsDevice.DrawPrimitives(PrimitiveType.TriangleList, 0, 36);
+            GraphicsDevice.DrawPrimitives(PrimitiveType.TriangleList, 0, VertexBuffer.VertexCount);
 
             foreach (IGameObject go in _children)
                 go.Draw(effect, WorldMatrix * world);
