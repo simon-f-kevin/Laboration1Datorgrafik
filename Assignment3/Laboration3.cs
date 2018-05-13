@@ -1,6 +1,10 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Game_Engine.Components;
+using Game_Engine.Managers;
+using Game_Engine.Systems;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System.Linq;
 
 namespace Assignment3
 {
@@ -11,10 +15,24 @@ namespace Assignment3
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        private BasicEffect basicEffect;
+
+        //models
+        private Model houseModel;
+        private Texture2D houseTexture;
+
+        //systems
+        private HeightmapSystem heightmapSystem;
+        private CameraSystem cameraSystem;
 
         public Laboration3()
         {
-            graphics = new GraphicsDeviceManager(this);
+            graphics = new GraphicsDeviceManager(this)
+            {
+                PreferredBackBufferWidth = 1280,
+                PreferredBackBufferHeight = 720,
+                GraphicsProfile = GraphicsProfile.HiDef
+            };
             Content.RootDirectory = "Content";
         }
 
@@ -27,7 +45,12 @@ namespace Assignment3
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+            basicEffect = new BasicEffect(GraphicsDevice);
+            heightmapSystem = new HeightmapSystem(GraphicsDevice, basicEffect);
+            
 
+            
+            SystemManager.Instance.addToDrawableQueue(heightmapSystem);
             base.Initialize();
         }
 
@@ -37,9 +60,24 @@ namespace Assignment3
         /// </summary>
         protected override void LoadContent()
         {
-            // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
+            houseModel = Content.Load<Model>("farmhouse_obj");
+            houseTexture = Content.Load<Texture2D>("farmhouse-texture");
 
+            HeightmapComponent heightmapComponent = new HeightmapComponent(1, new[]{ CreateTexture(GraphicsDevice, 200, 200, color => Color.White),
+                CreateTexture(GraphicsDevice, 200, 200, color => Color.Green)}, 0,0,GraphicsDevice);
+            ComponentManager.Instance.AddComponent(heightmapComponent);
+
+            var view = Matrix.CreateLookAt( Vector3.Zero, (Vector3.Zero + Vector3.Backward * 20) , Vector3.Up);
+            var projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver2, GraphicsDevice.Viewport.AspectRatio, 0.1f, 1000f);
+            CameraComponent cameraComponent = new CameraComponent(1, view, projection, true);
+            ComponentManager.Instance.AddComponent(cameraComponent);
+
+            basicEffect.Projection = cameraComponent.Projection;
+            basicEffect.View = cameraComponent.View;
+
+            cameraSystem = new CameraSystem(GraphicsDevice);
+            SystemManager.Instance.addToUpdateableQueue(cameraSystem);
             // TODO: use this.Content to load your game content here
         }
 
@@ -63,7 +101,7 @@ namespace Assignment3
                 Exit();
 
             // TODO: Add your update logic here
-
+            SystemManager.Instance.Update(gameTime);
             base.Update(gameTime);
         }
 
@@ -76,8 +114,27 @@ namespace Assignment3
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // TODO: Add your drawing code here
-
+            SystemManager.Instance.Draw();
             base.Draw(gameTime);
+        }
+
+        private Texture2D CreateTexture(GraphicsDevice device, int width, int height, System.Func<int, Color> paint)
+        {
+            //initialize a texture
+            Texture2D texture = new Texture2D(device, width, height);
+
+            //the array holds the color for each pixel in the texture
+            Color[] colorArray = new Color[width * height];
+            for (int pixel = 0; pixel < colorArray.Count(); pixel++)
+            {
+                //the function applies the color according to the specified pixel
+                colorArray[pixel] = paint(pixel);
+            }
+
+            //set the color
+            texture.SetData(colorArray);
+
+            return texture;
         }
     }
 }

@@ -25,11 +25,8 @@ namespace Game_Engine.Systems
                 var cameraComponent = ComponentManager.Instance.GetComponentsById<CameraComponent>(modelComponent.EntityID);
                 foreach (ModelMesh modelMesh in modelComponent.model.Meshes)
                 {
-                    //System.Console.WriteLine(modelMesh.Name);
                     foreach (BasicEffect effect in modelMesh.Effects)
                     {
-                        
-                        //modelComponent.objectWorld = Matrix.CreateScale(transformComponent.scale) * transformComponent.rotation * Matrix.CreateTranslation(transformComponent.position);
                         effect.World = boneTransformations[modelMesh.ParentBone.Index];
                         effect.View = cameraComponent.View;
                         effect.Projection = cameraComponent.Projection;

@@ -40,6 +40,9 @@
   <PropertyGroup>
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>Assignment3.Program</StartupObject>
+  </PropertyGroup>
   <ItemGroup>
     <Compile Include="Laboration3.cs" />
     <Compile Include="Program.cs" />

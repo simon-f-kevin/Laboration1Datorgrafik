@@ -21,8 +21,8 @@ namespace Game_Engine.Managers
     public class SystemManager
     {
         private static SystemManager _instance;
-        public Queue<IUpdateableSystem> UpdateableSystems { get; set; }
-        public Queue<IDrawableSystem> DrawableSystems { get; set; }
+        private Queue<IUpdateableSystem> UpdateableSystems { get; set; }
+        private Queue<IDrawableSystem> DrawableSystems { get; set; }
 
         private SystemManager()
         {

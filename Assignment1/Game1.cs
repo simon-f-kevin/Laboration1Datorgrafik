@@ -44,7 +44,7 @@ namespace Assignment1
             transformSystem = new TransformSystem();
             cameraSystem = new CameraSystem(this.GraphicsDevice);
             modelSystem = new ModelSystem();
-            heightmapSystem = new HeightmapSystem(GraphicsDevice);
+            heightmapSystem = new HeightmapSystem(GraphicsDevice, new BasicEffect(GraphicsDevice));
 
             SystemManager.Instance.addToUpdateableQueue(transformSystem, cameraSystem);
             SystemManager.Instance.addToDrawableQueue(modelSystem, heightmapSystem);
