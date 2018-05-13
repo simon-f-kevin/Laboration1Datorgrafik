@@ -6,7 +6,7 @@ using Game_Engine.Systems;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Robot;
+using Game_Engine.Robot;
 using System;
 using System.Collections.Generic;
 
@@ -24,24 +24,30 @@ namespace Assignment2
         Texture2D mapTextureImage;
         Texture2D houseTexture;
         Texture2D treeTexture;
-        Model playerModel;
         Model treeModel;
         Model houseModel;
 
         WorldTerrain worldTerrain;
-        PlayerCameraSystem cameraSystem;
+        CameraSystem cameraSystem;
         WorldDrawSystem worldDrawSystem;
         WorldObjectsDrawSystem worldObjectsDrawSystem;
+        HeightmapSystem heightmapSystem;
 
         BasicEffect Effect;
         Player torso;
-        RobotArm robotArm;
+        RobotBody robotArm;
 
         List<Vector3> modelPositions;
+        float[,] HeightmapData;
 
         public Laboration2()
         {
-            graphics = new GraphicsDeviceManager(this);
+            graphics = new GraphicsDeviceManager(this)
+            {
+                PreferredBackBufferWidth = 1280,
+                PreferredBackBufferHeight = 720,
+                GraphicsProfile = GraphicsProfile.HiDef
+            };
             Content.RootDirectory = "Content";
         }
 
@@ -53,7 +59,6 @@ namespace Assignment2
         /// </summary>
         protected override void Initialize()
         {
-            
             base.Initialize();
         }
 
@@ -66,6 +71,7 @@ namespace Assignment2
 
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
+            Effect = new BasicEffect(GraphicsDevice);
             mapTexture = Content.Load<Texture2D>("US_Canyon");
             mapTextureImage = Content.Load<Texture2D>("grass");
             houseModel = Content.Load<Model>("farmhouse_obj");
@@ -73,59 +79,44 @@ namespace Assignment2
             treeModel = Content.Load<Model>("farmhouse_obj");
             treeTexture = Content.Load<Texture2D>("Tree");
 
-            worldTerrain = new WorldTerrain(GraphicsDevice, mapTexture,
-                mapTextureImage, new Vector3(0,0,0));
-            worldTerrain.HeightmapWorldMatrix = Matrix.CreateTranslation(new Vector3(0, 0, 1080));
-            List<House> houses = CreateHouses(houseModel, 100);
+            HeightmapComponent heightmapComponent = new HeightmapComponent(1, new Texture2D[2] { mapTexture, mapTextureImage }, 0, 0, GraphicsDevice);
+            HeightmapData = heightmapComponent.HeightData;
+            ComponentManager.Instance.AddComponent(heightmapComponent);
+
+            List<House> houses = CreateHouses(houseModel, 2000);
             
 
             //systems
-            worldDrawSystem = new WorldDrawSystem(worldTerrain, GraphicsDevice);
             worldObjectsDrawSystem = new WorldObjectsDrawSystem();
             worldObjectsDrawSystem.Objects = houses;
+            heightmapSystem = new HeightmapSystem(GraphicsDevice, Effect);
 
-            SystemManager.Instance.addToDrawableQueue(worldDrawSystem, worldObjectsDrawSystem);
 
+            SystemManager.Instance.addToDrawableQueue(worldObjectsDrawSystem, heightmapSystem);
+
+            robotArm = new RobotBody(GraphicsDevice, new Vector3(2,4,2), treeTexture);
+            robotArm.GetHeightMap(HeightmapData);
+            var gubbepos = robotArm.Position;
 
             //Create engine components
             int id = 1;
-            var view = Matrix.CreateLookAt(new Vector3(200, 50, 50), new Vector3(0, 0, 0), Vector3.Up);
+            var view = Matrix.CreateLookAt(gubbepos + Vector3.Forward * 20, gubbepos, Vector3.Up);
             var projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver2, GraphicsDevice.Viewport.AspectRatio, 0.1f, 1000f);
             CameraComponent cameraComponent = new CameraComponent(id,view,  projection, true);
             ComponentManager.Instance.AddComponent(cameraComponent);
 
-            Effect = new BasicEffect(GraphicsDevice);
+            Effect.Projection = cameraComponent.Projection;
+            Effect.View = cameraComponent.View;
 
-            robotArm = new RobotArm(GraphicsDevice);
-            robotArm.GetHeightMap(worldTerrain.GetHeightmapData());
-
-            torso = new Player(Vector3.Zero, Vector3.Zero, new Vector3(50, 50, 50), GraphicsDevice);
-            torso.HeightMap = worldTerrain.GetHeightmapData();
-            Effect.VertexColorEnabled = true;
-            Effect.Projection = cameraComponent.projection;
-            Effect.View = cameraComponent.view;
-
-            cameraSystem = new PlayerCameraSystem(torso);
-
+            cameraSystem = new CameraSystem(GraphicsDevice);
+            cameraSystem.SetModelToFollow(robotArm);
             SystemManager.Instance.addToUpdateableQueue(cameraSystem);
-        }
-
-        private void CreateRobotArm(int entityId)
-        {
-            RobotArmComponent robotArmComponent = new RobotArmComponent(entityId);
-            LowerArmComponent lowerArmComponent = new LowerArmComponent(entityId);
-            CuboidMeshComponent cuboidMeshComponent = new CuboidMeshComponent(entityId, GraphicsDevice, 2, 1, 2, Effect);
-
-            ComponentManager.Instance.AddComponent(robotArmComponent);
-            ComponentManager.Instance.AddComponent(lowerArmComponent);
-            ComponentManager.Instance.AddComponent(cuboidMeshComponent);
         }
 
         private List<House> CreateHouses(Model houseModel, int nModels)
         {
             List<House> houses = new List<House>();
-            var heightmapData = worldTerrain.GetHeightmapData();
-            modelPositions = GeneratePositions(heightmapData, nModels);
+            modelPositions = GeneratePositions(HeightmapData, nModels);
             houses.Add(new House(houseModel, modelPositions[0], treeTexture));
             for (int i = 1; i < nModels; i++)
             {
@@ -154,7 +145,7 @@ namespace Assignment2
                 //Console.WriteLine(x.ToString() + " " + z.ToString());
             }
 
-             return positions;
+            return positions;
         }
 
         /// <summary>
@@ -177,7 +168,7 @@ namespace Assignment2
                 Exit();
 
             // TODO: Add your update logic here
-            torso.Update();
+            //torso.Update();
             robotArm.Update(gameTime);
             SystemManager.Instance.Update(gameTime);
             base.Update(gameTime);
@@ -190,11 +181,9 @@ namespace Assignment2
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
-            torso.Draw(Effect, Matrix.Identity);
+            
             robotArm.Draw(Effect, Matrix.Identity);
             SystemManager.Instance.Draw();
-
-            //Console.WriteLine(torso.Position.ToString());
 
             base.Draw(gameTime);
         }

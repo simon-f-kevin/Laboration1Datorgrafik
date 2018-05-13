@@ -6,31 +6,31 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-namespace Robot
+namespace Game_Engine.Robot
 {
-    class LowerArm : CuboidMesh
+    class Horn : CuboidMesh
     {
         private List<IGameObject> _children = new List<IGameObject>();
 
         private Vector3 _rotation = Vector3.Zero;
-        private Vector3 _position = new Vector3(0, 1.5f, 0);
-        private Vector3 _jointPos = new Vector3(0, 0.5f, 0);
+        private Vector3 _position = new Vector3(0, 0.5f, 0);
+        private Vector3 _jointPos = new Vector3(0, 1.5f, 0);
 
-        public LowerArm(GraphicsDevice graphics)
-            : base(graphics, 1f, 3f, 1f)
+        public Horn(GraphicsDevice graphics, Vector3 size, Texture2D texture)
+            : base(graphics, size, texture)
         {
-            _children.Add(new UpperArm(graphics));
+            _rotation = new Vector3(_rotation.X, _rotation.Y + 0.5f, _rotation.Z);
         }
 
         public override void Update(GameTime gameTime)
         {
-            //if (Keyboard.GetState().IsKeyDown(Keys.Down))
-            //    _rotation = new Vector3(_rotation.X, _rotation.Y, _rotation.Z + 0.01f);
+            //if (Keyboard.GetState().IsKeyDown(Keys.D2))
+            //    _rotation = new Vector3(_rotation.X, _rotation.Y + 0.01f, _rotation.Z);
 
-            //if (Keyboard.GetState().IsKeyDown(Keys.Up))
-            //    _rotation = new Vector3(_rotation.X, _rotation.Y, _rotation.Z - 0.01f);
+            //if (Keyboard.GetState().IsKeyDown(Keys.D1))
+            //    _rotation = new Vector3(_rotation.X, _rotation.Y - 0.01f, _rotation.Z);
 
-            World = Matrix.Identity *
+            WorldMatrix = Matrix.Identity *
                 Matrix.CreateTranslation(_position) *
                 Matrix.CreateFromQuaternion(Quaternion.CreateFromYawPitchRoll(_rotation.X, _rotation.Y, _rotation.Z)) *
                 Matrix.CreateTranslation(_jointPos);
@@ -41,14 +41,14 @@ namespace Robot
 
         public override void Draw(BasicEffect effect, Matrix world)
         {
-            effect.World = World * world;
+            effect.World = WorldMatrix * world;
             effect.CurrentTechnique.Passes[0].Apply();
-
+            effect.Texture = Texture;
             GraphicsDevice.SetVertexBuffer(VertexBuffer);
-            GraphicsDevice.DrawPrimitives(PrimitiveType.TriangleList, 0, 36);
+            GraphicsDevice.DrawPrimitives(PrimitiveType.TriangleList, 0, VertexBuffer.VertexCount);
 
             foreach (IGameObject go in _children)
-                go.Draw(effect, World * world);
+                go.Draw(effect, WorldMatrix * world);
         }
     }
 }

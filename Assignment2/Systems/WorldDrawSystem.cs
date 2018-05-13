@@ -28,8 +28,8 @@ namespace Assignment2.Systems
             Dictionary<int, EntityComponent> cameras = ComponentManager.Instance.getDictionary<CameraComponent>();
             foreach(CameraComponent cameraComponent in cameras.Values)
             {
-                worldTerrain.BasicEffect.View = cameraComponent.view;
-                worldTerrain.BasicEffect.Projection = cameraComponent.projection;
+                worldTerrain.BasicEffect.View = cameraComponent.View;
+                worldTerrain.BasicEffect.Projection = cameraComponent.Projection;
                 worldTerrain.Draw();
             }
            

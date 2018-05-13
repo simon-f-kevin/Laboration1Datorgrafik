@@ -10,18 +10,21 @@ namespace Game_Engine.Components
 {
     public class CameraComponent : EntityComponent
     {
-        public Matrix world { get; set; }
-        public Matrix view { get; set; }
-        public Matrix projection { get; set; }
+        public Matrix World { get; set; }
+        public Matrix View { get; set; }
+        public Matrix Projection { get; set; }
 
         public bool Follow { get; set; }
 
+        public BoundingFrustum BoundingFrustum { get; set; }
+
         public CameraComponent(int id, Matrix View, Matrix Projection, bool Follow) : base(id)
         {
-            world = Matrix.Identity;
-            this.view = View;
-            this.projection = Projection;
+            World = Matrix.Identity;
+            this.View = View;
+            this.Projection = Projection;
             this.Follow = Follow;
+            BoundingFrustum = new BoundingFrustum(Matrix.Identity);
         }
     }
 }

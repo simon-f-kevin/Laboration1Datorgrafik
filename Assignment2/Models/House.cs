@@ -11,12 +11,12 @@ namespace Assignment2.Models
     public class House : AbstractModel, IModel
     {
         private Texture2D texture;
-
+        private float scale = 0.1f;
         public House(Model houseModel, Vector3 pos, Texture2D texture)
         {
             model = houseModel;
             //model.Bones[0].Transform = Matrix.CreateTranslation(pos);
-            worldMatrix = Matrix.CreateTranslation(pos);
+            worldMatrix = Matrix.CreateScale(scale) * Matrix.CreateTranslation(pos);
             this.texture = texture;
         }
 

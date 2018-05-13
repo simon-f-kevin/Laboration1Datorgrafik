@@ -5,7 +5,7 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace Robot
+namespace Game_Engine.Robot
 {
     public interface IGameObject
     {
