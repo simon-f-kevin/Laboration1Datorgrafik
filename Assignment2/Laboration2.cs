@@ -1,5 +1,4 @@
 ﻿using Assignment2.Models;
-using Assignment2.Robot;
 using Assignment2.Systems;
 using Game_Engine.Components;
 using Game_Engine.Managers;
@@ -30,12 +29,13 @@ namespace Assignment2
         Model houseModel;
 
         WorldTerrain worldTerrain;
-        RobotCameraSystem cameraSystem;
+        PlayerCameraSystem cameraSystem;
         WorldDrawSystem worldDrawSystem;
         WorldObjectsDrawSystem worldObjectsDrawSystem;
 
-        RobotArm _arm;
-        BasicEffect _effect;
+        BasicEffect Effect;
+        Player torso;
+        RobotArm robotArm;
 
         List<Vector3> modelPositions;
 
@@ -53,8 +53,6 @@ namespace Assignment2
         /// </summary>
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
-            //cameraSystem = new CameraSystem(this.GraphicsDevice);
             
             base.Initialize();
         }
@@ -76,8 +74,8 @@ namespace Assignment2
             treeTexture = Content.Load<Texture2D>("Tree");
 
             worldTerrain = new WorldTerrain(GraphicsDevice, mapTexture,
-                new Texture2D[4] { mapTextureImage, mapTextureImage, mapTextureImage, mapTextureImage }, new Vector3(0,0,0));
-
+                mapTextureImage, new Vector3(0,0,0));
+            worldTerrain.HeightmapWorldMatrix = Matrix.CreateTranslation(new Vector3(0, 0, 1080));
             List<House> houses = CreateHouses(houseModel, 100);
             
 
@@ -91,20 +89,23 @@ namespace Assignment2
 
             //Create engine components
             int id = 1;
-            var view = Matrix.CreateLookAt(new Vector3(100, 0, 5), new Vector3(0, 27, 0), Vector3.Up);
+            var view = Matrix.CreateLookAt(new Vector3(200, 50, 50), new Vector3(0, 0, 0), Vector3.Up);
             var projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver2, GraphicsDevice.Viewport.AspectRatio, 0.1f, 1000f);
             CameraComponent cameraComponent = new CameraComponent(id,view,  projection, true);
             ComponentManager.Instance.AddComponent(cameraComponent);
 
-            _arm = new RobotArm(GraphicsDevice);
-            _arm.GetHeightMap(worldTerrain.GetHeightmapData());
-            _effect = new BasicEffect(GraphicsDevice);
-            _effect.VertexColorEnabled = true;
+            Effect = new BasicEffect(GraphicsDevice);
 
-            _effect.Projection = cameraComponent.projection;
-            _effect.View = cameraComponent.view;
+            robotArm = new RobotArm(GraphicsDevice);
+            robotArm.GetHeightMap(worldTerrain.GetHeightmapData());
 
-            cameraSystem = new RobotCameraSystem(_arm);
+            torso = new Player(Vector3.Zero, Vector3.Zero, new Vector3(50, 50, 50), GraphicsDevice);
+            torso.HeightMap = worldTerrain.GetHeightmapData();
+            Effect.VertexColorEnabled = true;
+            Effect.Projection = cameraComponent.projection;
+            Effect.View = cameraComponent.view;
+
+            cameraSystem = new PlayerCameraSystem(torso);
 
             SystemManager.Instance.addToUpdateableQueue(cameraSystem);
         }
@@ -113,7 +114,7 @@ namespace Assignment2
         {
             RobotArmComponent robotArmComponent = new RobotArmComponent(entityId);
             LowerArmComponent lowerArmComponent = new LowerArmComponent(entityId);
-            CuboidMeshComponent cuboidMeshComponent = new CuboidMeshComponent(entityId, GraphicsDevice, 2, 1, 2, _effect);
+            CuboidMeshComponent cuboidMeshComponent = new CuboidMeshComponent(entityId, GraphicsDevice, 2, 1, 2, Effect);
 
             ComponentManager.Instance.AddComponent(robotArmComponent);
             ComponentManager.Instance.AddComponent(lowerArmComponent);
@@ -140,13 +141,16 @@ namespace Assignment2
             List<Vector3> positions = new List<Vector3>();
 
             Random rnd = new Random();
-            int x = -10;
-            int z = -10;
+            int x = 2;
+            int z = 2;
             for (int i = 0; i < nPositions; i++)
             {
-                x += 10;
-                z += 10;
-                positions.Add(new Vector3(x, heightmapData[Math.Abs(x) , Math.Abs(z)] + (houseModel.Meshes[0].BoundingSphere.Radius), z));
+                x = rnd.Next(x / 2, x + 5);
+                z = rnd.Next(z / 2, z + 5);
+                var y = heightmapData[Math.Abs(x), Math.Abs(z)];
+                positions.Add(new Vector3(x, y, -z));
+                x += 50;
+                z += 50;
                 //Console.WriteLine(x.ToString() + " " + z.ToString());
             }
 
@@ -173,8 +177,8 @@ namespace Assignment2
                 Exit();
 
             // TODO: Add your update logic here
-            _arm.Update(gameTime);
-
+            torso.Update();
+            robotArm.Update(gameTime);
             SystemManager.Instance.Update(gameTime);
             base.Update(gameTime);
         }
@@ -186,11 +190,11 @@ namespace Assignment2
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
-
-            
+            torso.Draw(Effect, Matrix.Identity);
+            robotArm.Draw(Effect, Matrix.Identity);
             SystemManager.Instance.Draw();
-            _arm.Draw(_effect, Matrix.Identity);
-            Console.WriteLine(_arm._position.ToString());
+
+            //Console.WriteLine(torso.Position.ToString());
 
             base.Draw(gameTime);
         }
