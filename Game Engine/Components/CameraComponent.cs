@@ -13,6 +13,7 @@ namespace Game_Engine.Components
         public Matrix World { get; set; }
         public Matrix View { get; set; }
         public Matrix Projection { get; set; }
+        public Vector3 Position;
 
         public bool Follow { get; set; }
 

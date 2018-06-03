@@ -68,19 +68,19 @@ namespace Game_Engine.Systems
 
                 Quaternion rot = Quaternion.CreateFromAxisAngle(Vector3.Zero, -elapsedGameTime * 0.01f);
                 rot.Normalize();
-                transformComponent.rotation *= Matrix.CreateFromQuaternion(rot);
+                transformComponent.Rotation *= Matrix.CreateFromQuaternion(rot);
 
                 // Reset to original (zero) position and rotation
                 if (Keyboard.GetState().IsKeyDown(Keys.R))
                     modelComponent.model.Bones[0].Transform = Matrix.Identity;
 
                 //Rotate blades of chopper
-                transformComponent.rotationVector.Y += 0.9f;
-                transformComponent.rotationVector.X += 0.9f;
+                transformComponent.RotationVector.Y += 0.9f;
+                transformComponent.RotationVector.X += 0.9f;
 
-                transformComponent.position = modelComponent.model.Bones[0].Transform.Translation;
-                modelComponent.model.Bones["Main_Rotor"].Transform = Matrix.CreateRotationY(transformComponent.rotationVector.Y) * Matrix.CreateTranslation(modelComponent.model.Bones["Main_Rotor"].Transform.Translation);
-                modelComponent.model.Bones["Back_Rotor"].Transform = Matrix.CreateRotationZ((float)Math.PI / 2f) * Matrix.CreateRotationX(transformComponent.rotationVector.X) * Matrix.CreateTranslation(modelComponent.model.Bones["Back_Rotor"].Transform.Translation);
+                transformComponent.Position = modelComponent.model.Bones[0].Transform.Translation;
+                //modelComponent.model.Bones["Main_Rotor"].Transform = Matrix.CreateRotationY(transformComponent.RotationVector.Y) * Matrix.CreateTranslation(modelComponent.model.Bones["Main_Rotor"].Transform.Translation);
+                //modelComponent.model.Bones["Back_Rotor"].Transform = Matrix.CreateRotationZ((float)Math.PI / 2f) * Matrix.CreateRotationX(transformComponent.RotationVector.X) * Matrix.CreateTranslation(modelComponent.model.Bones["Back_Rotor"].Transform.Translation);
             }
         }
     }

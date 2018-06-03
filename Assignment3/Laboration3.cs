@@ -22,8 +22,9 @@ namespace Assignment3
         private Texture2D houseTexture;
 
         //systems
-        private HeightmapSystem heightmapSystem;
+        private ModelSystem modelSystem;
         private CameraSystem cameraSystem;
+        private TransformSystem transformSystem;
 
         public Laboration3()
         {
@@ -46,11 +47,13 @@ namespace Assignment3
         {
             // TODO: Add your initialization logic here
             basicEffect = new BasicEffect(GraphicsDevice);
-            heightmapSystem = new HeightmapSystem(GraphicsDevice, basicEffect);
             
+            modelSystem = new ModelSystem();
+            cameraSystem = new CameraSystem(GraphicsDevice);
+            //transformSystem = new TransformSystem();
 
-            
-            SystemManager.Instance.addToDrawableQueue(heightmapSystem);
+            SystemManager.Instance.addToUpdateableQueue(cameraSystem);
+            SystemManager.Instance.addToDrawableQueue(modelSystem);
             base.Initialize();
         }
 
@@ -60,26 +63,21 @@ namespace Assignment3
         /// </summary>
         protected override void LoadContent()
         {
+            int cameraId = 1;
             spriteBatch = new SpriteBatch(GraphicsDevice);
             houseModel = Content.Load<Model>("farmhouse_obj");
             houseTexture = Content.Load<Texture2D>("farmhouse-texture");
 
-            HeightmapComponent heightmapComponent = new HeightmapComponent(1, new[]{ CreateTexture(GraphicsDevice, 200, 200, color => Color.White),
-                CreateTexture(GraphicsDevice, 200, 200, color => Color.Green)}, 0,0,GraphicsDevice);
-            ComponentManager.Instance.AddComponent(heightmapComponent);
+            CreateCamera(cameraId);
+            
+            CreateTerrain(2);
+            CreateHouseModel(cameraId, new Vector3(0,0,-5000));
 
-            var view = Matrix.CreateLookAt( Vector3.Zero, (Vector3.Zero + Vector3.Backward * 20) , Vector3.Up);
-            var projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver2, GraphicsDevice.Viewport.AspectRatio, 0.1f, 1000f);
-            CameraComponent cameraComponent = new CameraComponent(1, view, projection, true);
-            ComponentManager.Instance.AddComponent(cameraComponent);
+            
 
-            basicEffect.Projection = cameraComponent.Projection;
-            basicEffect.View = cameraComponent.View;
-
-            cameraSystem = new CameraSystem(GraphicsDevice);
-            SystemManager.Instance.addToUpdateableQueue(cameraSystem);
             // TODO: use this.Content to load your game content here
         }
+
 
         /// <summary>
         /// UnloadContent will be called once per game and is the place to unload
@@ -135,6 +133,32 @@ namespace Assignment3
             texture.SetData(colorArray);
 
             return texture;
+        }
+
+        private void CreateCamera(int cameraId)
+        {
+            var view = Matrix.CreateLookAt(Vector3.Zero, (Vector3.Zero + Vector3.Forward * 20), Vector3.Up);
+            var projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver2, GraphicsDevice.Viewport.AspectRatio, 0.1f, 1000f);
+            CameraComponent cameraComponent = new CameraComponent(cameraId, view, projection, false);
+            cameraComponent.Position = new Vector3(0,0,0);
+            basicEffect.Projection = cameraComponent.Projection;
+            basicEffect.View = cameraComponent.View;
+
+            ComponentManager.Instance.AddComponent(cameraComponent);
+        }
+
+        private void CreateHouseModel(int houseId, Vector3 position)
+        {
+            ModelComponent modelComponent = new ModelComponent(houseId, houseModel);
+            TransformComponent transformComponent = new TransformComponent(houseId, new Vector3(10, 10, 10), position);
+
+            ComponentManager.Instance.AddComponent(transformComponent);
+            ComponentManager.Instance.AddComponent(modelComponent);
+        }
+
+        private void CreateTerrain(int terrainId)
+        {
+
         }
     }
 }

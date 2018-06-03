@@ -37,7 +37,6 @@ namespace Game_Engine.Systems
                         modelMesh.Draw();
                     }
                 }
-                GC.Collect();
             }
         }
     }

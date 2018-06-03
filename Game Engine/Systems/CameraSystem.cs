@@ -45,6 +45,29 @@ namespace Game_Engine.Systems
                         0.5f * 0.1f, 1.3f * 1000f);
                     cameraComp.BoundingFrustum.Matrix = cameraComp.View * clipProjection;
                 }
+                else
+                {
+                    if (Keyboard.GetState().IsKeyDown(Keys.Up))
+                    {
+                        cameraComp.Position += Vector3.Up;
+                        cameraComp.View = Matrix.CreateLookAt(cameraComp.Position, Vector3.Forward, Vector3.Up);
+                    }
+                    if (Keyboard.GetState().IsKeyDown(Keys.Down))
+                    {
+                        cameraComp.Position += Vector3.Down;
+                        cameraComp.View = Matrix.CreateLookAt(cameraComp.Position, Vector3.Forward, Vector3.Up);
+                    }
+                    if (Keyboard.GetState().IsKeyDown(Keys.Left))
+                    {
+                        cameraComp.Position += Vector3.Left;
+                        cameraComp.View = Matrix.CreateLookAt(cameraComp.Position, Vector3.Forward, Vector3.Up);
+                    }
+                    if (Keyboard.GetState().IsKeyDown(Keys.Right))
+                    {
+                        cameraComp.Position += Vector3.Right;
+                        cameraComp.View = Matrix.CreateLookAt(cameraComp.Position, Vector3.Forward, Vector3.Up);
+                    }
+                }
             }
             
         }
