@@ -92,9 +92,8 @@ namespace Assignment3
             CreateTerrain(12, new Vector3(124, 0, -125));
             CreateTerrain(13, new Vector3(-124, 0, -125));
             CreateHouseModel(4, new Vector3(0,0,0));
-            CreateBlock(5, new Vector3(-40, 5, -30));
+            CreateBlock(5, new Vector3(-40, 1, -30));
             
-
             // TODO: use this.Content to load your game content here
         }
 
@@ -174,11 +173,11 @@ namespace Assignment3
         {
             LightComponent lightComponent = new LightComponent(id)
             {
-                LightDirection =  new Vector3(0,10,0),//new Vector3(-0.3333333f, 0.6666667f, 0.6666667f),
+                LightDirection =  new Vector3(10,2,0),//new Vector3(-0.3333333f, 0.6666667f, 0.6666667f),
                 DiffuseLightDirection = new Vector3(-0.3333333f, 0.6666667f, 0.6666667f),
-                DiffuseColor = Color.White.ToVector4(),
+                DiffuseColor = Color.HotPink.ToVector4(),
                 DiffuseIntensity = 0.5f,
-                AmbientColor = Color.White.ToVector4(),
+                AmbientColor = Color.IndianRed.ToVector4(),
                 AmbientIntensity = 0.2f,
             };
 
