@@ -70,9 +70,9 @@
     <None Include="app.manifest" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Game Engine\Game Engine.csproj">
+    <ProjectReference Include="..\Game Engine\Game_Engine.csproj">
       <Project>{1dad9161-39ad-4a3d-8676-ea55d25cd717}</Project>
-      <Name>Game Engine</Name>
+      <Name>Game_Engine</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

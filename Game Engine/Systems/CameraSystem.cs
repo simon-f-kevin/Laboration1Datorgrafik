@@ -47,25 +47,26 @@ namespace Game_Engine.Systems
                 }
                 else
                 {
+                    var transformComponent = ComponentManager.Instance.GetComponentsById<TransformComponent>(cameraComp.EntityID);
                     if (Keyboard.GetState().IsKeyDown(Keys.Up))
                     {
                         cameraComp.Position += Vector3.Up;
-                        cameraComp.View = Matrix.CreateLookAt(cameraComp.Position, Vector3.Forward, Vector3.Up);
+                        cameraComp.View = Matrix.CreateLookAt(cameraComp.Position, transformComponent.Position, Vector3.Up);
                     }
                     if (Keyboard.GetState().IsKeyDown(Keys.Down))
                     {
                         cameraComp.Position += Vector3.Down;
-                        cameraComp.View = Matrix.CreateLookAt(cameraComp.Position, Vector3.Forward, Vector3.Up);
+                        cameraComp.View = Matrix.CreateLookAt(cameraComp.Position, transformComponent.Position, Vector3.Up);
                     }
                     if (Keyboard.GetState().IsKeyDown(Keys.Left))
                     {
                         cameraComp.Position += Vector3.Left;
-                        cameraComp.View = Matrix.CreateLookAt(cameraComp.Position, Vector3.Forward, Vector3.Up);
+                        cameraComp.View = Matrix.CreateLookAt(cameraComp.Position, transformComponent.Position, Vector3.Up);
                     }
                     if (Keyboard.GetState().IsKeyDown(Keys.Right))
                     {
                         cameraComp.Position += Vector3.Right;
-                        cameraComp.View = Matrix.CreateLookAt(cameraComp.Position, Vector3.Forward, Vector3.Up);
+                        cameraComp.View = Matrix.CreateLookAt(cameraComp.Position, transformComponent.Position, Vector3.Up);
                     }
                 }
             }

@@ -1,4 +1,6 @@
-﻿using Game_Engine.Components;
+﻿using Assignment2.Models;
+using Assignment3.Systems;
+using Game_Engine.Components;
 using Game_Engine.Managers;
 using Game_Engine.Systems;
 using Microsoft.Xna.Framework;
@@ -16,13 +18,17 @@ namespace Assignment3
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         private BasicEffect basicEffect;
+        Ground ground;
+        House house;
 
         //models
         private Model houseModel;
+        private Model blobModel;
+        private Model blockModel;
         private Texture2D houseTexture;
 
         //systems
-        private ModelSystem modelSystem;
+        private ModelRenderSystem modelSystem;
         private CameraSystem cameraSystem;
         private TransformSystem transformSystem;
 
@@ -48,7 +54,7 @@ namespace Assignment3
             // TODO: Add your initialization logic here
             basicEffect = new BasicEffect(GraphicsDevice);
             
-            modelSystem = new ModelSystem();
+            modelSystem = new ModelRenderSystem();
             cameraSystem = new CameraSystem(GraphicsDevice);
             //transformSystem = new TransformSystem();
 
@@ -67,10 +73,13 @@ namespace Assignment3
             spriteBatch = new SpriteBatch(GraphicsDevice);
             houseModel = Content.Load<Model>("farmhouse_obj");
             houseTexture = Content.Load<Texture2D>("farmhouse-texture");
+            blobModel = Content.Load<Model>("Blob");
+            blockModel = Content.Load<Model>("block2");
 
             CreateCamera(cameraId);
-            
+            CreateBlob(2, new Vector3(0, 0, -4500));
             CreateTerrain(2);
+            //house = new House(houseModel, new Vector3(0, 0, -5000), houseTexture);
             CreateHouseModel(cameraId, new Vector3(0,0,-5000));
 
             
@@ -110,9 +119,11 @@ namespace Assignment3
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
-
+            CameraComponent cameraComponent = (CameraComponent)ComponentManager.Instance.getDictionary<CameraComponent>().Values.First();
             // TODO: Add your drawing code here
             SystemManager.Instance.Draw();
+            ground.Draw(basicEffect, cameraComponent.World);
+            //house.Draw(cameraComponent.World, cameraComponent.Projection);
             base.Draw(gameTime);
         }
 
@@ -149,8 +160,26 @@ namespace Assignment3
 
         private void CreateHouseModel(int houseId, Vector3 position)
         {
-            ModelComponent modelComponent = new ModelComponent(houseId, houseModel);
+            ModelComponent modelComponent = new ModelComponent(houseId, houseModel, houseTexture);
             TransformComponent transformComponent = new TransformComponent(houseId, new Vector3(10, 10, 10), position);
+
+            ComponentManager.Instance.AddComponent(transformComponent);
+            ComponentManager.Instance.AddComponent(modelComponent);
+        }
+
+        private void CreateBlob(int blobId, Vector3 position)
+        {
+            ModelComponent modelComponent = new ModelComponent(blobId, blobModel, CreateTexture(GraphicsDevice, 1, 1, c => Color.BlueViolet));
+            TransformComponent transformComponent = new TransformComponent(blobId, new Vector3(5, 5, 5), position);
+
+            ComponentManager.Instance.AddComponent(transformComponent);
+            ComponentManager.Instance.AddComponent(modelComponent);
+        }
+
+        private void CreateBlock(int blockId, Vector3 position)
+        {
+            ModelComponent modelComponent = new ModelComponent(blockId, blobModel, CreateTexture(GraphicsDevice, 1, 1, c => Color.BlanchedAlmond));
+            TransformComponent transformComponent = new TransformComponent(blockId, new Vector3(5, 5, 5), position);
 
             ComponentManager.Instance.AddComponent(transformComponent);
             ComponentManager.Instance.AddComponent(modelComponent);
@@ -158,7 +187,7 @@ namespace Assignment3
 
         private void CreateTerrain(int terrainId)
         {
-
+            ground = new Ground(GraphicsDevice, new Vector3(5000, 1, 5000), CreateTexture(GraphicsDevice, 1, 1, c => Color.LightYellow));
         }
     }
 }
