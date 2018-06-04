@@ -37,6 +37,10 @@ namespace Assignment3.Systems
                         effect.FogStart = 50;
                         effect.FogEnd = 160;
 
+                        effect.DiffuseColor = Color.HotPink.ToVector3();
+                        effect.AmbientLightColor = Color.IndianRed.ToVector3();
+                        effect.SpecularColor = Color.CornflowerBlue.ToVector3();
+
                         effect.EnableDefaultLighting();
                         effect.LightingEnabled = true;
                         effect.Texture = modelComponent.Texture;

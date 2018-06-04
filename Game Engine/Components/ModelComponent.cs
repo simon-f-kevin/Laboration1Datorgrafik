@@ -12,7 +12,7 @@ namespace Game_Engine.Components
     public class ModelComponent : EntityComponent
     {
         public Texture2D Texture { get; set; }
-
+        public Effect Effect { get; set; }
         public Matrix objectWorld { get; set; }
         public Model model { get; set; }
         public ModelComponent(int id, Model model) : base(id)

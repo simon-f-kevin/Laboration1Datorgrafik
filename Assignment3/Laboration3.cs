@@ -31,6 +31,7 @@ namespace Assignment3
         private ModelRenderSystem modelSystem;
         private CameraSystem cameraSystem;
         private LightSystem lightSystem;
+        private ShadowSystem shadowSystem;
 
         public Laboration3()
         {
@@ -57,9 +58,10 @@ namespace Assignment3
             modelSystem = new ModelRenderSystem();
             cameraSystem = new CameraSystem(GraphicsDevice);
             lightSystem = new LightSystem();
+            shadowSystem = new ShadowSystem(GraphicsDevice);
 
             SystemManager.Instance.addToUpdateableQueue(cameraSystem, lightSystem);
-            SystemManager.Instance.addToDrawableQueue(modelSystem, lightSystem);
+            SystemManager.Instance.addToDrawableQueue(modelSystem, lightSystem); //shadowSystem);
             base.Initialize();
         }
 
@@ -172,7 +174,7 @@ namespace Assignment3
         {
             LightComponent lightComponent = new LightComponent(id)
             {
-                LightDirection = new Vector3(-0.3333333f, 0.6666667f, 0.6666667f),
+                LightDirection =  new Vector3(0,10,0),//new Vector3(-0.3333333f, 0.6666667f, 0.6666667f),
                 DiffuseLightDirection = new Vector3(-0.3333333f, 0.6666667f, 0.6666667f),
                 DiffuseColor = Color.White.ToVector4(),
                 DiffuseIntensity = 0.5f,
@@ -186,6 +188,7 @@ namespace Assignment3
         private void CreateHouseModel(int houseId, Vector3 position)
         {
             ModelComponent modelComponent = new ModelComponent(houseId, houseModel, houseTexture);
+            modelComponent.Effect = Content.Load<Effect>("Shadow");
             TransformComponent transformComponent = new TransformComponent(houseId, new Vector3(5, 5, 5), position);
 
             ComponentManager.Instance.AddComponent(transformComponent);
@@ -195,6 +198,7 @@ namespace Assignment3
         private void CreateBlob(int blobId, Vector3 position)
         {
             ModelComponent modelComponent = new ModelComponent(blobId, blobModel, CreateTexture(GraphicsDevice, 1, 1, c => Color.BlueViolet));
+            modelComponent.Effect = Content.Load<Effect>("Shadow");
             TransformComponent transformComponent = new TransformComponent(blobId, new Vector3(2, 2, 2), position);
 
             ComponentManager.Instance.AddComponent(transformComponent);
@@ -204,6 +208,7 @@ namespace Assignment3
         private void CreateBlock(int blockId, Vector3 position)
         {
             ModelComponent modelComponent = new ModelComponent(blockId, blockModel, CreateTexture(GraphicsDevice, 1, 1, c => Color.HotPink));
+            modelComponent.Effect = Content.Load<Effect>("Shadow");
             TransformComponent transformComponent = new TransformComponent(blockId, new Vector3(50, 50, 50), position);
 
             ComponentManager.Instance.AddComponent(transformComponent);
@@ -212,8 +217,8 @@ namespace Assignment3
 
         private void CreateTerrain(int terrainId, Vector3 position)
         {
-            //ground = new Ground(GraphicsDevice, new Vector3(5000, 1, 5000), CreateTexture(GraphicsDevice, 1, 1, c => Color.LightYellow));
             ModelComponent modelComponent = new ModelComponent(terrainId, groundModel, CreateTexture(GraphicsDevice, 1, 1, c => Color.Yellow));
+            modelComponent.Effect = Content.Load<Effect>("Shadow");
             TransformComponent transformComponent = new TransformComponent(terrainId, new Vector3(50, 50, 50), position); //hej
 
             ComponentManager.Instance.AddComponent(transformComponent);
