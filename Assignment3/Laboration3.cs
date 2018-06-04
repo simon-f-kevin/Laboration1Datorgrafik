@@ -18,8 +18,6 @@ namespace Assignment3
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         private BasicEffect basicEffect;
-        //Ground ground;
-        //House house;
 
         //models
         private Model houseModel;
@@ -80,7 +78,14 @@ namespace Assignment3
             CreateCamera(cameraId);
             CreateBlob(2, new Vector3(-30, 5, 30));
             CreateTerrain(3, new Vector3(0,0,0));
-            //house = new House(houseModel, new Vector3(0, 0, -5000), houseTexture);
+            CreateTerrain(6, new Vector3(0, 0, 125));
+            CreateTerrain(7, new Vector3(124, 0, 0));
+            CreateTerrain(8, new Vector3(-124, 0, 0));
+            CreateTerrain(9, new Vector3(0, 0, -125));
+            CreateTerrain(10, new Vector3(124, 0, 125));
+            CreateTerrain(11, new Vector3(-124, 0, 125));
+            CreateTerrain(12, new Vector3(124, 0, -125));
+            CreateTerrain(13, new Vector3(-124, 0, -125));
             CreateHouseModel(4, new Vector3(0,0,0));
             CreateBlock(5, new Vector3(-40, 5, -30));
             
@@ -123,8 +128,6 @@ namespace Assignment3
             CameraComponent cameraComponent = (CameraComponent)ComponentManager.Instance.getDictionary<CameraComponent>().Values.First();
             // TODO: Add your drawing code here
             SystemManager.Instance.Draw();
-            //ground.Draw(basicEffect, cameraComponent.World);
-            //house.Draw(cameraComponent.World, cameraComponent.Projection);
             base.Draw(gameTime);
         }
 
@@ -149,7 +152,7 @@ namespace Assignment3
 
         private void CreateCamera(int cameraId)
         {
-            var view = Matrix.CreateLookAt(new Vector3(-75, 15, 0), (Vector3.Zero + Vector3.Forward * 20), Vector3.Up);
+            var view = Matrix.CreateLookAt(new Vector3(-62, 15, 0), (Vector3.Zero + Vector3.Forward * 20), Vector3.Up);
             var projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver2, GraphicsDevice.Viewport.AspectRatio, 0.1f, 1000f);
             CameraComponent cameraComponent = new CameraComponent(cameraId, view, projection, false);
             cameraComponent.Position = new Vector3(0,0,0);
@@ -195,6 +198,7 @@ namespace Assignment3
 
             ComponentManager.Instance.AddComponent(transformComponent);
             ComponentManager.Instance.AddComponent(modelComponent);
+
         }
     }
 }

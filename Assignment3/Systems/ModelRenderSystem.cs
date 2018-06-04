@@ -32,6 +32,11 @@ namespace Assignment3.Systems
                         effect.View = cameraComponent.View;
                         effect.Projection = cameraComponent.Projection;
 
+                        effect.FogEnabled = true;
+                        effect.FogColor = Color.CornflowerBlue.ToVector3();
+                        effect.FogStart = 50;
+                        effect.FogEnd = 160;
+
                         effect.EnableDefaultLighting();
                         effect.LightingEnabled = true;
                         effect.Texture = modelComponent.Texture;
