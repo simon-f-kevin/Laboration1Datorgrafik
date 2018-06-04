@@ -107,3 +107,9 @@
 /processorParam:DebugMode=Auto
 /build:Shadow.fx
 
+#begin Shading.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Shading.fx
+

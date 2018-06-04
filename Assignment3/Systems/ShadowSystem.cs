@@ -56,8 +56,12 @@ namespace Assignment3.Systems
                 foreach(var meshPart in mesh.MeshParts)
                 {
                     modelComp.Effect.CurrentTechnique = modelComp.Effect.Techniques[technique];
+                    if (technique.Contains("DrawWithShadowMap"))
+                    {
+                        modelComp.Effect.Parameters["ShadowMap"].SetValue(renderTarget);
+                    }
                     modelComp.Effect.Parameters["Texture"].SetValue(modelComp.Texture);
-                    if(technique.Contains("DrawWithShadowMap")) modelComp.Effect.Parameters["ShadowMap"].SetValue(renderTarget);
+                    modelComp.Effect.Parameters["World"].SetValue(Matrix.CreateTranslation(transformComponent.Position));
                     modelComp.Effect.Parameters["View"].SetValue(cameraComponent.View);
                     modelComp.Effect.Parameters["Projection"].SetValue(cameraComponent.Projection);
                     modelComp.Effect.Parameters["LightDirection"].SetValue(lightComponent.LightDirection);
@@ -75,6 +79,11 @@ namespace Assignment3.Systems
                     modelComp.Effect.Parameters["Shininess"].SetValue(0.9f);
                     modelComp.Effect.Parameters["SpecularColor"].SetValue(Color.CornflowerBlue.ToVector4());
                     modelComp.Effect.Parameters["SpecularIntensity"].SetValue(0.1f);
+
+                    modelComp.Effect.Parameters["FogStart"].SetValue(100f);
+                    modelComp.Effect.Parameters["FogEnd"].SetValue(150f);
+                    modelComp.Effect.Parameters["FogColor"].SetValue(Color.CornflowerBlue.ToVector4());
+                    modelComp.Effect.Parameters["FogEnabled"].SetValue(true);
 
                     foreach(var pass in modelComp.Effect.CurrentTechnique.Passes)
                     {

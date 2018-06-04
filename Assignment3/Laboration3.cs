@@ -61,7 +61,7 @@ namespace Assignment3
             shadowSystem = new ShadowSystem(GraphicsDevice);
 
             SystemManager.Instance.addToUpdateableQueue(cameraSystem, lightSystem);
-            SystemManager.Instance.addToDrawableQueue(modelSystem, lightSystem); //shadowSystem);
+            SystemManager.Instance.addToDrawableQueue(lightSystem, shadowSystem);
             base.Initialize();
         }
 
