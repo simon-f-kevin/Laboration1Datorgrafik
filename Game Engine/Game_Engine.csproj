@@ -72,6 +72,7 @@
     <Compile Include="Components\EntityComponent.cs" />
     <Compile Include="Components\HeightmapComponent.cs" />
     <Compile Include="Components\HeightmapMeshComponent.cs" />
+    <Compile Include="Components\LightComponent.cs" />
     <Compile Include="Components\LowerArmComponent.cs" />
     <Compile Include="Components\ModelComponent.cs" />
     <Compile Include="Components\RobotArmComponent.cs" />

@@ -6,6 +6,7 @@ using Game_Engine.Systems;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System;
 using System.Linq;
 
 namespace Assignment3
@@ -29,6 +30,7 @@ namespace Assignment3
         //systems
         private ModelRenderSystem modelSystem;
         private CameraSystem cameraSystem;
+        private LightSystem lightSystem;
 
         public Laboration3()
         {
@@ -54,10 +56,10 @@ namespace Assignment3
             
             modelSystem = new ModelRenderSystem();
             cameraSystem = new CameraSystem(GraphicsDevice);
-            //transformSystem = new TransformSystem();
+            lightSystem = new LightSystem();
 
-            SystemManager.Instance.addToUpdateableQueue(cameraSystem);
-            SystemManager.Instance.addToDrawableQueue(modelSystem);
+            SystemManager.Instance.addToUpdateableQueue(cameraSystem, lightSystem);
+            SystemManager.Instance.addToDrawableQueue(modelSystem, lightSystem);
             base.Initialize();
         }
 
@@ -76,6 +78,7 @@ namespace Assignment3
             groundModel = Content.Load<Model>("ground");
 
             CreateCamera(cameraId);
+            CreateLightSource(14);
             CreateBlob(2, new Vector3(-30, 5, 30));
             CreateTerrain(3, new Vector3(0,0,0));
             CreateTerrain(6, new Vector3(0, 0, 125));
@@ -156,11 +159,28 @@ namespace Assignment3
             var projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver2, GraphicsDevice.Viewport.AspectRatio, 0.1f, 1000f);
             CameraComponent cameraComponent = new CameraComponent(cameraId, view, projection, false);
             cameraComponent.Position = new Vector3(0,0,0);
+            cameraComponent.BoundingFrustum = new BoundingFrustum(Matrix.Identity);
             basicEffect.Projection = cameraComponent.Projection;
             basicEffect.View = cameraComponent.View;
             TransformComponent transformComponent = new TransformComponent(cameraId, Vector3.One, cameraComponent.Position);
             ComponentManager.Instance.AddComponent(cameraComponent);
             ComponentManager.Instance.AddComponent(transformComponent);
+        }
+
+
+        private void CreateLightSource(int id)
+        {
+            LightComponent lightComponent = new LightComponent(id)
+            {
+                LightDirection = new Vector3(-0.3333333f, 0.6666667f, 0.6666667f),
+                DiffuseLightDirection = new Vector3(-0.3333333f, 0.6666667f, 0.6666667f),
+                DiffuseColor = Color.White.ToVector4(),
+                DiffuseIntensity = 0.5f,
+                AmbientColor = Color.White.ToVector4(),
+                AmbientIntensity = 0.2f,
+            };
+
+            ComponentManager.Instance.AddComponent(lightComponent);
         }
 
         private void CreateHouseModel(int houseId, Vector3 position)

@@ -28,7 +28,7 @@ namespace Assignment3.Systems
                 {
                     foreach (BasicEffect effect in modelMesh.Effects)
                     {
-                        effect.World = Matrix.CreateTranslation(transformComponent.Position); //boneTransformations[modelMesh.ParentBone.Index]; //
+                        effect.World = Matrix.CreateTranslation(transformComponent.Position);
                         effect.View = cameraComponent.View;
                         effect.Projection = cameraComponent.Projection;
 

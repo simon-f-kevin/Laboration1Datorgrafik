@@ -44,11 +44,12 @@
     <StartupObject>Assignment3.Program</StartupObject>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Ground.cs" />
     <Compile Include="Laboration3.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Systems\LightSystem.cs" />
     <Compile Include="Systems\ModelRenderSystem.cs" />
+    <Compile Include="Systems\ShadowSystem.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MonoGame.Framework">
