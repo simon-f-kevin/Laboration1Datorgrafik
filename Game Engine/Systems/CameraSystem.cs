@@ -68,6 +68,10 @@ namespace Game_Engine.Systems
                         cameraComp.Position += Vector3.Right;
                         cameraComp.View = Matrix.CreateLookAt(cameraComp.Position, transformComponent.Position, Vector3.Up);
                     }
+                    if (Keyboard.GetState().IsKeyDown(Keys.P))
+                    {
+                        Console.WriteLine(cameraComp.Position);
+                    }
                 }
             }
             

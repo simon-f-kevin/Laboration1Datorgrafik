@@ -18,19 +18,19 @@ namespace Assignment3
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         private BasicEffect basicEffect;
-        Ground ground;
-        House house;
+        //Ground ground;
+        //House house;
 
         //models
         private Model houseModel;
         private Model blobModel;
         private Model blockModel;
+        private Model groundModel;
         private Texture2D houseTexture;
 
         //systems
         private ModelRenderSystem modelSystem;
         private CameraSystem cameraSystem;
-        private TransformSystem transformSystem;
 
         public Laboration3()
         {
@@ -75,13 +75,14 @@ namespace Assignment3
             houseTexture = Content.Load<Texture2D>("farmhouse-texture");
             blobModel = Content.Load<Model>("Blob");
             blockModel = Content.Load<Model>("block2");
+            groundModel = Content.Load<Model>("ground");
 
             CreateCamera(cameraId);
-            CreateBlob(2, new Vector3(0, 0, -4500));
-            CreateTerrain(2);
+            CreateBlob(2, new Vector3(-30, 5, 30));
+            CreateTerrain(3, new Vector3(0,0,0));
             //house = new House(houseModel, new Vector3(0, 0, -5000), houseTexture);
-            CreateHouseModel(cameraId, new Vector3(0,0,-5000));
-
+            CreateHouseModel(4, new Vector3(0,0,0));
+            CreateBlock(5, new Vector3(-40, 5, -30));
             
 
             // TODO: use this.Content to load your game content here
@@ -122,7 +123,7 @@ namespace Assignment3
             CameraComponent cameraComponent = (CameraComponent)ComponentManager.Instance.getDictionary<CameraComponent>().Values.First();
             // TODO: Add your drawing code here
             SystemManager.Instance.Draw();
-            ground.Draw(basicEffect, cameraComponent.World);
+            //ground.Draw(basicEffect, cameraComponent.World);
             //house.Draw(cameraComponent.World, cameraComponent.Projection);
             base.Draw(gameTime);
         }
@@ -148,20 +149,21 @@ namespace Assignment3
 
         private void CreateCamera(int cameraId)
         {
-            var view = Matrix.CreateLookAt(Vector3.Zero, (Vector3.Zero + Vector3.Forward * 20), Vector3.Up);
+            var view = Matrix.CreateLookAt(new Vector3(-75, 15, 0), (Vector3.Zero + Vector3.Forward * 20), Vector3.Up);
             var projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver2, GraphicsDevice.Viewport.AspectRatio, 0.1f, 1000f);
             CameraComponent cameraComponent = new CameraComponent(cameraId, view, projection, false);
             cameraComponent.Position = new Vector3(0,0,0);
             basicEffect.Projection = cameraComponent.Projection;
             basicEffect.View = cameraComponent.View;
-
+            TransformComponent transformComponent = new TransformComponent(cameraId, Vector3.One, cameraComponent.Position);
             ComponentManager.Instance.AddComponent(cameraComponent);
+            ComponentManager.Instance.AddComponent(transformComponent);
         }
 
         private void CreateHouseModel(int houseId, Vector3 position)
         {
             ModelComponent modelComponent = new ModelComponent(houseId, houseModel, houseTexture);
-            TransformComponent transformComponent = new TransformComponent(houseId, new Vector3(10, 10, 10), position);
+            TransformComponent transformComponent = new TransformComponent(houseId, new Vector3(5, 5, 5), position);
 
             ComponentManager.Instance.AddComponent(transformComponent);
             ComponentManager.Instance.AddComponent(modelComponent);
@@ -170,7 +172,7 @@ namespace Assignment3
         private void CreateBlob(int blobId, Vector3 position)
         {
             ModelComponent modelComponent = new ModelComponent(blobId, blobModel, CreateTexture(GraphicsDevice, 1, 1, c => Color.BlueViolet));
-            TransformComponent transformComponent = new TransformComponent(blobId, new Vector3(5, 5, 5), position);
+            TransformComponent transformComponent = new TransformComponent(blobId, new Vector3(2, 2, 2), position);
 
             ComponentManager.Instance.AddComponent(transformComponent);
             ComponentManager.Instance.AddComponent(modelComponent);
@@ -178,16 +180,21 @@ namespace Assignment3
 
         private void CreateBlock(int blockId, Vector3 position)
         {
-            ModelComponent modelComponent = new ModelComponent(blockId, blobModel, CreateTexture(GraphicsDevice, 1, 1, c => Color.BlanchedAlmond));
-            TransformComponent transformComponent = new TransformComponent(blockId, new Vector3(5, 5, 5), position);
+            ModelComponent modelComponent = new ModelComponent(blockId, blockModel, CreateTexture(GraphicsDevice, 1, 1, c => Color.HotPink));
+            TransformComponent transformComponent = new TransformComponent(blockId, new Vector3(50, 50, 50), position);
 
             ComponentManager.Instance.AddComponent(transformComponent);
             ComponentManager.Instance.AddComponent(modelComponent);
         }
 
-        private void CreateTerrain(int terrainId)
+        private void CreateTerrain(int terrainId, Vector3 position)
         {
-            ground = new Ground(GraphicsDevice, new Vector3(5000, 1, 5000), CreateTexture(GraphicsDevice, 1, 1, c => Color.LightYellow));
+            //ground = new Ground(GraphicsDevice, new Vector3(5000, 1, 5000), CreateTexture(GraphicsDevice, 1, 1, c => Color.LightYellow));
+            ModelComponent modelComponent = new ModelComponent(terrainId, groundModel, CreateTexture(GraphicsDevice, 1, 1, c => Color.Yellow));
+            TransformComponent transformComponent = new TransformComponent(terrainId, new Vector3(50, 50, 50), position); //hej
+
+            ComponentManager.Instance.AddComponent(transformComponent);
+            ComponentManager.Instance.AddComponent(modelComponent);
         }
     }
 }
