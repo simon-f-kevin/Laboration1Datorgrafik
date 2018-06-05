@@ -110,52 +110,138 @@ namespace Assignment3._1
                 if((string)model.model.Tag == "ground")
                 {
                     worldRenderMatrix = Matrix.Identity;
+                    DrawGround(model, "CreateShadowMap");
+                }
+                else
+                {
+                    TransformComponent tc = ComponentManager.Instance.GetComponentsById<TransformComponent>(model.EntityID);
+                    worldRenderMatrix = Matrix.CreateWorld(tc.Position, Vector3.Forward, Vector3.Up);
                     DrawModel(model, "CreateShadowMap");
                 }
-                DrawModel(model, "CreateShadowMap");
             }
             graphicsDevice.SetRenderTarget(null);
         }
 
-        
+
 
         private void DrawWithShadowMap()
         {
             var models = ComponentManager.Instance.getDictionary<ModelComponent>().Values;
 
             graphicsDevice.Clear(Color.CornflowerBlue);
-
+            graphicsDevice.BlendState = BlendState.Opaque;
+            graphicsDevice.DepthStencilState = DepthStencilState.Default;
+            graphicsDevice.RasterizerState = RasterizerState.CullCounterClockwise;
             graphicsDevice.SamplerStates[1] = SamplerState.PointClamp;
 
-            worldRenderMatrix = Matrix.CreateRotationY(MathHelper.ToRadians(rotationthingy));
+            //worldRenderMatrix = Matrix.CreateRotationY(MathHelper.ToRadians(rotationthingy));
+            
             foreach (ModelComponent model in models)
             {
+                TransformComponent tc = ComponentManager.Instance.GetComponentsById<TransformComponent>(model.EntityID);
+                worldRenderMatrix = Matrix.CreateWorld(tc.Position, Vector3.Forward, Vector3.Up);
                 DrawModel(model, "DrawWithShadowMap");
             }
         }
 
-        private void DrawModel(ModelComponent model, string techniqueName)
+        private void DrawModel(ModelComponent modelComp, string techniqueName)
         {
-            var cameraComp = ComponentManager.Instance.getDictionary<CameraComponent>().Values.First() as CameraComponent;
+            var cameraComponent = ComponentManager.Instance.getDictionary<CameraComponent>().Values.First() as CameraComponent;
             var lightComponent = ComponentManager.Instance.getDictionary<LightComponent>().Values.First() as LightComponent;
-            foreach (ModelMesh mesh in model.model.Meshes)
+            var transformComponent = ComponentManager.Instance.GetComponentsById<TransformComponent>(modelComp.EntityID) as TransformComponent;
+            foreach (ModelMesh mesh in modelComp.model.Meshes)
             {
-                // Loop over effects in the mesh
-                foreach (Effect effect in mesh.Effects)
+                foreach (ModelMeshPart meshPart in mesh.MeshParts)
                 {
-                    // Set the currest values for the effect
-                    effect.CurrentTechnique = effect.Techniques[techniqueName];
-                    effect.Parameters["World"].SetValue(worldRenderMatrix);
-                    effect.Parameters["View"].SetValue(cameraComp.View);
-                    effect.Parameters["Projection"].SetValue(cameraComp.Projection);
-                    effect.Parameters["LightDirection"].SetValue(lightComponent.LightDirection);
-                    effect.Parameters["LightViewProj"].SetValue(lightComponent.LightViewProjection);
 
-                    if (techniqueName.Equals("DrawWithShadowMap"))
-                        effect.Parameters["ShadowMap"].SetValue(shadowRenderTarget);
+                    modelComp.Effect.CurrentTechnique = modelComp.Effect.Techniques[techniqueName];
+                    if (techniqueName.Contains("DrawWithShadowMap"))
+                    {
+                        modelComp.Effect.Parameters["ShadowMap"].SetValue(shadowRenderTarget);
+                    }
+                    modelComp.Effect.Parameters["Texture"].SetValue(modelComp.Texture);
+                    modelComp.Effect.Parameters["World"].SetValue(worldRenderMatrix); // Matrix.CreateTranslation(transformComponent.Position)
+                    modelComp.Effect.Parameters["View"].SetValue(cameraComponent.View);
+                    modelComp.Effect.Parameters["Projection"].SetValue(cameraComponent.Projection);
+                    modelComp.Effect.Parameters["LightDirection"].SetValue(lightComponent.LightDirection);
+                    modelComp.Effect.Parameters["LightViewProj"].SetValue(lightComponent.LightViewProjection);
+                    modelComp.Effect.Parameters["AmbientColor"].SetValue(lightComponent.AmbientColor);
+                    modelComp.Effect.Parameters["AmbientIntensity"].SetValue(lightComponent.AmbientIntensity);
+                    modelComp.Effect.Parameters["DiffuseLightDirection"].SetValue(lightComponent.DiffuseLightDirection);
+                    modelComp.Effect.Parameters["DiffuseColor"].SetValue(lightComponent.DiffuseColor);
+                    modelComp.Effect.Parameters["DiffuseIntensity"].SetValue(lightComponent.DiffuseIntensity);
+                    modelComp.Effect.Parameters["CameraPosition"].SetValue(cameraComponent.Position);
+
+                    modelComp.Effect.Parameters["ShadowStrenght"].SetValue(0.9f);
+                    modelComp.Effect.Parameters["DepthBias"].SetValue(0.1f);
+                    modelComp.Effect.Parameters["ViewVector"].SetValue(Vector3.One);
+                    modelComp.Effect.Parameters["Shininess"].SetValue(0.9f);
+                    modelComp.Effect.Parameters["SpecularColor"].SetValue(Color.CornflowerBlue.ToVector4());
+                    modelComp.Effect.Parameters["SpecularIntensity"].SetValue(0.1f);
+
+                    modelComp.Effect.Parameters["FogStart"].SetValue(150f);
+                    modelComp.Effect.Parameters["FogEnd"].SetValue(350f);
+                    modelComp.Effect.Parameters["FogColor"].SetValue(Color.HotPink.ToVector4());
+                    modelComp.Effect.Parameters["FogEnabled"].SetValue(true);
+
+                    foreach (var pass in modelComp.Effect.CurrentTechnique.Passes)
+                    {
+                        pass.Apply();
+                    }
+
+                    graphicsDevice.SetVertexBuffer(meshPart.VertexBuffer);
+                    graphicsDevice.Indices = meshPart.IndexBuffer;
+                    graphicsDevice.DrawIndexedPrimitives(PrimitiveType.TriangleList, meshPart.VertexOffset, meshPart.StartIndex, meshPart.PrimitiveCount);
                 }
-                // Draw the mesh
-                mesh.Draw();
+                
+            }
+        }
+        private void DrawGround(ModelComponent modelComp, string techniqueName)
+        {
+            var cameraComponent = ComponentManager.Instance.getDictionary<CameraComponent>().Values.First() as CameraComponent;
+            var lightComponent = ComponentManager.Instance.getDictionary<LightComponent>().Values.First() as LightComponent;
+            var transformComponent = ComponentManager.Instance.GetComponentsById<TransformComponent>(modelComp.EntityID) as TransformComponent;
+            foreach (ModelMesh mesh in modelComp.model.Meshes)
+            {
+                foreach (ModelMeshPart meshPart in mesh.MeshParts)
+                {
+
+                    modelComp.Effect.CurrentTechnique = modelComp.Effect.Techniques[techniqueName];
+                    modelComp.Effect.Parameters["ShadowMap"].SetValue((RenderTarget2D)null);
+                    modelComp.Effect.Parameters["Texture"].SetValue(modelComp.Texture);
+                    modelComp.Effect.Parameters["World"].SetValue(worldRenderMatrix); // Matrix.CreateTranslation(transformComponent.Position)
+                    modelComp.Effect.Parameters["View"].SetValue(cameraComponent.View);
+                    modelComp.Effect.Parameters["Projection"].SetValue(cameraComponent.Projection);
+                    modelComp.Effect.Parameters["LightDirection"].SetValue(lightComponent.LightDirection);
+                    modelComp.Effect.Parameters["LightViewProj"].SetValue(lightComponent.LightViewProjection);
+                    modelComp.Effect.Parameters["AmbientColor"].SetValue(lightComponent.AmbientColor);
+                    modelComp.Effect.Parameters["AmbientIntensity"].SetValue(lightComponent.AmbientIntensity);
+                    modelComp.Effect.Parameters["DiffuseLightDirection"].SetValue(lightComponent.DiffuseLightDirection);
+                    modelComp.Effect.Parameters["DiffuseColor"].SetValue(lightComponent.DiffuseColor);
+                    modelComp.Effect.Parameters["DiffuseIntensity"].SetValue(lightComponent.DiffuseIntensity);
+                    modelComp.Effect.Parameters["CameraPosition"].SetValue(cameraComponent.Position);
+
+                    modelComp.Effect.Parameters["ShadowStrenght"].SetValue(0.9f);
+                    modelComp.Effect.Parameters["DepthBias"].SetValue(0.1f);
+                    modelComp.Effect.Parameters["ViewVector"].SetValue(Vector3.One);
+                    modelComp.Effect.Parameters["Shininess"].SetValue(0.9f);
+                    modelComp.Effect.Parameters["SpecularColor"].SetValue(Color.CornflowerBlue.ToVector4());
+                    modelComp.Effect.Parameters["SpecularIntensity"].SetValue(0.1f);
+
+                    modelComp.Effect.Parameters["FogStart"].SetValue(150f);
+                    modelComp.Effect.Parameters["FogEnd"].SetValue(350f);
+                    modelComp.Effect.Parameters["FogColor"].SetValue(Color.HotPink.ToVector4());
+                    modelComp.Effect.Parameters["FogEnabled"].SetValue(true);
+
+                    foreach (var pass in modelComp.Effect.CurrentTechnique.Passes)
+                    {
+                        pass.Apply();
+                    }
+
+                    graphicsDevice.SetVertexBuffer(meshPart.VertexBuffer);
+                    graphicsDevice.Indices = meshPart.IndexBuffer;
+                    graphicsDevice.DrawIndexedPrimitives(PrimitiveType.TriangleList, meshPart.VertexOffset, meshPart.StartIndex, meshPart.PrimitiveCount);
+                }
             }
         }
     }
