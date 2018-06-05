@@ -75,9 +75,6 @@ struct DrawWithShadowMap_VSOut
 	float fogFactor : FOG;
 };
 
-
-
-
 struct CreateShadowMap_VSOut
 {
 	float4 Position : POSITION;

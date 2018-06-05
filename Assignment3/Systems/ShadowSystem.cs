@@ -49,8 +49,9 @@ namespace Assignment3.Systems
             {
                 TransformComponent transformComponent = ComponentManager.Instance.GetComponentsById<TransformComponent>(modelComp.EntityID);
                 DrawModel(modelComp, transformComponent, lightComponent, cameraComponent, "CreateShadowMap");
+                graphicsDevice.SetRenderTarget(null);
             }
-            graphicsDevice.SetRenderTarget(null);
+            
         }
 
         private void DrawShadowMap()
@@ -59,15 +60,16 @@ namespace Assignment3.Systems
             graphicsDevice.BlendState = BlendState.Opaque;
             graphicsDevice.DepthStencilState = DepthStencilState.Default;
             graphicsDevice.RasterizerState = RasterizerState.CullCounterClockwise;
-            graphicsDevice.SamplerStates[0] = new SamplerState
-            {
-                AddressU = TextureAddressMode.Clamp,
-                AddressV = TextureAddressMode.Clamp,
-                AddressW = TextureAddressMode.Clamp,
-                Filter = TextureFilter.Linear,
-                ComparisonFunction = CompareFunction.LessEqual,
-                FilterMode = TextureFilterMode.Comparison
-            };
+            //graphicsDevice.SamplerStates[0] = new SamplerState
+            //{
+            //    AddressU = TextureAddressMode.Clamp,
+            //    AddressV = TextureAddressMode.Clamp,
+            //    AddressW = TextureAddressMode.Clamp,
+            //    Filter = TextureFilter.Linear,
+            //    ComparisonFunction = CompareFunction.LessEqual,
+            //    FilterMode = TextureFilterMode.Comparison
+            //};
+            graphicsDevice.SamplerStates[0] = SamplerState.PointClamp;
 
             var lightComponent = ComponentManager.Instance.getDictionary<LightComponent>().Values.First() as LightComponent;
             var cameraComponent = ComponentManager.Instance.getDictionary<CameraComponent>().Values.First() as CameraComponent;
@@ -92,7 +94,6 @@ namespace Assignment3.Systems
 
         private void DrawModel(ModelComponent modelComp, TransformComponent transformComponent, LightComponent lightComponent, CameraComponent cameraComponent, string technique)
         {
-
             foreach (ModelMesh mesh in modelComp.model.Meshes)
             {
                 foreach (var meshPart in mesh.MeshParts)
@@ -104,7 +105,7 @@ namespace Assignment3.Systems
                     }
                     modelComp.Effect.Parameters["Texture"].SetValue(meshPart.Effect.Parameters["Texture"].GetValueTexture2D());
                     modelComp.Effect.Parameters["Texture"].SetValue(modelComp.Texture);
-                    modelComp.Effect.Parameters["World"].SetValue(Matrix.CreateTranslation(transformComponent.Position));
+                    modelComp.Effect.Parameters["World"].SetValue(Matrix.CreateWorld(transformComponent.Position, Vector3.Forward, Vector3.Up)); // Matrix.CreateTranslation(transformComponent.Position)
                     modelComp.Effect.Parameters["View"].SetValue(cameraComponent.View);
                     modelComp.Effect.Parameters["Projection"].SetValue(cameraComponent.Projection);
                     modelComp.Effect.Parameters["LightDirection"].SetValue(lightComponent.LightDirection);
@@ -117,7 +118,7 @@ namespace Assignment3.Systems
                     modelComp.Effect.Parameters["CameraPosition"].SetValue(cameraComponent.Position);
 
                     modelComp.Effect.Parameters["ShadowStrenght"].SetValue(0.9f);
-                    modelComp.Effect.Parameters["DepthBias"].SetValue(0.001f);
+                    modelComp.Effect.Parameters["DepthBias"].SetValue(0.1f);
                     modelComp.Effect.Parameters["ViewVector"].SetValue(Vector3.One);
                     modelComp.Effect.Parameters["Shininess"].SetValue(0.9f);
                     modelComp.Effect.Parameters["SpecularColor"].SetValue(Color.CornflowerBlue.ToVector4());

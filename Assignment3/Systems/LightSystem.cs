@@ -22,7 +22,7 @@ namespace Assignment3.Systems
             var rotationY = (float)gameTime.ElapsedGameTime.TotalMilliseconds * 0.0005f;
             var rotation = Quaternion.CreateFromAxisAngle(Vector3.UnitY, rotationY);
 
-            lightComponent.LightDirection = Vector3.Transform(lightComponent.LightDirection, rotation);
+            //lightComponent.LightDirection = Vector3.Transform(lightComponent.LightDirection, rotation);
             if (Keyboard.GetState().IsKeyDown(Keys.F))
             {
                 lightComponent.LightDirection = new Vector3(lightComponent.LightDirection.X, lightComponent.LightDirection.Y, lightComponent.LightDirection.Z - 0.2f);

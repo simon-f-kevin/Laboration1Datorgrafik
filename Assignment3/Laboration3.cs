@@ -25,6 +25,7 @@ namespace Assignment3
         private Model blockModel;
         private Model groundModel;
         private Texture2D houseTexture;
+        private Model chopperModel;
 
         //update
         private TransformComponent blobTransformComponent;
@@ -78,6 +79,7 @@ namespace Assignment3
             blobModel = Content.Load<Model>("Blob");
             blockModel = Content.Load<Model>("block2");
             groundModel = Content.Load<Model>("ground");
+            chopperModel = Content.Load<Model>("Chopper");
 
             CreateCamera(cameraId);
             CreateLightSource(14);
@@ -93,6 +95,7 @@ namespace Assignment3
             CreateTerrain(13, new Vector3(-124, 0, -125));
             CreateHouseModel(4, new Vector3(0,0,0));
             CreateBlock(5, new Vector3(-40, 1, -30));
+            CreateChopper(14, new Vector3(-20, 10, -20));
             
             // TODO: use this.Content to load your game content here
         }
@@ -116,13 +119,21 @@ namespace Assignment3
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
-            if (Keyboard.GetState().IsKeyDown(Keys.A))
+            if (Keyboard.GetState().IsKeyDown(Keys.W))
             {
                 blobTransformComponent.Position = new Vector3(blobTransformComponent.Position.X + 1, blobTransformComponent.Position.Y, blobTransformComponent.Position.Z);
             }
-            if (Keyboard.GetState().IsKeyDown(Keys.D))
+            if (Keyboard.GetState().IsKeyDown(Keys.S))
             {
                 blobTransformComponent.Position = new Vector3(blobTransformComponent.Position.X - 1, blobTransformComponent.Position.Y, blobTransformComponent.Position.Z);
+            }
+            if (Keyboard.GetState().IsKeyDown(Keys.A))
+            {
+                blobTransformComponent.Position = new Vector3(blobTransformComponent.Position.X, blobTransformComponent.Position.Y, blobTransformComponent.Position.Z + 1);
+            }
+            if (Keyboard.GetState().IsKeyDown(Keys.D))
+            {
+                blobTransformComponent.Position = new Vector3(blobTransformComponent.Position.X, blobTransformComponent.Position.Y, blobTransformComponent.Position.Z - 1);
             }
             // TODO: Add your update logic here
             SystemManager.Instance.Update(gameTime);
@@ -136,8 +147,6 @@ namespace Assignment3
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
-            CameraComponent cameraComponent = (CameraComponent)ComponentManager.Instance.getDictionary<CameraComponent>().Values.First();
-            // TODO: Add your drawing code here
             SystemManager.Instance.Draw(spriteBatch);
             base.Draw(gameTime);
         }
@@ -178,8 +187,8 @@ namespace Assignment3
         {
             LightComponent lightComponent = new LightComponent(id)
             {
-                LightDirection = new Vector3(-0.3333333f, 0.6666667f, 0.6666667f), //new Vector3(-1, 2, 2),
-                DiffuseLightDirection = new Vector3(-0.3333333f, 0.6666667f, 0.6666667f),//new Vector3(-1, 2, 2),
+                LightDirection = new Vector3(-1, 2, 2), //new Vector3(-0.3333333f, 0.6666667f, 0.6666667f), //
+                DiffuseLightDirection = new Vector3(-1, 2, 2), //new Vector3(-0.3333333f, 0.6666667f, 0.6666667f),
                 DiffuseColor = Color.HotPink.ToVector4(),
                 DiffuseIntensity = 0.8f,
                 AmbientColor = Color.IndianRed.ToVector4(),
@@ -228,6 +237,16 @@ namespace Assignment3
             ComponentManager.Instance.AddComponent(transformComponent);
             ComponentManager.Instance.AddComponent(modelComponent);
 
+        }
+
+        private void CreateChopper(int chopperId, Vector3 pos)
+        {
+            ModelComponent modelComponent = new ModelComponent(chopperId, chopperModel, CreateTexture(GraphicsDevice, 1, 1, c => Color.LightGray));
+            modelComponent.Effect = Content.Load<Effect>("Shadow");
+            TransformComponent transformComponent = new TransformComponent(chopperId, Vector3.One, pos);
+
+            ComponentManager.Instance.AddComponent(transformComponent);
+            ComponentManager.Instance.AddComponent(modelComponent);
         }
     }
 }
