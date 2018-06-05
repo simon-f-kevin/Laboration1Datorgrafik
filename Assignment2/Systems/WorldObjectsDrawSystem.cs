@@ -2,6 +2,7 @@
 using Game_Engine.Components;
 using Game_Engine.Managers;
 using Game_Engine.Systems;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,6 +34,10 @@ namespace Assignment2.Systems
                 }
             }
             
+        }
+
+        public void Draw(SpriteBatch spriteBatch)
+        {
         }
     }
 }

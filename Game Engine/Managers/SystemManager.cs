@@ -90,13 +90,14 @@ namespace Game_Engine.Managers
             }
         }
 
-        public void Draw()
+        public void Draw(SpriteBatch spriteBatch)
         {
             int size = DrawableSystems.Count;
             for(int i = 0; i < size; i++)
             {
                 IDrawableSystem system = DrawableSystems.Dequeue();
                 system.Draw();
+                system.Draw(spriteBatch);
                 DrawableSystems.Enqueue(system);
             }
         }

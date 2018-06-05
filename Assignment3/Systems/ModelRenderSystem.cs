@@ -81,5 +81,9 @@ namespace Assignment3.Systems
                 #endregion  
             }
         }
+
+        public void Draw(SpriteBatch spriteBatch)
+        {
+        }
     }
 }

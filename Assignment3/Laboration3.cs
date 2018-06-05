@@ -18,7 +18,6 @@ namespace Assignment3
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-        private BasicEffect basicEffect;
 
         //models
         private Model houseModel;
@@ -27,8 +26,10 @@ namespace Assignment3
         private Model groundModel;
         private Texture2D houseTexture;
 
+        //update
+        private TransformComponent blobTransformComponent;
+
         //systems
-        private ModelRenderSystem modelSystem;
         private CameraSystem cameraSystem;
         private LightSystem lightSystem;
         private ShadowSystem shadowSystem;
@@ -53,9 +54,8 @@ namespace Assignment3
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            basicEffect = new BasicEffect(GraphicsDevice);
             
-            modelSystem = new ModelRenderSystem();
+            //modelSystem = new ModelRenderSystem();
             cameraSystem = new CameraSystem(GraphicsDevice);
             lightSystem = new LightSystem();
             shadowSystem = new ShadowSystem(GraphicsDevice);
@@ -116,7 +116,14 @@ namespace Assignment3
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
-
+            if (Keyboard.GetState().IsKeyDown(Keys.A))
+            {
+                blobTransformComponent.Position = new Vector3(blobTransformComponent.Position.X + 1, blobTransformComponent.Position.Y, blobTransformComponent.Position.Z);
+            }
+            if (Keyboard.GetState().IsKeyDown(Keys.D))
+            {
+                blobTransformComponent.Position = new Vector3(blobTransformComponent.Position.X - 1, blobTransformComponent.Position.Y, blobTransformComponent.Position.Z);
+            }
             // TODO: Add your update logic here
             SystemManager.Instance.Update(gameTime);
             base.Update(gameTime);
@@ -131,7 +138,7 @@ namespace Assignment3
             GraphicsDevice.Clear(Color.CornflowerBlue);
             CameraComponent cameraComponent = (CameraComponent)ComponentManager.Instance.getDictionary<CameraComponent>().Values.First();
             // TODO: Add your drawing code here
-            SystemManager.Instance.Draw();
+            SystemManager.Instance.Draw(spriteBatch);
             base.Draw(gameTime);
         }
 
@@ -161,8 +168,6 @@ namespace Assignment3
             CameraComponent cameraComponent = new CameraComponent(cameraId, view, projection, false);
             cameraComponent.Position = new Vector3(0,0,0);
             cameraComponent.BoundingFrustum = new BoundingFrustum(Matrix.Identity);
-            basicEffect.Projection = cameraComponent.Projection;
-            basicEffect.View = cameraComponent.View;
             TransformComponent transformComponent = new TransformComponent(cameraId, Vector3.One, cameraComponent.Position);
             ComponentManager.Instance.AddComponent(cameraComponent);
             ComponentManager.Instance.AddComponent(transformComponent);
@@ -173,12 +178,12 @@ namespace Assignment3
         {
             LightComponent lightComponent = new LightComponent(id)
             {
-                LightDirection =  new Vector3(10,2,0),//new Vector3(-0.3333333f, 0.6666667f, 0.6666667f),
-                DiffuseLightDirection = new Vector3(-0.3333333f, 0.6666667f, 0.6666667f),
+                LightDirection = new Vector3(-0.3333333f, 0.6666667f, 0.6666667f), //new Vector3(-1, 2, 2),
+                DiffuseLightDirection = new Vector3(-0.3333333f, 0.6666667f, 0.6666667f),//new Vector3(-1, 2, 2),
                 DiffuseColor = Color.HotPink.ToVector4(),
-                DiffuseIntensity = 0.5f,
+                DiffuseIntensity = 0.8f,
                 AmbientColor = Color.IndianRed.ToVector4(),
-                AmbientIntensity = 0.2f,
+                AmbientIntensity = 0.5f,
             };
 
             ComponentManager.Instance.AddComponent(lightComponent);
@@ -198,9 +203,9 @@ namespace Assignment3
         {
             ModelComponent modelComponent = new ModelComponent(blobId, blobModel, CreateTexture(GraphicsDevice, 1, 1, c => Color.BlueViolet));
             modelComponent.Effect = Content.Load<Effect>("Shadow");
-            TransformComponent transformComponent = new TransformComponent(blobId, new Vector3(2, 2, 2), position);
+            blobTransformComponent = new TransformComponent(blobId, new Vector3(2, 2, 2), position);
 
-            ComponentManager.Instance.AddComponent(transformComponent);
+            ComponentManager.Instance.AddComponent(blobTransformComponent);
             ComponentManager.Instance.AddComponent(modelComponent);
         }
 
@@ -218,7 +223,7 @@ namespace Assignment3
         {
             ModelComponent modelComponent = new ModelComponent(terrainId, groundModel, CreateTexture(GraphicsDevice, 1, 1, c => Color.Yellow));
             modelComponent.Effect = Content.Load<Effect>("Shadow");
-            TransformComponent transformComponent = new TransformComponent(terrainId, new Vector3(50, 50, 50), position); //hej
+            TransformComponent transformComponent = new TransformComponent(terrainId, new Vector3(50, 50, 50), position); 
 
             ComponentManager.Instance.AddComponent(transformComponent);
             ComponentManager.Instance.AddComponent(modelComponent);

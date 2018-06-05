@@ -42,6 +42,7 @@ sampler2D textureSampler = sampler_state
 	MinFilter = Linear;
 	AddressU = Clamp;
 	AddressV = Clamp;
+	AddressW = Clamp;
 };
 
 

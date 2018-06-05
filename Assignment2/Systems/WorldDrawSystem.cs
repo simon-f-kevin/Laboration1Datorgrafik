@@ -34,5 +34,9 @@ namespace Assignment2.Systems
             }
            
         }
+
+        public void Draw(SpriteBatch spriteBatch)
+        {
+        }
     }
 }

@@ -2,6 +2,7 @@
 using Game_Engine.Managers;
 using Game_Engine.Systems;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
@@ -18,23 +19,25 @@ namespace Assignment3.Systems
         public void Update(GameTime gameTime)
         {
             lightComponent = ComponentManager.Instance.getDictionary<LightComponent>().Values.First() as LightComponent;
-            var rotationY = (float)gameTime.ElapsedGameTime.TotalMilliseconds * 0.00005f;
+            var rotationY = (float)gameTime.ElapsedGameTime.TotalMilliseconds * 0.0005f;
             var rotation = Quaternion.CreateFromAxisAngle(Vector3.UnitY, rotationY);
 
             lightComponent.LightDirection = Vector3.Transform(lightComponent.LightDirection, rotation);
             if (Keyboard.GetState().IsKeyDown(Keys.F))
             {
-                lightComponent.LightDirection = new Vector3(lightComponent.LightDirection.X, lightComponent.LightDirection.Y, lightComponent.LightDirection.Z - 0.002f);
+                lightComponent.LightDirection = new Vector3(lightComponent.LightDirection.X, lightComponent.LightDirection.Y, lightComponent.LightDirection.Z - 0.2f);
             }
             if (Keyboard.GetState().IsKeyDown(Keys.G))
             {
-                lightComponent.LightDirection = new Vector3(lightComponent.LightDirection.X, lightComponent.LightDirection.Y, lightComponent.LightDirection.Z + 0.002f);
+                lightComponent.LightDirection = new Vector3(lightComponent.LightDirection.X, lightComponent.LightDirection.Y, lightComponent.LightDirection.Z + 0.2f);
             }
         }
         public void Draw()
         {
             CreateLightMatrix();
         }
+
+        public void Draw(SpriteBatch spriteBatch) { }
 
         private void CreateLightMatrix()
         {

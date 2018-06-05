@@ -183,7 +183,7 @@ namespace Assignment2
             GraphicsDevice.Clear(Color.CornflowerBlue);
             
             robotArm.Draw(Effect, Matrix.Identity);
-            SystemManager.Instance.Draw();
+            SystemManager.Instance.Draw(spriteBatch);
 
             base.Draw(gameTime);
         }

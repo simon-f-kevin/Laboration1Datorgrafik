@@ -82,5 +82,9 @@ namespace Game_Engine.Systems
 
 
         }
+
+        public void Draw(SpriteBatch spriteBatch)
+        {
+        }
     }
 }

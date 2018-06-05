@@ -204,7 +204,7 @@ namespace Assignment1
             //GraphicsDevice.DepthStencilState = dss;
 
             // TODO: Add your drawing code here
-            SystemManager.Instance.Draw();
+            SystemManager.Instance.Draw(spriteBatch);
             //spriteBatch.End();
         }
     }
