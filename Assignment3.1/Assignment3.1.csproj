@@ -41,10 +41,19 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="AmbientComponent.cs" />
+    <Compile Include="CameraComponent.cs" />
+    <Compile Include="CameraSystem.cs" />
+    <Compile Include="FogComponent.cs" />
     <Compile Include="Game1.cs" />
-    <Compile Include="RenderSystem.cs" />
+    <Compile Include="LightComponent.cs" />
+    <Compile Include="LightSystem.cs" />
+    <Compile Include="ModelComponent.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ShadowMappingEffect.cs" />
+    <Compile Include="ShadowRenderTargetComponent.cs" />
+    <Compile Include="ShadowSystem.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MonoGame.Framework">

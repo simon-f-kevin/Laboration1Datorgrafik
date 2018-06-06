@@ -32,7 +32,7 @@ namespace Assignment3._1
 
         internal void Update(GameTime gameTime)
         {
-            var lightComponent = ComponentManager.Instance.getDictionary<LightComponent>().Values.First() as LightComponent;
+            var lightComponent = ComponentManager.Instance.getDictionary<LightComponent2>().Values.First() as LightComponent2;
             var rotationY = (float)gameTime.ElapsedGameTime.TotalMilliseconds * 0.00005f;
             var rotation = Quaternion.CreateFromAxisAngle(Vector3.UnitY, rotationY);
 
@@ -41,8 +41,8 @@ namespace Assignment3._1
 
         internal void Draw()
         {
-            var lightComponent = ComponentManager.Instance.getDictionary<LightComponent>().Values.First() as LightComponent;
-            var cameraComponent = ComponentManager.Instance.getDictionary<CameraComponent>().Values.First() as CameraComponent;
+            var lightComponent = ComponentManager.Instance.getDictionary<LightComponent2>().Values.First() as LightComponent2;
+            var cameraComponent = ComponentManager.Instance.getDictionary<CameraComponent2>().Values.First() as CameraComponent2;
             CreateLightViewProjectionMatrix(lightComponent, cameraComponent);
 
 
@@ -53,7 +53,7 @@ namespace Assignment3._1
             DrawWithShadowMap();
         }
 
-        private void CreateLightViewProjectionMatrix(LightComponent lightComponent, CameraComponent cameraComponent)
+        private void CreateLightViewProjectionMatrix(LightComponent2 lightComponent, CameraComponent2 cameraComponent)
         {
             Matrix lightRotation = Matrix.CreateLookAt(Vector3.Zero,
                                                        -lightComponent.LightDirection,
@@ -105,7 +105,7 @@ namespace Assignment3._1
 
             worldRenderMatrix = Matrix.CreateRotationY(MathHelper.ToRadians(rotationthingy));
 
-            foreach(ModelComponent model in models)
+            foreach(ModelComponent2 model in models)
             {
                 if((string)model.model.Tag == "ground")
                 {
@@ -136,7 +136,7 @@ namespace Assignment3._1
 
             //worldRenderMatrix = Matrix.CreateRotationY(MathHelper.ToRadians(rotationthingy));
             
-            foreach (ModelComponent model in models)
+            foreach (ModelComponent2 model in models)
             {
                 TransformComponent tc = ComponentManager.Instance.GetComponentsById<TransformComponent>(model.EntityID);
                 worldRenderMatrix = Matrix.CreateWorld(tc.Position, Vector3.Forward, Vector3.Up);
@@ -144,10 +144,10 @@ namespace Assignment3._1
             }
         }
 
-        private void DrawModel(ModelComponent modelComp, string techniqueName)
+        private void DrawModel(ModelComponent2 modelComp, string techniqueName)
         {
-            var cameraComponent = ComponentManager.Instance.getDictionary<CameraComponent>().Values.First() as CameraComponent;
-            var lightComponent = ComponentManager.Instance.getDictionary<LightComponent>().Values.First() as LightComponent;
+            var cameraComponent = ComponentManager.Instance.getDictionary<CameraComponent2>().Values.First() as CameraComponent2;
+            var lightComponent = ComponentManager.Instance.getDictionary<LightComponent2>().Values.First() as LightComponent2;
             var transformComponent = ComponentManager.Instance.GetComponentsById<TransformComponent>(modelComp.EntityID) as TransformComponent;
             foreach (ModelMesh mesh in modelComp.model.Meshes)
             {
@@ -196,10 +196,10 @@ namespace Assignment3._1
                 
             }
         }
-        private void DrawGround(ModelComponent modelComp, string techniqueName)
+        private void DrawGround(ModelComponent2 modelComp, string techniqueName)
         {
-            var cameraComponent = ComponentManager.Instance.getDictionary<CameraComponent>().Values.First() as CameraComponent;
-            var lightComponent = ComponentManager.Instance.getDictionary<LightComponent>().Values.First() as LightComponent;
+            var cameraComponent = ComponentManager.Instance.getDictionary<CameraComponent2>().Values.First() as CameraComponent2;
+            var lightComponent = ComponentManager.Instance.getDictionary<LightComponent2>().Values.First() as LightComponent2;
             var transformComponent = ComponentManager.Instance.GetComponentsById<TransformComponent>(modelComp.EntityID) as TransformComponent;
             foreach (ModelMesh mesh in modelComp.model.Meshes)
             {

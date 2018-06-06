@@ -28,7 +28,7 @@ namespace Game_Engine.Systems
             {
                 foreach (HeightmapMeshComponent mesh in heightmapComponent.HeightMapMeshes)
                 {
-                    CameraComponent _cameraComp = ComponentManager.Instance.GetComponentsById<CameraComponent>(heightmapComponent.EntityID);
+                    CameraComponent2 _cameraComp = ComponentManager.Instance.GetComponentsById<CameraComponent2>(heightmapComponent.EntityID);
                     if (_cameraComp.BoundingFrustum.Intersects(mesh.BoundingBoxComponent.BoundingBox))
                     {
                         device.SetVertexBuffer(mesh.VertexBuffer);

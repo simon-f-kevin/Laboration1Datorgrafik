@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Game_Engine.Components
 {
-    public class CameraComponent : EntityComponent
+    public class CameraComponent2 : EntityComponent
     {
         public Matrix World { get; set; }
         public Matrix View { get; set; }
@@ -19,7 +19,7 @@ namespace Game_Engine.Components
 
         public BoundingFrustum BoundingFrustum { get; set; }
 
-        public CameraComponent(int id, Matrix View, Matrix Projection, bool Follow) : base(id)
+        public CameraComponent2(int id, Matrix View, Matrix Projection, bool Follow) : base(id)
         {
             World = Matrix.Identity;
             this.View = View;

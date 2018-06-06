@@ -174,7 +174,7 @@ namespace Assignment3
         {
             var view = Matrix.CreateLookAt(new Vector3(-62, 15, 0), (Vector3.Zero + Vector3.Forward * 20), Vector3.Up);
             var projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver2, GraphicsDevice.Viewport.AspectRatio, 0.1f, 1000f);
-            CameraComponent cameraComponent = new CameraComponent(cameraId, view, projection, false);
+            CameraComponent2 cameraComponent = new CameraComponent2(cameraId, view, projection, false);
             cameraComponent.Position = new Vector3(0,0,0);
             cameraComponent.BoundingFrustum = new BoundingFrustum(Matrix.Identity);
             TransformComponent transformComponent = new TransformComponent(cameraId, Vector3.One, cameraComponent.Position);
@@ -185,7 +185,7 @@ namespace Assignment3
 
         private void CreateLightSource(int id)
         {
-            LightComponent lightComponent = new LightComponent(id)
+            LightComponent2 lightComponent = new LightComponent2(id)
             {
                 LightDirection = new Vector3(-1, 2, 2), //new Vector3(-0.3333333f, 0.6666667f, 0.6666667f), //
                 DiffuseLightDirection = new Vector3(-1, 2, 2), //new Vector3(-0.3333333f, 0.6666667f, 0.6666667f),
@@ -200,7 +200,7 @@ namespace Assignment3
 
         private void CreateHouseModel(int houseId, Vector3 position)
         {
-            ModelComponent modelComponent = new ModelComponent(houseId, houseModel, houseTexture);
+            ModelComponent2 modelComponent = new ModelComponent2(houseId, houseModel, houseTexture);
             modelComponent.Effect = Content.Load<Effect>("Shadow");
             TransformComponent transformComponent = new TransformComponent(houseId, new Vector3(5, 5, 5), position);
 
@@ -210,7 +210,7 @@ namespace Assignment3
 
         private void CreateBlob(int blobId, Vector3 position)
         {
-            ModelComponent modelComponent = new ModelComponent(blobId, blobModel, CreateTexture(GraphicsDevice, 1, 1, c => Color.BlueViolet));
+            ModelComponent2 modelComponent = new ModelComponent2(blobId, blobModel, CreateTexture(GraphicsDevice, 1, 1, c => Color.BlueViolet));
             modelComponent.Effect = Content.Load<Effect>("Shadow");
             blobTransformComponent = new TransformComponent(blobId, new Vector3(2, 2, 2), position);
 
@@ -220,7 +220,7 @@ namespace Assignment3
 
         private void CreateBlock(int blockId, Vector3 position)
         {
-            ModelComponent modelComponent = new ModelComponent(blockId, blockModel, CreateTexture(GraphicsDevice, 1, 1, c => Color.HotPink));
+            ModelComponent2 modelComponent = new ModelComponent2(blockId, blockModel, CreateTexture(GraphicsDevice, 1, 1, c => Color.HotPink));
             modelComponent.Effect = Content.Load<Effect>("Shadow");
             TransformComponent transformComponent = new TransformComponent(blockId, new Vector3(50, 50, 50), position);
 
@@ -230,7 +230,7 @@ namespace Assignment3
 
         private void CreateTerrain(int terrainId, Vector3 position)
         {
-            ModelComponent modelComponent = new ModelComponent(terrainId, groundModel, CreateTexture(GraphicsDevice, 1, 1, c => Color.Yellow));
+            ModelComponent2 modelComponent = new ModelComponent2(terrainId, groundModel, CreateTexture(GraphicsDevice, 1, 1, c => Color.Yellow));
             modelComponent.Effect = Content.Load<Effect>("Shadow");
             TransformComponent transformComponent = new TransformComponent(terrainId, new Vector3(50, 50, 50), position); 
 
@@ -241,7 +241,7 @@ namespace Assignment3
 
         private void CreateChopper(int chopperId, Vector3 pos)
         {
-            ModelComponent modelComponent = new ModelComponent(chopperId, chopperModel, CreateTexture(GraphicsDevice, 1, 1, c => Color.LightGray));
+            ModelComponent2 modelComponent = new ModelComponent2(chopperId, chopperModel, CreateTexture(GraphicsDevice, 1, 1, c => Color.LightGray));
             modelComponent.Effect = Content.Load<Effect>("Shadow");
             TransformComponent transformComponent = new TransformComponent(chopperId, Vector3.One, pos);
 

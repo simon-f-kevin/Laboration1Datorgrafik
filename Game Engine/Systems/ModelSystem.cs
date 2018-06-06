@@ -15,14 +15,14 @@ namespace Game_Engine.Systems
         Matrix[] boneTransformations;
         public void Draw()
         {
-            var ModelComponents = ComponentManager.Instance.getDictionary<ModelComponent>();
+            var ModelComponents = ComponentManager.Instance.getDictionary<ModelComponent2>();
             
-            foreach(ModelComponent modelComponent in ModelComponents.Values)
+            foreach(ModelComponent2 modelComponent in ModelComponents.Values)
             {
                 boneTransformations = new Matrix[modelComponent.model.Bones.Count];
                 modelComponent.model.CopyAbsoluteBoneTransformsTo(boneTransformations);
                 var transformComponent = ComponentManager.Instance.GetComponentsById<TransformComponent>(modelComponent.EntityID);
-                var cameraComponent = ComponentManager.Instance.GetComponentsById<CameraComponent>(modelComponent.EntityID);
+                var cameraComponent = ComponentManager.Instance.GetComponentsById<CameraComponent2>(modelComponent.EntityID);
                 foreach (ModelMesh modelMesh in modelComponent.model.Meshes)
                 {
                     foreach (BasicEffect effect in modelMesh.Effects)

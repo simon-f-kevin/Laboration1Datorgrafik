@@ -12,12 +12,12 @@ using Microsoft.Xna.Framework.Input;
 
 namespace Game_Engine.Systems
 {
-    public class CameraSystem : IUpdateableSystem
+    public class CameraSystem2 : IUpdateableSystem
     {
         private GraphicsDevice graphicsDevice;
         private RobotBody robot;
 
-        public CameraSystem(GraphicsDevice graphicsDevice)
+        public CameraSystem2(GraphicsDevice graphicsDevice)
         {
             this.graphicsDevice = graphicsDevice;
             
@@ -30,8 +30,8 @@ namespace Game_Engine.Systems
 
         public void Update(GameTime gameTime)
         {
-            var cameras = ComponentManager.Instance.getDictionary<CameraComponent>();
-            foreach(CameraComponent cameraComp in cameras.Values)
+            var cameras = ComponentManager.Instance.getDictionary<CameraComponent2>();
+            foreach(CameraComponent2 cameraComp in cameras.Values)
             {
                 if (cameraComp.Follow)
                 {

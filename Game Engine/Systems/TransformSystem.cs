@@ -16,7 +16,7 @@ namespace Game_Engine.Systems
             foreach(TransformComponent transformComponent in transformComponents.Values)
             {
                 VelocityComponent velocityComponent = ComponentManager.Instance.GetComponentsById<VelocityComponent>(transformComponent.EntityID);
-                ModelComponent modelComponent = ComponentManager.Instance.GetComponentsById<ModelComponent>(transformComponent.EntityID);
+                ModelComponent2 modelComponent = ComponentManager.Instance.GetComponentsById<ModelComponent2>(transformComponent.EntityID);
                 float elapsedGameTime = (float)gameTime.ElapsedGameTime.TotalMilliseconds;
                 
                 // ------

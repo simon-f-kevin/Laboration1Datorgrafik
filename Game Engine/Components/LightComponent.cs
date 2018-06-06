@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Game_Engine.Components
 {
-    public class LightComponent : EntityComponent
+    public class LightComponent2 : EntityComponent
     {
         public Vector3 LightDirection { get; set; }
         public Matrix LightViewProjection { get; set; }
@@ -21,7 +21,7 @@ namespace Game_Engine.Components
         public Vector4 FogColor { get; set; }
         public bool FogEnabled { get; set; }
 
-        public LightComponent(int entityID) : base(entityID)
+        public LightComponent2(int entityID) : base(entityID)
         {
         }
     }
