@@ -72,12 +72,6 @@
     <Compile Include="Managers\ComponentManager.cs" />
     <Compile Include="Managers\SystemManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Robot\Limb.cs" />
-    <Compile Include="Robot\CuboidMesh.cs" />
-    <Compile Include="Robot\IGameObject.cs" />
-    <Compile Include="Robot\Head.cs" />
-    <Compile Include="Robot\RobotBody.cs" />
-    <Compile Include="Robot\Horn.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

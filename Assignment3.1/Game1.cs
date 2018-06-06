@@ -83,7 +83,7 @@ namespace Assignment3._1
             CreateCamera(13);
             CreateLighting(14);
             CreateAmbientLight(15);
-            createShadowrender(16);
+            CreateShadowrender(16);
             CreateFog(17);
 
             // TODO: use this.Content to load your game content here
@@ -108,7 +108,7 @@ namespace Assignment3._1
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            lightSystem.Update(gameTime);
+            //lightSystem.Update(gameTime);
             cameraSystem.Update(gameTime);
             // TODO: Add your update logic here
 
@@ -134,34 +134,27 @@ namespace Assignment3._1
         private void CreateHouse(int houseId, Vector3 position)
         {
 
-            var modelDude = new ModelComponent(houseId);
-            modelDude.Model = houseModel;
-            modelDude.Texture2D = houseTexture;
-            modelDude.ShadowMapRendering = true;
-            modelDude.Position = position;
-            modelDude.UpdateControlls = true;
-            modelDude.ObjectWorld = World;
-            modelDude.Scale = 1f;
-            var shadowEffectDude =new ShadowMappingEffect(modelDude.EntityID);
-            shadowEffectDude.effect = Content.Load<Effect>("Shadow");
-            ComponentManager.Instance.AddComponent(modelDude);
-            ComponentManager.Instance.AddComponent(shadowEffectDude);
+            CreateShadedModel(houseId, position, houseModel, houseTexture);
         }
-        private void CreateGround(int houseId, Vector3 position)
+        private void CreateGround(int groundId, Vector3 position)
         {
+            CreateShadedModel(groundId, position, groundModel, houseTexture);
+        }
 
-            var modelDude = new ModelComponent(houseId);
-            modelDude.Model = groundModel;
-            modelDude.Texture2D = houseTexture;
-            modelDude.ShadowMapRendering = true;
-            modelDude.Position = position;
-            modelDude.UpdateControlls = false;
-            modelDude.ObjectWorld = World;
-            modelDude.Scale = 1f;
-            var shadowEffectDude = new ShadowMappingEffect(modelDude.EntityID);
-            shadowEffectDude.effect = Content.Load<Effect>("Shadow");
-            ComponentManager.Instance.AddComponent(modelDude);
-            ComponentManager.Instance.AddComponent(shadowEffectDude);
+        private void CreateShadedModel(int entityId, Vector3 position, Model model, Texture2D texture)
+        {
+            var modelComponent = new ModelComponent(entityId);
+            modelComponent.Model = model;
+            modelComponent.Texture2D = texture;
+            modelComponent.Position = position;
+            modelComponent.ObjectWorld = World;
+            modelComponent.Scale = 1f;
+
+            var shadowMappingEffect = new ShadowMappingEffect(entityId);
+            shadowMappingEffect.effect = Content.Load<Effect>("Shadow");
+
+            ComponentManager.Instance.AddComponent(modelComponent);
+            ComponentManager.Instance.AddComponent(shadowMappingEffect);
         }
 
         private Texture2D CreateTexture(GraphicsDevice device, int width, int height, System.Func<int, Color> paint)
@@ -224,7 +217,7 @@ namespace Assignment3._1
             fogComp.FogEnd = 300f;
             ComponentManager.Instance.AddComponent(fogComp);
         }
-        public void createShadowrender(int shadowid)
+        public void CreateShadowrender(int shadowid)
         {
             ShadowRenderTargetComponent shadowRenderComp = new ShadowRenderTargetComponent(shadowid);
             shadowRenderComp.ShadowRenderTarget = new RenderTarget2D(graphics.GraphicsDevice,

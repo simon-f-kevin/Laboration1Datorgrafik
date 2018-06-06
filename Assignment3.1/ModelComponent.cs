@@ -19,11 +19,7 @@ namespace Game_Engine.Components
         public Model Model { get; set; }
         public Texture2D Texture2D { get; set; }
         public Vector3 Position { get; set; }
-        public float rotateModel { get; set; }
         public Matrix ObjectWorld { get; set; }
-        public bool ShadowMapRendering { get; set; }
-        public bool UpdateControlls { get; set; }
         public float Scale { get; set; }
-
     }
 }
