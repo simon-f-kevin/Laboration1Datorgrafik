@@ -31,7 +31,12 @@ namespace Assignment3._1
 
         public Game1()
         {
-            graphics = new GraphicsDeviceManager(this);
+            graphics = new GraphicsDeviceManager(this)
+            {
+                PreferredBackBufferWidth = 1280,
+                PreferredBackBufferHeight = 720,
+                GraphicsProfile = GraphicsProfile.HiDef
+            };
             Content.RootDirectory = "Content";
         }
 
@@ -70,18 +75,18 @@ namespace Assignment3._1
             int mid = 0;
 
             CreateHouse(1, new Vector3(50, mid, 20));
-            CreateBlob(2, new Vector3(-30, 10, 50));
-            CreateBlock(3, new Vector3(50, mid, -40));
+            //CreateBlob(2, new Vector3(-30, 10, 50));
+            //CreateBlock(3, new Vector3(50, mid, -40));
             //Ground                                         
             CreateGround(4, new Vector3(mid, mid, mid));
             CreateGround(5, new Vector3(mid, mid, high));
-            CreateGround(6, new Vector3(mid, mid, low));
+            //CreateGround(6, new Vector3(mid, mid, low));
             CreateGround(7, new Vector3(high, mid, mid));
             CreateGround(8, new Vector3(high, mid, high));
-            CreateGround(9, new Vector3(high, mid, low));
-            CreateGround(10, new Vector3(low, mid, mid));
-            CreateGround(11, new Vector3(low, mid, high));
-            CreateGround(12, new Vector3(low, mid, low));
+            //CreateGround(9, new Vector3(high, mid, low));
+            //CreateGround(10, new Vector3(low, mid, mid));
+            //CreateGround(11, new Vector3(low, mid, high));
+            //CreateGround(12, new Vector3(low, mid, low));
 
             CreateCamera(13);
             CreateLighting(14);
@@ -124,7 +129,7 @@ namespace Assignment3._1
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // TODO: Add your drawing code here
-            renderSystem.Draw();
+            renderSystem.Draw(spriteBatch);
 
             base.Draw(gameTime);
         }
@@ -133,7 +138,8 @@ namespace Assignment3._1
         private void CreateHouse(int houseId, Vector3 position)
         {
             ModelComponent modelComponent = new ModelComponent(houseId, houseModel, houseTexture);
-            modelComponent.Effect = Content.Load<Effect>("Shadow");
+            modelComponent.Effect = Content.Load<Effect>("ShadowMapGenerate");
+            modelComponent.objectWorld = Matrix.Identity;
             TransformComponent transformComponent = new TransformComponent(houseId, new Vector3(5, 5, 5), position);
 
             ComponentManager.Instance.AddComponent(transformComponent);
@@ -144,6 +150,7 @@ namespace Assignment3._1
         {
             ModelComponent modelComponent = new ModelComponent(blobId, blobModel, CreateTexture(GraphicsDevice, 1, 1, c => Color.BlueViolet));
             modelComponent.Effect = Content.Load<Effect>("Shadow");
+            modelComponent.objectWorld = Matrix.Identity;
             blobTransformComponent = new TransformComponent(blobId, new Vector3(2, 2, 2), position);
 
             ComponentManager.Instance.AddComponent(blobTransformComponent);
@@ -154,6 +161,7 @@ namespace Assignment3._1
         {
             ModelComponent modelComponent = new ModelComponent(blockId, blockModel, CreateTexture(GraphicsDevice, 1, 1, c => Color.HotPink));
             modelComponent.Effect = Content.Load<Effect>("Shadow");
+            modelComponent.objectWorld = Matrix.Identity;
             TransformComponent transformComponent = new TransformComponent(blockId, new Vector3(50, 50, 50), position);
 
             ComponentManager.Instance.AddComponent(transformComponent);
@@ -164,7 +172,8 @@ namespace Assignment3._1
         {
             ModelComponent modelComponent = new ModelComponent(groundId, groundModel, CreateTexture(GraphicsDevice, 1, 1, c => Color.Yellow));
             modelComponent.model.Tag = "ground";
-            modelComponent.Effect = Content.Load<Effect>("Shadow");
+            modelComponent.Effect = Content.Load<Effect>("ShadowMapGenerate");
+            modelComponent.objectWorld = Matrix.Identity;
             TransformComponent transformComponent = new TransformComponent(groundId, new Vector3(50, 50, 50), position);
 
 
@@ -177,6 +186,7 @@ namespace Assignment3._1
         {
             ModelComponent modelComponent = new ModelComponent(chopperId, chopperModel, CreateTexture(GraphicsDevice, 1, 1, c => Color.LightGray));
             modelComponent.Effect = Content.Load<Effect>("Shadow");
+            modelComponent.objectWorld = Matrix.Identity;
             TransformComponent transformComponent = new TransformComponent(chopperId, Vector3.One, pos);
 
             ComponentManager.Instance.AddComponent(transformComponent);
@@ -204,11 +214,11 @@ namespace Assignment3._1
 
         private void CreateCamera(int cameraId)
         {
-            Vector3 cameraPosition = new Vector3(0, 70, 100);
-            Vector3 cameraForward = new Vector3(0, -0.4472136f, -0.8944272f);
+            Vector3 cameraPosition = new Vector3(-100, 70, 10);
+            Vector3 cameraForward = new Vector3(0, 0, -0.8944272f);
             BoundingFrustum cameraFrustum = new BoundingFrustum(Matrix.Identity);
             float aspectRatio = (float)800 / (float)480;
-            Matrix viewMatrix = Matrix.CreateLookAt(cameraPosition, cameraPosition + cameraForward, Vector3.Up);
+            Matrix viewMatrix = Matrix.CreateLookAt(cameraPosition, (Vector3.Zero + Vector3.Forward * 20), Vector3.Up);
             Matrix projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver4, aspectRatio, 1.0f, 1000.0f);
             CameraComponent cameraComponent = new CameraComponent(cameraId, viewMatrix, projection, false);
             cameraComponent.Position = cameraPosition;
@@ -223,6 +233,7 @@ namespace Assignment3._1
         {
             LightComponent lightComponent = new LightComponent(lightID)
             {
+                LightPosition = new Vector3(-1,10,1),
                 LightDirection = new Vector3(-1, 2, 2), //new Vector3(-0.3333333f, 0.6666667f, 0.6666667f), //
                 DiffuseLightDirection = new Vector3(-1, 2, 2), //new Vector3(-0.3333333f, 0.6666667f, 0.6666667f),
                 DiffuseColor = Color.HotPink.ToVector4(),

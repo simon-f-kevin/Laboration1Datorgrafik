@@ -13,6 +13,24 @@
 
 #---------------------------------- Content ---------------------------------#
 
+#begin farmhouse-texture.jpg
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:farmhouse-texture.jpg
+
+#begin Shadow.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Shadow.fx
+
 #begin Blob.obj
 /importer:OpenAssetImporter
 /processor:ModelProcessor
@@ -70,18 +88,6 @@
 /processorParam:TextureFormat=Compressed
 /build:farmhouse_obj.obj
 
-#begin farmhouse-texture.jpg
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:farmhouse-texture.jpg
-
 #begin ground.obj
 /importer:OpenAssetImporter
 /processor:ModelProcessor
@@ -101,9 +107,9 @@
 /processorParam:TextureFormat=Compressed
 /build:ground.obj
 
-#begin Shadow.fx
+#begin ShadowMapGenerate.fx
 /importer:EffectImporter
 /processor:EffectProcessor
 /processorParam:DebugMode=Auto
-/build:Shadow.fx
+/build:ShadowMapGenerate.fx
 

@@ -20,6 +20,8 @@ namespace Game_Engine.Components
         public float FogEnd { get; set; }
         public Vector4 FogColor { get; set; }
         public bool FogEnabled { get; set; }
+        public float LightIntensity { get; set; }
+        public Vector3 LightPosition { get; set; }
 
         public LightComponent(int entityID) : base(entityID)
         {
