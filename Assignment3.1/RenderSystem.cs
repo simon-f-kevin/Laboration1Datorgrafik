@@ -113,7 +113,7 @@ namespace Assignment3._1
             {
                 foreach (ModelMeshPart meshPart in mesh.MeshParts)
                 {
-                    modelComponent.Effect.Parameters["WorldViewProj"].SetValue(modelComponent.objectWorld * lightComponent.LightViewProjection);
+                    modelComponent.Effect.Parameters["WorldViewProj"].SetValue(modelComponent.ObjectWorld * lightComponent.LightViewProjection);
                     modelComponent.Effect.CurrentTechnique.Passes[0].Apply();
 
                     graphicsDevice.SetVertexBuffer(meshPart.VertexBuffer);
@@ -262,7 +262,7 @@ namespace Assignment3._1
                     //}
                     #endregion
 
-                    Matrix worldMatrix = modelTransforms[mesh.ParentBone.Index] * modelComp.objectWorld;
+                    Matrix worldMatrix = modelTransforms[mesh.ParentBone.Index] * modelComp.ObjectWorld;
                     var currentEffect = modelComp.Effect;
                     currentEffect.CurrentTechnique = currentEffect.Techniques[techniqueName];
                     currentEffect.Parameters["xWorldViewProjection"].SetValue(worldMatrix * cameraComponent.View * cameraComponent.Projection);

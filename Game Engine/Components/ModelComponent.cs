@@ -13,17 +13,19 @@ namespace Game_Engine.Components
     {
         public Texture2D Texture { get; set; }
         public Effect Effect { get; set; }
-        public Matrix objectWorld { get; set; }
+        public Matrix ObjectWorld { get; set; }
         public Model model { get; set; }
+        public bool RenderShadowMap { get; set; }
+
         public ModelComponent(int id, Model model) : base(id)
         {
-            objectWorld = Matrix.Identity;
+            ObjectWorld = Matrix.Identity;
             this.model = model;
         }
 
         public ModelComponent(int id, Model model, Texture2D texture) : base(id)
         {
-            objectWorld = Matrix.Identity;
+            ObjectWorld = Matrix.Identity;
             this.model = model;
             this.Texture = texture;
         }

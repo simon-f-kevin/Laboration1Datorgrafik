@@ -4,8 +4,14 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Game_Engine.Components;
 using Game_Engine.Managers;
-using Game_Engine.Systems;
+//using Game_Engine.Systems;
 using System.Linq;
+using Assignment3._1.Components;
+using Assignment3._1.Systems;
+using CameraComponent = Assignment3._1.Components.CameraComponent;
+using LightComponent = Assignment3._1.Components.LightComponent;
+//using CameraComponent = Game_Engine.Components.CameraComponent;
+using ModelComponent = Game_Engine.Components.ModelComponent;
 
 namespace Assignment3._1
 {
@@ -25,7 +31,11 @@ namespace Assignment3._1
         private Texture2D houseTexture;
 
         private CameraSystem cameraSystem;
-        private RenderSystem renderSystem;
+        private HandleInputSystem handleInputSystem;
+        private LightSystem lightSystem;
+        private ShadowSystem shadowSystem;
+        //private RenderSystem renderSystem;
+
 
         private TransformComponent blobTransformComponent;
 
@@ -49,8 +59,11 @@ namespace Assignment3._1
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            renderSystem = new RenderSystem(GraphicsDevice);
-            cameraSystem = new CameraSystem(GraphicsDevice);
+            //renderSystem = new RenderSystem(GraphicsDevice);
+            cameraSystem = new CameraSystem();
+            handleInputSystem = new HandleInputSystem();
+            lightSystem = new LightSystem();
+            shadowSystem = new ShadowSystem(GraphicsDevice);
             base.Initialize();
         }
 
@@ -113,10 +126,12 @@ namespace Assignment3._1
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            renderSystem.Update(gameTime);
+            //renderSystem.Update(gameTime);
             cameraSystem.Update(gameTime);
             // TODO: Add your update logic here
-
+            lightSystem.Update(gameTime);
+            cameraSystem.Update(gameTime);
+            handleInputSystem.Update(gameTime);
             base.Update(gameTime);
         }
 
@@ -129,8 +144,9 @@ namespace Assignment3._1
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // TODO: Add your drawing code here
-            renderSystem.Draw(spriteBatch);
-
+            //renderSystem.Draw(spriteBatch);
+            lightSystem.Draw();
+            shadowSystem.Draw();
             base.Draw(gameTime);
         }
 
@@ -138,10 +154,15 @@ namespace Assignment3._1
         private void CreateHouse(int houseId, Vector3 position)
         {
             ModelComponent modelComponent = new ModelComponent(houseId, houseModel, houseTexture);
-            modelComponent.Effect = Content.Load<Effect>("ShadowMapGenerate");
-            modelComponent.objectWorld = Matrix.Identity;
+            modelComponent.RenderShadowMap = true;
+            modelComponent.Effect = Content.Load<Effect>("Shadow");
+            modelComponent.ObjectWorld = Matrix.Identity;
             TransformComponent transformComponent = new TransformComponent(houseId, new Vector3(5, 5, 5), position);
 
+            ShadowMappingEffectComponent shadowMap = new ShadowMappingEffectComponent(houseId);
+            shadowMap.effect = Content.Load<Effect>("Shadow");
+
+            ComponentManager.Instance.AddComponent(shadowMap);
             ComponentManager.Instance.AddComponent(transformComponent);
             ComponentManager.Instance.AddComponent(modelComponent);
         }
@@ -149,10 +170,14 @@ namespace Assignment3._1
         private void CreateBlob(int blobId, Vector3 position)
         {
             ModelComponent modelComponent = new ModelComponent(blobId, blobModel, CreateTexture(GraphicsDevice, 1, 1, c => Color.BlueViolet));
+            modelComponent.RenderShadowMap = true;
             modelComponent.Effect = Content.Load<Effect>("Shadow");
-            modelComponent.objectWorld = Matrix.Identity;
+            modelComponent.ObjectWorld = Matrix.Identity;
             blobTransformComponent = new TransformComponent(blobId, new Vector3(2, 2, 2), position);
+            ShadowMappingEffectComponent shadowMap = new ShadowMappingEffectComponent(blobId);
+            shadowMap.effect = Content.Load<Effect>("Shadow");
 
+            ComponentManager.Instance.AddComponent(shadowMap);
             ComponentManager.Instance.AddComponent(blobTransformComponent);
             ComponentManager.Instance.AddComponent(modelComponent);
         }
@@ -161,9 +186,12 @@ namespace Assignment3._1
         {
             ModelComponent modelComponent = new ModelComponent(blockId, blockModel, CreateTexture(GraphicsDevice, 1, 1, c => Color.HotPink));
             modelComponent.Effect = Content.Load<Effect>("Shadow");
-            modelComponent.objectWorld = Matrix.Identity;
+            modelComponent.ObjectWorld = Matrix.Identity;
             TransformComponent transformComponent = new TransformComponent(blockId, new Vector3(50, 50, 50), position);
+            ShadowMappingEffectComponent shadowMap = new ShadowMappingEffectComponent(blockId);
+            shadowMap.effect = Content.Load<Effect>("Shadow");
 
+            ComponentManager.Instance.AddComponent(shadowMap);
             ComponentManager.Instance.AddComponent(transformComponent);
             ComponentManager.Instance.AddComponent(modelComponent);
         }
@@ -171,12 +199,14 @@ namespace Assignment3._1
         private void CreateGround(int groundId, Vector3 position)
         {
             ModelComponent modelComponent = new ModelComponent(groundId, groundModel, CreateTexture(GraphicsDevice, 1, 1, c => Color.Yellow));
-            modelComponent.model.Tag = "ground";
-            modelComponent.Effect = Content.Load<Effect>("ShadowMapGenerate");
-            modelComponent.objectWorld = Matrix.Identity;
+            modelComponent.RenderShadowMap = true;
+            modelComponent.Effect = Content.Load<Effect>("Shadow");
+            modelComponent.ObjectWorld = Matrix.Identity;
             TransformComponent transformComponent = new TransformComponent(groundId, new Vector3(50, 50, 50), position);
+            ShadowMappingEffectComponent shadowMap = new ShadowMappingEffectComponent(groundId);
+            shadowMap.effect = Content.Load<Effect>("Shadow");
 
-
+            ComponentManager.Instance.AddComponent(shadowMap);
             ComponentManager.Instance.AddComponent(transformComponent);
             ComponentManager.Instance.AddComponent(modelComponent);
 
@@ -186,9 +216,13 @@ namespace Assignment3._1
         {
             ModelComponent modelComponent = new ModelComponent(chopperId, chopperModel, CreateTexture(GraphicsDevice, 1, 1, c => Color.LightGray));
             modelComponent.Effect = Content.Load<Effect>("Shadow");
-            modelComponent.objectWorld = Matrix.Identity;
+            modelComponent.RenderShadowMap = true;
+            modelComponent.ObjectWorld = Matrix.Identity;
             TransformComponent transformComponent = new TransformComponent(chopperId, Vector3.One, pos);
+            ShadowMappingEffectComponent shadowMap = new ShadowMappingEffectComponent(chopperId);
+            shadowMap.effect = Content.Load<Effect>("Shadow");
 
+            ComponentManager.Instance.AddComponent(shadowMap);
             ComponentManager.Instance.AddComponent(transformComponent);
             ComponentManager.Instance.AddComponent(modelComponent);
         }
@@ -214,35 +248,38 @@ namespace Assignment3._1
 
         private void CreateCamera(int cameraId)
         {
-            Vector3 cameraPosition = new Vector3(-100, 70, 10);
-            Vector3 cameraForward = new Vector3(0, 0, -0.8944272f);
-            BoundingFrustum cameraFrustum = new BoundingFrustum(Matrix.Identity);
-            float aspectRatio = (float)800 / (float)480;
-            Matrix viewMatrix = Matrix.CreateLookAt(cameraPosition, (Vector3.Zero + Vector3.Forward * 20), Vector3.Up);
-            Matrix projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver4, aspectRatio, 1.0f, 1000.0f);
-            CameraComponent cameraComponent = new CameraComponent(cameraId, viewMatrix, projection, false);
-            cameraComponent.Position = cameraPosition;
-            cameraComponent.BoundingFrustum = cameraFrustum;
-            TransformComponent transformComponent = new TransformComponent(cameraId, Vector3.One, cameraComponent.Position);
-
-            ComponentManager.Instance.AddComponent(cameraComponent);
-            ComponentManager.Instance.AddComponent(transformComponent);
+            CameraComponent cameraComp = new CameraComponent(cameraId);
+            cameraComp.CameraPosition = new Vector3(0, 70, 100);
+            cameraComp.CameraForward = new Vector3(0, -0.4472136f, -0.8944272f);
+            cameraComp.CameraFrustum = new BoundingFrustum(Matrix.Identity);
+            cameraComp.AspectRatio = (float)800 / (float)400;
+            cameraComp.Projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver4,
+                cameraComp.AspectRatio,
+                1.0f, 1000.0f);
+            ComponentManager.Instance.AddComponent(cameraComp);
         }
 
         private void CreateLighting(int lightID)
         {
-            LightComponent lightComponent = new LightComponent(lightID)
-            {
-                LightPosition = new Vector3(-1,10,1),
-                LightDirection = new Vector3(-1, 2, 2), //new Vector3(-0.3333333f, 0.6666667f, 0.6666667f), //
-                DiffuseLightDirection = new Vector3(-1, 2, 2), //new Vector3(-0.3333333f, 0.6666667f, 0.6666667f),
-                DiffuseColor = Color.HotPink.ToVector4(),
-                DiffuseIntensity = 0.8f,
-                AmbientColor = Color.IndianRed.ToVector4(),
-                AmbientIntensity = 0.5f,
-            };
+            var lightComp = new LightComponent(lightID);
+            lightComp.LightDir = new Vector3(-0.3333333f, 0.6666667f, 0.6666667f);
+            lightComp.DiffusColor = Color.White.ToVector4();
+            lightComp.DiffuseIntensity = 0.5f;
+            lightComp.DiffuseLightDirection = lightComp.LightDir;
+            ComponentManager.Instance.AddComponent(lightComp);
+            var ambientComp = new AmbientComponent(lightID);
+            ambientComp.AmbientColor = Color.White.ToVector4();
+            ambientComp.AmbientIntensity = 0.2f;
+            ComponentManager.Instance.AddComponent(ambientComp);
 
-            ComponentManager.Instance.AddComponent(lightComponent);
+            var shadowRenderComp = new ShadowRenderTargetComponent(lightID);
+            shadowRenderComp.ShadowRenderTarget = new RenderTarget2D(GraphicsDevice,
+                2048,
+                2048,
+                false,
+                SurfaceFormat.Single,
+                DepthFormat.Depth24);
+            ComponentManager.Instance.AddComponent(shadowRenderComp);
         }
     }
 }
