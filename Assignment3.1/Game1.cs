@@ -70,17 +70,12 @@ namespace Assignment3._1
             blockModel = Content.Load<Model>("block2");
             groundModel = Content.Load<Model>("ground");
 
-            int high = 125;
-            int low = -high;
-            int mid = 0;
+            CreateCamera(1);
+            CreateLighting(2);
 
-            CreateHouse(1, new Vector3(50, mid, 20));
-            CreateBlob(2, new Vector3(70, 20, 50));
-            CreateGround(3, new Vector3(50, -10, 20));
-
-
-            CreateCamera(13);
-            CreateLighting(14);
+            CreateHouse(3, new Vector3(50, 0, 20));
+            CreateBlob(4, new Vector3(70, 20, 50));
+            CreateGround(5, new Vector3(50, -5, 20));
 
             // TODO: use this.Content to load your game content here
         }

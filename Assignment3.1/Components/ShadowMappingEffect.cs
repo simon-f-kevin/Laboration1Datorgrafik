@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Game_Engine.Components;
+using Game_Engine.Managers;
 
 namespace Game_Engine.Components
 {
@@ -14,13 +15,12 @@ namespace Game_Engine.Components
     {
         public ShadowMappingEffect(int EntityID) : base(EntityID)
         {
+            CameraComponent = ComponentManager.Instance.getDictionary<CameraComponent>().Values.FirstOrDefault() as CameraComponent;
+            LightComponet = ComponentManager.Instance.getDictionary<LightComponent>().Values.FirstOrDefault() as LightComponent;
         }
         public LightComponent LightComponet { get; set; }
-        public FogComponent FogComponent { get; set; }
-        public AmbientComponent AmbientComponent { get; set; }
         public CameraComponent CameraComponent { get; set; }
         public Effect effect { get; set; }
-        public RenderTarget2D shadowRenderTarget { get; set; }
         public Matrix world{ get; set; }      
         public bool createShadowMap { get; set; }
         public string Techniquename { get; set; }
@@ -31,7 +31,6 @@ namespace Game_Engine.Components
             {
                 effect.Parameters["Texture"].SetValue(texture2D);
             }
-
         }
         public void Apply()
         {
@@ -46,7 +45,7 @@ namespace Game_Engine.Components
 
             if (!createShadowMap)
             {
-                effect.Parameters["ShadowMap"].SetValue(shadowRenderTarget);
+                effect.Parameters["ShadowMap"].SetValue(LightComponet.ShadowRenderTarget);
             }
 
             effect.Parameters["AmbientColor"].SetValue(LightComponet.AmbientColor);
@@ -58,17 +57,12 @@ namespace Game_Engine.Components
             effect.Parameters["DiffuseColor"].SetValue(LightComponet.DiffusColor);
             effect.Parameters["DiffuseIntensity"].SetValue(LightComponet.DiffuseIntensity);
 
-    
-  
             effect.Parameters["CameraPosition"].SetValue(CameraComponent.CameraPosition);
    
-
             effect.Parameters["FogStart"].SetValue(LightComponet.FogStart);
             effect.Parameters["FogEnd"].SetValue(LightComponet.FogEnd);
             effect.Parameters["FogColor"].SetValue(LightComponet.FogColor);
             effect.Parameters["FogEnabled"].SetValue(LightComponet.FogEnabled);
-
-
 
             effect.Parameters["Shininess"].SetValue(0.9f);
             effect.Parameters["SpecularColor"].SetValue(Color.MediumVioletRed.ToVector4());

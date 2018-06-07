@@ -17,11 +17,9 @@ namespace Assignment3._1
 
         private Matrix World;
         private GraphicsDevice Graphics;
-        public bool Visible { get; set; }
 
         public RenderSystem(GraphicsDevice graphicsDevice, Matrix world)
         {
-            Visible = true;
             Graphics = graphicsDevice;
             World = world;
         }
@@ -47,13 +45,19 @@ namespace Assignment3._1
         {
             var lightComponent = ComponentManager.Instance.getDictionary<LightComponent>().Values.FirstOrDefault() as LightComponent;
             var cameraComp = ComponentManager.Instance.getDictionary<CameraComponent>().Values.FirstOrDefault() as CameraComponent;
+
+            if (cameraComp == null || lightComponent == null)
+            {
+                return;
+            }
+
             CreateLightViewProjectionMatrix(lightComponent, cameraComp);
 
             Graphics.BlendState = BlendState.Opaque;
             Graphics.DepthStencilState = DepthStencilState.Default;
 
-            CreateShadowMap();
-            DrawWithShadowMap();
+            CreateShadowMap(lightComponent, cameraComp);
+            DrawWithShadowMap(lightComponent, cameraComp);
         }
 
         private void CreateLightViewProjectionMatrix(LightComponent lightComponent, CameraComponent cameraComp)
@@ -104,13 +108,8 @@ namespace Assignment3._1
         /// Renders the scene to the floating point render target then 
         /// sets the texture for use when drawing the scene.
         /// </summary>
-        void CreateShadowMap()
+        void CreateShadowMap(LightComponent light, CameraComponent cameraComp)
         {
-            var light = ComponentManager.Instance.getDictionary<LightComponent>().Values.FirstOrDefault() as LightComponent;
-            if (light == null)
-            {
-                return;
-            }
             Graphics.SetRenderTarget(light.ShadowRenderTarget);
             Graphics.Clear(Color.White);
 
@@ -118,24 +117,10 @@ namespace Assignment3._1
 
             // Set the models world matrix so it will rotate
             var models = ComponentManager.Instance.getDictionary<ModelComponent>();
-            var cameraComp = ComponentManager.Instance.getDictionary<CameraComponent>().Values.FirstOrDefault() as CameraComponent;
-            var shadowMappingEffects = ComponentManager.Instance.getDictionary<ShadowMappingEffect>();
-            if (cameraComp == null || light == null)
-            {
-                return;
-            }
             foreach (ModelComponent modelComp in models.Values)
             {
-                EntityComponent shadowMappingEffec;
-                if (shadowMappingEffects.TryGetValue(modelComp.EntityID, out shadowMappingEffec))
-                {
-                    ShadowMappingEffect shadowMappingEffect = (ShadowMappingEffect)shadowMappingEffec;
-                    shadowMappingEffect.CameraComponent = cameraComp;
-                    shadowMappingEffect.LightComponet = light;
-                    shadowMappingEffect.shadowRenderTarget = null;
-                    DrawModel(modelComp, true, shadowMappingEffect);
-                }
-
+                var shadowMappingEffect = ComponentManager.Instance.GetComponentsById<ShadowMappingEffect>(modelComp.EntityID);
+                DrawModel(modelComp, true, shadowMappingEffect);
             }
             // Draw the dude model
             // Set render target back to the back buffer
@@ -146,7 +131,7 @@ namespace Assignment3._1
         /// <summary>
         /// Renders the scene using the shadow map to darken the shadow areas
         /// </summary>
-        void DrawWithShadowMap()
+        void DrawWithShadowMap(LightComponent light, CameraComponent cameraComp)
         {
             Graphics.Clear(Color.CornflowerBlue);
             Graphics.BlendState = BlendState.Opaque;
@@ -162,26 +147,11 @@ namespace Assignment3._1
                 FilterMode = TextureFilterMode.Comparison
             };
 
-
             var models = ComponentManager.Instance.getDictionary<ModelComponent>();
-            var cameraComp = ComponentManager.Instance.getDictionary<CameraComponent>().Values.FirstOrDefault() as CameraComponent;
-            var light = ComponentManager.Instance.getDictionary<LightComponent>().Values.FirstOrDefault() as LightComponent;
-            var shadowMappingEffects = ComponentManager.Instance.getDictionary<ShadowMappingEffect>();
-            if (cameraComp == null || light == null)
-            {
-                return;
-            }
             foreach (ModelComponent modelComp in models.Values)
             {
-                EntityComponent shadowMappingEffec;
-                if (shadowMappingEffects.TryGetValue(modelComp.EntityID, out shadowMappingEffec))
-                {
-                    ShadowMappingEffect shadowMappingEffect = (ShadowMappingEffect)shadowMappingEffec;
-                    shadowMappingEffect.CameraComponent = cameraComp;
-                    shadowMappingEffect.LightComponet = light;
-                    shadowMappingEffect.shadowRenderTarget = light.ShadowRenderTarget;
-                    DrawModel(modelComp, false, shadowMappingEffect);
-                }
+                var shadowMappingEffect = ComponentManager.Instance.GetComponentsById<ShadowMappingEffect>(modelComp.EntityID);
+                DrawModel(modelComp, false, shadowMappingEffect);
             }
         }
 
