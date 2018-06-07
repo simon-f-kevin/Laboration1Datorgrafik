@@ -52,6 +52,9 @@ namespace Assignment3._1
             // TODO: Add your initialization logic here
             cameraSystem = new CameraSystem();
             renderSystem = new RenderSystem(graphics.GraphicsDevice, World);
+
+            SystemManager.Instance.addToUpdateableQueue(cameraSystem, renderSystem);
+            SystemManager.Instance.addToDrawableQueue(renderSystem);
             base.Initialize();
         }
 
@@ -99,8 +102,7 @@ namespace Assignment3._1
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            renderSystem.Update(gameTime);
-            cameraSystem.Update(gameTime);
+            SystemManager.Instance.Update(gameTime);
             // TODO: Add your update logic here
 
             base.Update(gameTime);
@@ -115,8 +117,7 @@ namespace Assignment3._1
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // TODO: Add your drawing code here
-            renderSystem.Draw();
-
+            SystemManager.Instance.Draw();
             base.Draw(gameTime);
         }
 
@@ -169,11 +170,11 @@ namespace Assignment3._1
                 * Matrix.CreateScale(new Vector3(transformComponent.Scale)) 
                 * Matrix.CreateTranslation(transformComponent.Position);
 
-            var shadowMappingEffect = new ShadowMappingEffect(entityId);
-            shadowMappingEffect.effect = Content.Load<Effect>("Shadow");
+            var effectSettingsComponent = new EffectSettingsComponent(entityId);
+            effectSettingsComponent.effect = Content.Load<Effect>("Shadow");
 
             ComponentManager.Instance.AddComponent(modelComponent);
-            ComponentManager.Instance.AddComponent(shadowMappingEffect);
+            ComponentManager.Instance.AddComponent(effectSettingsComponent);
             ComponentManager.Instance.AddComponent(transformComponent);
         }
 
@@ -193,15 +194,15 @@ namespace Assignment3._1
 
         private void CreateLighting(int lightID)
         {
-            LightComponent lightComp = new LightComponent(lightID);
+            LightSettingsComponent lightComp = new LightSettingsComponent(lightID);
 
-            lightComp.LightDir = new Vector3(-0.3333333f, 0.6666667f, 0.6666667f);
+            lightComp.LightDirection = new Vector3(-0.3333333f, 0.6666667f, 0.6666667f);
             lightComp.DiffusColor = Color.White.ToVector4();
             lightComp.DiffuseIntensity = 0.5f;
-            lightComp.DiffuseLightDirection = lightComp.LightDir;
+            lightComp.DiffuseLightDirection = lightComp.LightDirection;
             lightComp.AmbientColor = Color.White.ToVector4();
             lightComp.AmbientIntensity = 0.2f;
-            lightComp.ShadowRenderTarget = new RenderTarget2D(graphics.GraphicsDevice,
+            lightComp.RenderTarget = new RenderTarget2D(graphics.GraphicsDevice,
                     shadowMapWidthHeight,
                     shadowMapWidthHeight,
                     false,

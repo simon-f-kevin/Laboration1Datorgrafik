@@ -11,18 +11,17 @@ using Game_Engine.Managers;
 
 namespace Game_Engine.Components
 {
-    public class ShadowMappingEffect : EntityComponent
+    public class EffectSettingsComponent : EntityComponent
     {
-        public ShadowMappingEffect(int EntityID) : base(EntityID)
+        public EffectSettingsComponent(int EntityID) : base(EntityID)
         {
             CameraComponent = ComponentManager.Instance.getDictionary<CameraComponent>().Values.FirstOrDefault() as CameraComponent;
-            LightComponet = ComponentManager.Instance.getDictionary<LightComponent>().Values.FirstOrDefault() as LightComponent;
+            LightComponent = ComponentManager.Instance.getDictionary<LightSettingsComponent>().Values.FirstOrDefault() as LightSettingsComponent;
         }
-        public LightComponent LightComponet { get; set; }
-        public CameraComponent CameraComponent { get; set; }
+        private LightSettingsComponent LightComponent { get; set; }
+        private CameraComponent CameraComponent { get; set; }
         public Effect effect { get; set; }
         public Matrix world{ get; set; }      
-        public bool createShadowMap { get; set; }
         public string Techniquename { get; set; }
         public void AddEffect(Effect effectIN, Texture2D texture2D)
         {
@@ -38,31 +37,31 @@ namespace Game_Engine.Components
             effect.Parameters["World"].SetValue(world);
             effect.Parameters["View"].SetValue(CameraComponent.View);
             effect.Parameters["Projection"].SetValue(CameraComponent.Projection);
-            effect.Parameters["LightDirection"].SetValue(LightComponet.LightDir);
-            effect.Parameters["LightViewProj"].SetValue(LightComponet.LightViewProjection);
+            effect.Parameters["LightDirection"].SetValue(LightComponent.LightDirection);
+            effect.Parameters["LightViewProj"].SetValue(LightComponent.LightViewProjection);
             effect.Parameters["ShadowStrenght"].SetValue(1f);
             effect.Parameters["DepthBias"].SetValue(0.001f);
 
-            if (!createShadowMap)
-            {
-                effect.Parameters["ShadowMap"].SetValue(LightComponet.ShadowRenderTarget);
-            }
+            //if (!createShadowMap)
+//            {
+            effect.Parameters["ShadowMap"].SetValue(LightComponent.RenderTarget);
+//            }
 
-            effect.Parameters["AmbientColor"].SetValue(LightComponet.AmbientColor);
-            effect.Parameters["AmbientIntensity"].SetValue(LightComponet.AmbientIntensity);
+            effect.Parameters["AmbientColor"].SetValue(LightComponent.AmbientColor);
+            effect.Parameters["AmbientIntensity"].SetValue(LightComponent.AmbientIntensity);
             
             effect.Parameters["ViewVector"].SetValue(Vector3.One);
             //effect.Parameters["DiffuseLightDirection"].SetValue(shader.DiffuseLightDirection);
-            effect.Parameters["DiffuseLightDirection"].SetValue(LightComponet.DiffuseLightDirection); // todo
-            effect.Parameters["DiffuseColor"].SetValue(LightComponet.DiffusColor);
-            effect.Parameters["DiffuseIntensity"].SetValue(LightComponet.DiffuseIntensity);
+            effect.Parameters["DiffuseLightDirection"].SetValue(LightComponent.DiffuseLightDirection); // todo
+            effect.Parameters["DiffuseColor"].SetValue(LightComponent.DiffusColor);
+            effect.Parameters["DiffuseIntensity"].SetValue(LightComponent.DiffuseIntensity);
 
             effect.Parameters["CameraPosition"].SetValue(CameraComponent.CameraPosition);
    
-            effect.Parameters["FogStart"].SetValue(LightComponet.FogStart);
-            effect.Parameters["FogEnd"].SetValue(LightComponet.FogEnd);
-            effect.Parameters["FogColor"].SetValue(LightComponet.FogColor);
-            effect.Parameters["FogEnabled"].SetValue(LightComponet.FogEnabled);
+            effect.Parameters["FogStart"].SetValue(LightComponent.FogStart);
+            effect.Parameters["FogEnd"].SetValue(LightComponent.FogEnd);
+            effect.Parameters["FogColor"].SetValue(LightComponent.FogColor);
+            effect.Parameters["FogEnabled"].SetValue(LightComponent.FogEnabled);
 
             effect.Parameters["Shininess"].SetValue(0.9f);
             effect.Parameters["SpecularColor"].SetValue(Color.MediumVioletRed.ToVector4());

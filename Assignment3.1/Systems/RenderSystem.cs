@@ -1,20 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Game_Engine.Components;
+﻿using Game_Engine.Components;
 using Game_Engine.Managers;
 using Game_Engine.Systems;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System.Linq;
 
 namespace Assignment3._1
 {
     public class RenderSystem : IUpdateableSystem, IDrawableSystem
     {
-
         private Matrix World;
         private GraphicsDevice Graphics;
 
@@ -24,51 +19,50 @@ namespace Assignment3._1
             World = world;
         }
 
-
         public void Update(GameTime gameTime)
         {
-            var lightComponent = ComponentManager.Instance.getDictionary<LightComponent>().Values.FirstOrDefault() as LightComponent;
+            var lightSettingsComponent = ComponentManager.Instance.getDictionary<LightSettingsComponent>().Values.FirstOrDefault() as LightSettingsComponent;
             var rotationY = (float)gameTime.ElapsedGameTime.TotalMilliseconds * 0.00005f;
             var rotation = Quaternion.CreateFromAxisAngle(Vector3.UnitY, rotationY);
 
-            lightComponent.LightDir = Vector3.Transform(lightComponent.LightDir, rotation);
+            lightSettingsComponent.LightDirection = Vector3.Transform(lightSettingsComponent.LightDirection, rotation);
             if (Keyboard.GetState().IsKeyDown(Keys.F))
             {
-                lightComponent.LightDir = new Vector3(lightComponent.LightDir.X, lightComponent.LightDir.Y, lightComponent.LightDir.Z - 0.002f);
+                lightSettingsComponent.LightDirection = new Vector3(lightSettingsComponent.LightDirection.X, lightSettingsComponent.LightDirection.Y, lightSettingsComponent.LightDirection.Z - 0.002f);
             }
             if (Keyboard.GetState().IsKeyDown(Keys.G))
             {
-                lightComponent.LightDir = new Vector3(lightComponent.LightDir.X, lightComponent.LightDir.Y, lightComponent.LightDir.Z + 0.002f);
+                lightSettingsComponent.LightDirection = new Vector3(lightSettingsComponent.LightDirection.X, lightSettingsComponent.LightDirection.Y, lightSettingsComponent.LightDirection.Z + 0.002f);
             }
         }
         public void Draw()
         {
-            var lightComponent = ComponentManager.Instance.getDictionary<LightComponent>().Values.FirstOrDefault() as LightComponent;
+            var lightSettingsComponent = ComponentManager.Instance.getDictionary<LightSettingsComponent>().Values.FirstOrDefault() as LightSettingsComponent;
             var cameraComp = ComponentManager.Instance.getDictionary<CameraComponent>().Values.FirstOrDefault() as CameraComponent;
 
-            if (cameraComp == null || lightComponent == null)
+            if (cameraComp == null || lightSettingsComponent == null)
             {
                 return;
             }
 
-            CreateLightViewProjectionMatrix(lightComponent, cameraComp);
+            CreateLightViewProjectionMatrix(lightSettingsComponent, cameraComp);
 
             Graphics.BlendState = BlendState.Opaque;
             Graphics.DepthStencilState = DepthStencilState.Default;
 
-            CreateShadowMap(lightComponent, cameraComp);
-            DrawWithShadowMap(lightComponent, cameraComp);
+            CreateShadowMap(lightSettingsComponent, cameraComp);
+            DrawWithShadowMap(lightSettingsComponent, cameraComp);
         }
 
-        private void CreateLightViewProjectionMatrix(LightComponent lightComponent, CameraComponent cameraComp)
+        private void CreateLightViewProjectionMatrix(LightSettingsComponent lightSettingsComponent, CameraComponent cameraComponent)
         {
 
             Matrix lightRotation = Matrix.CreateLookAt(Vector3.Zero,
-                                                       -lightComponent.LightDir,
+                                                       -lightSettingsComponent.LightDirection,
                                                        Vector3.Up);
 
             // Get the corners of the frustum
-            Vector3[] frustumCorners = cameraComp.CameraFrustum.GetCorners();
+            Vector3[] frustumCorners = cameraComponent.CameraFrustum.GetCorners();
 
             // Transform the positions of the corners into the direction of the light
             for (int i = 0; i < frustumCorners.Length; i++)
@@ -94,7 +88,7 @@ namespace Assignment3._1
 
             // Create the view matrix for the light
             Matrix lightView = Matrix.CreateLookAt(lightPosition,
-                                                   lightPosition - lightComponent.LightDir,
+                                                   lightPosition - lightSettingsComponent.LightDirection,
                                                    Vector3.Up);
 
             // Create the projection matrix for the light
@@ -102,15 +96,15 @@ namespace Assignment3._1
             Matrix lightProjection = Matrix.CreateOrthographic(boxSize.X, boxSize.Y,
                                                                -boxSize.Z, boxSize.Z);
 
-            lightComponent.LightViewProjection = lightView * lightProjection;
+            lightSettingsComponent.LightViewProjection = lightView * lightProjection;
         }
         /// <summary>
         /// Renders the scene to the floating point render target then 
         /// sets the texture for use when drawing the scene.
         /// </summary>
-        void CreateShadowMap(LightComponent light, CameraComponent cameraComp)
+        void CreateShadowMap(LightSettingsComponent lightSettingsComponent, CameraComponent cameraComponent)
         {
-            Graphics.SetRenderTarget(light.ShadowRenderTarget);
+            Graphics.SetRenderTarget(lightSettingsComponent.RenderTarget);
             Graphics.Clear(Color.White);
 
             // Draw any occluders in our case that is just the dude model
@@ -119,8 +113,8 @@ namespace Assignment3._1
             var models = ComponentManager.Instance.getDictionary<ModelComponent>();
             foreach (ModelComponent modelComp in models.Values)
             {
-                var shadowMappingEffect = ComponentManager.Instance.GetComponentsById<ShadowMappingEffect>(modelComp.EntityID);
-                DrawModel(modelComp, true, shadowMappingEffect);
+                var effectSettigsComponent = ComponentManager.Instance.GetComponentsById<EffectSettingsComponent>(modelComp.EntityID);
+                DrawModel(modelComp, "CreateShadowMap", effectSettigsComponent);
             }
             // Draw the dude model
             // Set render target back to the back buffer
@@ -131,7 +125,7 @@ namespace Assignment3._1
         /// <summary>
         /// Renders the scene using the shadow map to darken the shadow areas
         /// </summary>
-        void DrawWithShadowMap(LightComponent light, CameraComponent cameraComp)
+        void DrawWithShadowMap(LightSettingsComponent lightSettingsComponent, CameraComponent cameraComponent)
         {
             Graphics.Clear(Color.CornflowerBlue);
             Graphics.BlendState = BlendState.Opaque;
@@ -150,8 +144,8 @@ namespace Assignment3._1
             var models = ComponentManager.Instance.getDictionary<ModelComponent>();
             foreach (ModelComponent modelComp in models.Values)
             {
-                var shadowMappingEffect = ComponentManager.Instance.GetComponentsById<ShadowMappingEffect>(modelComp.EntityID);
-                DrawModel(modelComp, false, shadowMappingEffect);
+                var effectSettingsComponent = ComponentManager.Instance.GetComponentsById<EffectSettingsComponent>(modelComp.EntityID);
+                DrawModel(modelComp, "DrawWithShadowMap", effectSettingsComponent);
             }
         }
 
@@ -160,10 +154,9 @@ namespace Assignment3._1
         /// </summary>
         /// <param name="model">The model to draw</param>
         /// <param name="technique">The technique to use</param>
-        void DrawModel(ModelComponent modelComp, bool createShadowMap, ShadowMappingEffect _ShadowMappingEffect)
+        void DrawModel(ModelComponent modelComp, string techniqueName, EffectSettingsComponent effectSettingsComponent)
         {
             var model = modelComp.Model;
-            string techniqueName = createShadowMap ? "CreateShadowMap" : "DrawWithShadowMap";
 
             Matrix[] transforms = new Matrix[model.Bones.Count];
             model.CopyAbsoluteBoneTransformsTo(transforms);
@@ -173,16 +166,14 @@ namespace Assignment3._1
 
                 foreach (var meshPart in mesh.MeshParts)
                 {
-                    _ShadowMappingEffect.AddEffect(meshPart.Effect, modelComp.Texture2D);
-                    _ShadowMappingEffect.Techniquename = techniqueName;
-                    _ShadowMappingEffect.world = transforms[mesh.ParentBone.Index] * modelComp.ObjectWorld * World;
-                    _ShadowMappingEffect.createShadowMap = createShadowMap;
-                    _ShadowMappingEffect.Apply();
+                    effectSettingsComponent.AddEffect(meshPart.Effect, modelComp.Texture2D);
+                    effectSettingsComponent.Techniquename = techniqueName;
+                    effectSettingsComponent.world = transforms[mesh.ParentBone.Index] * modelComp.ObjectWorld * World;
+                    effectSettingsComponent.Apply();
 
                     Graphics.SetVertexBuffer(meshPart.VertexBuffer);
                     Graphics.Indices = meshPart.IndexBuffer;
                     Graphics.DrawIndexedPrimitives(PrimitiveType.TriangleList, meshPart.VertexOffset, meshPart.StartIndex, meshPart.PrimitiveCount);
-
                 }
             }
         }
