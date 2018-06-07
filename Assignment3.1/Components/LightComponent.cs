@@ -19,6 +19,9 @@ namespace Game_Engine.Components
         public Vector3 DiffuseLightDirection { get; set; }
         public Vector4 DiffusColor { get; set; }
         public float DiffuseIntensity { get; set; }
-  
+        public Vector4 AmbientColor { get; set; }
+        public float AmbientIntensity { get; set; }
+
+
     }
 }

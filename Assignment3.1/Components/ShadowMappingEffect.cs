@@ -49,8 +49,8 @@ namespace Game_Engine.Components
                 effect.Parameters["ShadowMap"].SetValue(shadowRenderTarget);
             }
 
-            effect.Parameters["AmbientColor"].SetValue(AmbientComponent.AmbientColor);
-            effect.Parameters["AmbientIntensity"].SetValue(AmbientComponent.AmbientIntensity);
+            effect.Parameters["AmbientColor"].SetValue(LightComponet.AmbientColor);
+            effect.Parameters["AmbientIntensity"].SetValue(LightComponet.AmbientIntensity);
             
             effect.Parameters["ViewVector"].SetValue(Vector3.One);
             //effect.Parameters["DiffuseLightDirection"].SetValue(shader.DiffuseLightDirection);

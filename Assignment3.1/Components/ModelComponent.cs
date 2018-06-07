@@ -18,8 +18,6 @@ namespace Game_Engine.Components
 
         public Model Model { get; set; }
         public Texture2D Texture2D { get; set; }
-        public Vector3 Position { get; set; }
         public Matrix ObjectWorld { get; set; }
-        public float Scale { get; set; }
     }
 }

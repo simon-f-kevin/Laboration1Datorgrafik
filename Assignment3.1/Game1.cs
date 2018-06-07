@@ -6,6 +6,7 @@ using Game_Engine.Components;
 using Game_Engine.Managers;
 using Game_Engine.Systems;
 using System.Linq;
+using Assignment3._1.Components;
 
 namespace Assignment3._1
 {
@@ -33,6 +34,7 @@ namespace Assignment3._1
         private CameraSystem cameraSystem;
         private LightSystem lightSystem;
         private ShadowSystem shadowSystem;
+        private RenderSystem renderSystem;
 
 
         public Game1()
@@ -54,6 +56,7 @@ namespace Assignment3._1
             cameraSystem = new CameraSystem();
             lightSystem = new LightSystem();
             shadowSystem = new ShadowSystem(graphics.GraphicsDevice, World);
+            renderSystem = new RenderSystem(graphics.GraphicsDevice, World);
             base.Initialize();
         }
 
@@ -77,7 +80,8 @@ namespace Assignment3._1
             int mid = 0;
 
             CreateHouse(1, new Vector3(50, mid, 20));
-            CreateGround(2, new Vector3(50, -10, 20));
+            CreateBlob(2, new Vector3(70, 20, 50));
+            CreateGround(3, new Vector3(50, -10, 20));
 
 
             CreateCamera(13);
@@ -109,6 +113,7 @@ namespace Assignment3._1
                 Exit();
 
             //lightSystem.Update(gameTime);
+            renderSystem.Update(gameTime);
             cameraSystem.Update(gameTime);
             // TODO: Add your update logic here
 
@@ -124,8 +129,9 @@ namespace Assignment3._1
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // TODO: Add your drawing code here
-            lightSystem.Draw();
-            shadowSystem.Draw();
+            //lightSystem.Draw();
+            //shadowSystem.Draw();
+            renderSystem.Draw();
 
             base.Draw(gameTime);
         }
@@ -133,30 +139,43 @@ namespace Assignment3._1
 
         private void CreateHouse(int houseId, Vector3 position)
         {
-
             CreateShadedModel(houseId, position, houseModel, houseTexture);
         }
         private void CreateGround(int groundId, Vector3 position)
         {
-            CreateShadedModel(groundId, position, groundModel, houseTexture);
+            CreateShadedModel(groundId, position, groundModel, CreateTexture(Color.Yellow));
+        }
+        private void CreateBlob(int blobId, Vector3 position)
+        {
+            CreateShadedModel(blobId, position, blobModel, CreateTexture(Color.PaleVioletRed));
         }
 
         private void CreateShadedModel(int entityId, Vector3 position, Model model, Texture2D texture)
         {
+
+            var transformComponent = new TransformComponent(entityId);
+            transformComponent.Position = position;
+            transformComponent.Scale = 1f;
+
             var modelComponent = new ModelComponent(entityId);
             modelComponent.Model = model;
             modelComponent.Texture2D = texture;
-            modelComponent.Position = position;
-            modelComponent.ObjectWorld = World;
-            modelComponent.Scale = 1f;
+            modelComponent.ObjectWorld = World 
+                * Matrix.CreateScale(new Vector3(transformComponent.Scale)) 
+                * Matrix.CreateTranslation(transformComponent.Position);
 
             var shadowMappingEffect = new ShadowMappingEffect(entityId);
             shadowMappingEffect.effect = Content.Load<Effect>("Shadow");
 
             ComponentManager.Instance.AddComponent(modelComponent);
             ComponentManager.Instance.AddComponent(shadowMappingEffect);
+            ComponentManager.Instance.AddComponent(transformComponent);
         }
 
+        private Texture2D CreateTexture(Color colour)
+        {
+            return CreateTexture(graphics.GraphicsDevice, 1, 1, c => colour);
+        }
         private Texture2D CreateTexture(GraphicsDevice device, int width, int height, System.Func<int, Color> paint)
         {
             //initialize a texture
@@ -197,14 +216,17 @@ namespace Assignment3._1
             lightComp.DiffusColor = Color.White.ToVector4();
             lightComp.DiffuseIntensity = 0.5f;
             lightComp.DiffuseLightDirection = lightComp.LightDir;
+            lightComp.AmbientColor = Color.White.ToVector4();
+            lightComp.AmbientIntensity = 0.2f;
+
             ComponentManager.Instance.AddComponent(lightComp);
         }
 
         private void CreateAmbientLight(int ambID)
         {
             AmbientComponent ambientComp = new AmbientComponent(ambID);
-            ambientComp.AmbientColor = Color.White.ToVector4();
-            ambientComp.AmbientIntensity = 0.2f;
+            //ambientComp.AmbientColor = Color.White.ToVector4();
+            //ambientComp.AmbientIntensity = 0.2f;
             ComponentManager.Instance.AddComponent(ambientComp);
         }
 

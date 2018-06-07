@@ -97,7 +97,6 @@ namespace Game_Engine.Managers
             {
                 IDrawableSystem system = DrawableSystems.Dequeue();
                 system.Draw();
-                system.Draw(spriteBatch);
                 DrawableSystems.Enqueue(system);
             }
         }

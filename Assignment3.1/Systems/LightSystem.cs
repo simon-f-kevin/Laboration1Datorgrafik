@@ -31,12 +31,6 @@ namespace Assignment3._1
         }
 
 
-        public void Draw(SpriteBatch spriteBatch)
-        {
-
-        }
-
-
         public void Update(GameTime gameTime)
         {
 

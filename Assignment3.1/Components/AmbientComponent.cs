@@ -13,8 +13,8 @@ namespace Game_Engine.Components
         {
         }
 
-        public Vector4 AmbientColor { get; set; }
-        public float AmbientIntensity { get; set; }
+        //public Vector4 AmbientColor { get; set; }
+        //public float AmbientIntensity { get; set; }
 
     }
 }
