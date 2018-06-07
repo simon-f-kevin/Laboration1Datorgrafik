@@ -32,8 +32,6 @@ namespace Assignment3._1
         private Texture2D houseTexture;
 
         private CameraSystem cameraSystem;
-        //private LightSystem lightSystem;
-        //private ShadowSystem shadowSystem;
         private RenderSystem renderSystem;
 
 
@@ -52,10 +50,7 @@ namespace Assignment3._1
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            //renderSystem = new RenderSystem(GraphicsDevice);
             cameraSystem = new CameraSystem();
-            //lightSystem = new LightSystem();
-            //shadowSystem = new ShadowSystem(graphics.GraphicsDevice, World);
             renderSystem = new RenderSystem(graphics.GraphicsDevice, World);
             base.Initialize();
         }
@@ -86,9 +81,6 @@ namespace Assignment3._1
 
             CreateCamera(13);
             CreateLighting(14);
-            CreateAmbientLight(15);
-            CreateShadowrender(16);
-            CreateFog(17);
 
             // TODO: use this.Content to load your game content here
         }
@@ -112,7 +104,6 @@ namespace Assignment3._1
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            //lightSystem.Update(gameTime);
             renderSystem.Update(gameTime);
             cameraSystem.Update(gameTime);
             // TODO: Add your update logic here
@@ -129,8 +120,6 @@ namespace Assignment3._1
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // TODO: Add your drawing code here
-            //lightSystem.Draw();
-            //shadowSystem.Draw();
             renderSystem.Draw();
 
             base.Draw(gameTime);
@@ -146,7 +135,6 @@ namespace Assignment3._1
         {
             //initialize a texture
             Texture2D texture = new Texture2D(device, width, height);
-
             //the array holds the color for each pixel in the texture
             Color[] colorArray = new Color[width * height];
             for (int pixel = 0; pixel < colorArray.Count(); pixel++)
@@ -154,10 +142,8 @@ namespace Assignment3._1
                 //the function applies the color according to the specified pixel
                 colorArray[pixel] = paint(pixel);
             }
-
             //set the color
             texture.SetData(colorArray);
-
             return texture;
         }
 
@@ -177,7 +163,6 @@ namespace Assignment3._1
 
         private void CreateShadedModel(int entityId, Vector3 position, Model model, Texture2D texture)
         {
-
             var transformComponent = new TransformComponent(entityId);
             transformComponent.Position = position;
             transformComponent.Scale = 1f;
@@ -233,35 +218,6 @@ namespace Assignment3._1
             lightComp.FogEnd = 300f;
 
             ComponentManager.Instance.AddComponent(lightComp);
-        }
-
-        private void CreateAmbientLight(int ambID)
-        {
-            AmbientComponent ambientComp = new AmbientComponent(ambID);
-            //ambientComp.AmbientColor = Color.White.ToVector4();
-            //ambientComp.AmbientIntensity = 0.2f;
-            ComponentManager.Instance.AddComponent(ambientComp);
-        }
-
-        public void CreateFog(int fogid)
-        {
-            FogComponent fogComp = new FogComponent(fogid);
-            //fogComp.FogColor = Color.CornflowerBlue.ToVector4();
-            //fogComp.FogEnabled = true;
-            //fogComp.FogStart = 200f;
-            //fogComp.FogEnd = 300f;
-            ComponentManager.Instance.AddComponent(fogComp);
-        }
-        public void CreateShadowrender(int shadowid)
-        {
-            ShadowRenderTargetComponent shadowRenderComp = new ShadowRenderTargetComponent(shadowid);
-            //shadowRenderComp.ShadowRenderTarget = new RenderTarget2D(graphics.GraphicsDevice,
-            //                    shadowMapWidthHeight,
-            //                    shadowMapWidthHeight,
-            //                    false,
-            //                    SurfaceFormat.Single,
-            //                    DepthFormat.Depth24);
-            ComponentManager.Instance.AddComponent(shadowRenderComp);
         }
         #endregion
     }

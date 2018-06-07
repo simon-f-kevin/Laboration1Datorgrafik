@@ -107,15 +107,11 @@ namespace Assignment3._1
         void CreateShadowMap()
         {
             var light = ComponentManager.Instance.getDictionary<LightComponent>().Values.FirstOrDefault() as LightComponent;
-
-            var shadowRender = ComponentManager.Instance.getDictionary<ShadowRenderTargetComponent>().Values.FirstOrDefault() as ShadowRenderTargetComponent;
-            if (shadowRender == null)
+            if (light == null)
             {
                 return;
             }
             Graphics.SetRenderTarget(light.ShadowRenderTarget);
-
-
             Graphics.Clear(Color.White);
 
             // Draw any occluders in our case that is just the dude model
@@ -124,9 +120,7 @@ namespace Assignment3._1
             var models = ComponentManager.Instance.getDictionary<ModelComponent>();
             var cameraComp = ComponentManager.Instance.getDictionary<CameraComponent>().Values.FirstOrDefault() as CameraComponent;
             var shadowMappingEffects = ComponentManager.Instance.getDictionary<ShadowMappingEffect>();
-            var fogComp = ComponentManager.Instance.getDictionary<FogComponent>().Values.FirstOrDefault() as FogComponent;
-            var ambientComp = ComponentManager.Instance.getDictionary<AmbientComponent>().Values.FirstOrDefault() as AmbientComponent;
-            if (cameraComp == null || shadowRender == null || light == null || fogComp == null || ambientComp == null)
+            if (cameraComp == null || light == null)
             {
                 return;
             }
@@ -136,9 +130,7 @@ namespace Assignment3._1
                 if (shadowMappingEffects.TryGetValue(modelComp.EntityID, out shadowMappingEffec))
                 {
                     ShadowMappingEffect shadowMappingEffect = (ShadowMappingEffect)shadowMappingEffec;
-                    shadowMappingEffect.AmbientComponent = ambientComp;
                     shadowMappingEffect.CameraComponent = cameraComp;
-                    shadowMappingEffect.FogComponent = fogComp;
                     shadowMappingEffect.LightComponet = light;
                     shadowMappingEffect.shadowRenderTarget = null;
                     DrawModel(modelComp, true, shadowMappingEffect);
@@ -173,12 +165,9 @@ namespace Assignment3._1
 
             var models = ComponentManager.Instance.getDictionary<ModelComponent>();
             var cameraComp = ComponentManager.Instance.getDictionary<CameraComponent>().Values.FirstOrDefault() as CameraComponent;
-            var shadowRender = ComponentManager.Instance.getDictionary<ShadowRenderTargetComponent>().Values.FirstOrDefault() as ShadowRenderTargetComponent;
             var light = ComponentManager.Instance.getDictionary<LightComponent>().Values.FirstOrDefault() as LightComponent;
             var shadowMappingEffects = ComponentManager.Instance.getDictionary<ShadowMappingEffect>();
-            var fogComp = ComponentManager.Instance.getDictionary<FogComponent>().Values.FirstOrDefault() as FogComponent;
-            var ambientComp = ComponentManager.Instance.getDictionary<AmbientComponent>().Values.FirstOrDefault() as AmbientComponent;
-            if (cameraComp == null || shadowRender == null || light == null || fogComp == null || ambientComp == null)
+            if (cameraComp == null || light == null)
             {
                 return;
             }
@@ -188,14 +177,11 @@ namespace Assignment3._1
                 if (shadowMappingEffects.TryGetValue(modelComp.EntityID, out shadowMappingEffec))
                 {
                     ShadowMappingEffect shadowMappingEffect = (ShadowMappingEffect)shadowMappingEffec;
-                    shadowMappingEffect.AmbientComponent = ambientComp;
                     shadowMappingEffect.CameraComponent = cameraComp;
-                    shadowMappingEffect.FogComponent = fogComp;
                     shadowMappingEffect.LightComponet = light;
                     shadowMappingEffect.shadowRenderTarget = light.ShadowRenderTarget;
                     DrawModel(modelComp, false, shadowMappingEffect);
                 }
-
             }
         }
 
