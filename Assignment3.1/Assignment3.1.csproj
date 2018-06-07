@@ -48,14 +48,12 @@
     <Compile Include="Components\FogComponent.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="Components\LightComponent.cs" />
-    <Compile Include="Systems\LightSystem.cs" />
     <Compile Include="Components\ModelComponent.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Systems\RenderSystem.cs" />
     <Compile Include="Components\ShadowMappingEffect.cs" />
     <Compile Include="Components\ShadowRenderTargetComponent.cs" />
-    <Compile Include="Systems\ShadowSystem.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MonoGame.Framework">

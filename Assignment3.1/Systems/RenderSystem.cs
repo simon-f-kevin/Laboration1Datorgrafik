@@ -106,12 +106,14 @@ namespace Assignment3._1
         /// </summary>
         void CreateShadowMap()
         {
+            var light = ComponentManager.Instance.getDictionary<LightComponent>().Values.FirstOrDefault() as LightComponent;
+
             var shadowRender = ComponentManager.Instance.getDictionary<ShadowRenderTargetComponent>().Values.FirstOrDefault() as ShadowRenderTargetComponent;
             if (shadowRender == null)
             {
                 return;
             }
-            Graphics.SetRenderTarget(shadowRender.ShadowRenderTarget);
+            Graphics.SetRenderTarget(light.ShadowRenderTarget);
 
 
             Graphics.Clear(Color.White);
@@ -121,7 +123,6 @@ namespace Assignment3._1
             // Set the models world matrix so it will rotate
             var models = ComponentManager.Instance.getDictionary<ModelComponent>();
             var cameraComp = ComponentManager.Instance.getDictionary<CameraComponent>().Values.FirstOrDefault() as CameraComponent;
-            var light = ComponentManager.Instance.getDictionary<LightComponent>().Values.FirstOrDefault() as LightComponent;
             var shadowMappingEffects = ComponentManager.Instance.getDictionary<ShadowMappingEffect>();
             var fogComp = ComponentManager.Instance.getDictionary<FogComponent>().Values.FirstOrDefault() as FogComponent;
             var ambientComp = ComponentManager.Instance.getDictionary<AmbientComponent>().Values.FirstOrDefault() as AmbientComponent;
@@ -191,7 +192,7 @@ namespace Assignment3._1
                     shadowMappingEffect.CameraComponent = cameraComp;
                     shadowMappingEffect.FogComponent = fogComp;
                     shadowMappingEffect.LightComponet = light;
-                    shadowMappingEffect.shadowRenderTarget = shadowRender.ShadowRenderTarget;
+                    shadowMappingEffect.shadowRenderTarget = light.ShadowRenderTarget;
                     DrawModel(modelComp, false, shadowMappingEffect);
                 }
 

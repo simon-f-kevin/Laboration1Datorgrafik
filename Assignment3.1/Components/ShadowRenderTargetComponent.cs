@@ -10,7 +10,7 @@ namespace Game_Engine.Components
 {
     public class ShadowRenderTargetComponent : EntityComponent
     {
-        public RenderTarget2D ShadowRenderTarget { get; set; }
+        //public RenderTarget2D ShadowRenderTarget { get; set; }
         public ShadowRenderTargetComponent(int entityID) : base(entityID)
         {
 

@@ -1,5 +1,6 @@
 ﻿using Game_Engine.Components;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,6 +22,12 @@ namespace Game_Engine.Components
         public float DiffuseIntensity { get; set; }
         public Vector4 AmbientColor { get; set; }
         public float AmbientIntensity { get; set; }
+        public RenderTarget2D ShadowRenderTarget { get; set; }
+        public float FogStart { get; set; }
+        public float FogEnd { get; set; }
+        public Vector4 FogColor { get; set; }
+        public bool FogEnabled { get; set; }
+
 
 
     }

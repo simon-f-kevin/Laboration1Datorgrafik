@@ -63,10 +63,10 @@ namespace Game_Engine.Components
             effect.Parameters["CameraPosition"].SetValue(CameraComponent.CameraPosition);
    
 
-            effect.Parameters["FogStart"].SetValue(FogComponent.FogStart);
-            effect.Parameters["FogEnd"].SetValue(FogComponent.FogEnd);
-            effect.Parameters["FogColor"].SetValue(FogComponent.FogColor);
-            effect.Parameters["FogEnabled"].SetValue(FogComponent.FogEnabled);
+            effect.Parameters["FogStart"].SetValue(LightComponet.FogStart);
+            effect.Parameters["FogEnd"].SetValue(LightComponet.FogEnd);
+            effect.Parameters["FogColor"].SetValue(LightComponet.FogColor);
+            effect.Parameters["FogEnabled"].SetValue(LightComponet.FogEnabled);
 
 
 

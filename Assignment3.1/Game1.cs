@@ -32,8 +32,8 @@ namespace Assignment3._1
         private Texture2D houseTexture;
 
         private CameraSystem cameraSystem;
-        private LightSystem lightSystem;
-        private ShadowSystem shadowSystem;
+        //private LightSystem lightSystem;
+        //private ShadowSystem shadowSystem;
         private RenderSystem renderSystem;
 
 
@@ -54,8 +54,8 @@ namespace Assignment3._1
             // TODO: Add your initialization logic here
             //renderSystem = new RenderSystem(GraphicsDevice);
             cameraSystem = new CameraSystem();
-            lightSystem = new LightSystem();
-            shadowSystem = new ShadowSystem(graphics.GraphicsDevice, World);
+            //lightSystem = new LightSystem();
+            //shadowSystem = new ShadowSystem(graphics.GraphicsDevice, World);
             renderSystem = new RenderSystem(graphics.GraphicsDevice, World);
             base.Initialize();
         }
@@ -136,6 +136,31 @@ namespace Assignment3._1
             base.Draw(gameTime);
         }
 
+        #region Entity creation
+
+        private Texture2D CreateTexture(Color colour)
+        {
+            return CreateTexture(graphics.GraphicsDevice, 1, 1, c => colour);
+        }
+        private Texture2D CreateTexture(GraphicsDevice device, int width, int height, System.Func<int, Color> paint)
+        {
+            //initialize a texture
+            Texture2D texture = new Texture2D(device, width, height);
+
+            //the array holds the color for each pixel in the texture
+            Color[] colorArray = new Color[width * height];
+            for (int pixel = 0; pixel < colorArray.Count(); pixel++)
+            {
+                //the function applies the color according to the specified pixel
+                colorArray[pixel] = paint(pixel);
+            }
+
+            //set the color
+            texture.SetData(colorArray);
+
+            return texture;
+        }
+
 
         private void CreateHouse(int houseId, Vector3 position)
         {
@@ -172,28 +197,6 @@ namespace Assignment3._1
             ComponentManager.Instance.AddComponent(transformComponent);
         }
 
-        private Texture2D CreateTexture(Color colour)
-        {
-            return CreateTexture(graphics.GraphicsDevice, 1, 1, c => colour);
-        }
-        private Texture2D CreateTexture(GraphicsDevice device, int width, int height, System.Func<int, Color> paint)
-        {
-            //initialize a texture
-            Texture2D texture = new Texture2D(device, width, height);
-
-            //the array holds the color for each pixel in the texture
-            Color[] colorArray = new Color[width * height];
-            for (int pixel = 0; pixel < colorArray.Count(); pixel++)
-            {
-                //the function applies the color according to the specified pixel
-                colorArray[pixel] = paint(pixel);
-            }
-
-            //set the color
-            texture.SetData(colorArray);
-
-            return texture;
-        }
 
         private void CreateCamera(int cameraId)
         {
@@ -218,6 +221,16 @@ namespace Assignment3._1
             lightComp.DiffuseLightDirection = lightComp.LightDir;
             lightComp.AmbientColor = Color.White.ToVector4();
             lightComp.AmbientIntensity = 0.2f;
+            lightComp.ShadowRenderTarget = new RenderTarget2D(graphics.GraphicsDevice,
+                    shadowMapWidthHeight,
+                    shadowMapWidthHeight,
+                    false,
+                    SurfaceFormat.Single,
+                    DepthFormat.Depth24);
+            lightComp.FogColor = Color.CornflowerBlue.ToVector4();
+            lightComp.FogEnabled = true;
+            lightComp.FogStart = 200f;
+            lightComp.FogEnd = 300f;
 
             ComponentManager.Instance.AddComponent(lightComp);
         }
@@ -233,24 +246,23 @@ namespace Assignment3._1
         public void CreateFog(int fogid)
         {
             FogComponent fogComp = new FogComponent(fogid);
-            fogComp.FogColor = Color.CornflowerBlue.ToVector4();
-            fogComp.FogEnabled = true;
-            fogComp.FogStart = 200f;
-            fogComp.FogEnd = 300f;
+            //fogComp.FogColor = Color.CornflowerBlue.ToVector4();
+            //fogComp.FogEnabled = true;
+            //fogComp.FogStart = 200f;
+            //fogComp.FogEnd = 300f;
             ComponentManager.Instance.AddComponent(fogComp);
         }
         public void CreateShadowrender(int shadowid)
         {
             ShadowRenderTargetComponent shadowRenderComp = new ShadowRenderTargetComponent(shadowid);
-            shadowRenderComp.ShadowRenderTarget = new RenderTarget2D(graphics.GraphicsDevice,
-                                shadowMapWidthHeight,
-                                shadowMapWidthHeight,
-                                false,
-                                SurfaceFormat.Single,
-                                DepthFormat.Depth24);
+            //shadowRenderComp.ShadowRenderTarget = new RenderTarget2D(graphics.GraphicsDevice,
+            //                    shadowMapWidthHeight,
+            //                    shadowMapWidthHeight,
+            //                    false,
+            //                    SurfaceFormat.Single,
+            //                    DepthFormat.Depth24);
             ComponentManager.Instance.AddComponent(shadowRenderComp);
         }
-
-
+        #endregion
     }
 }

@@ -14,10 +14,10 @@ namespace Game_Engine.Components
         {
         }
 
-        public float FogStart { get; set; }
-        public float FogEnd { get; set; }
-        public Vector4 FogColor { get; set; }
-        public bool FogEnabled { get; set; }
+        //public float FogStart { get; set; }
+        //public float FogEnd { get; set; }
+        //public Vector4 FogColor { get; set; }
+        //public bool FogEnabled { get; set; }
 
     }
 }
