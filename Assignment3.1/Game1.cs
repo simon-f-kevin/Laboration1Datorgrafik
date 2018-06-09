@@ -66,7 +66,8 @@ namespace Assignment3._1
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-
+            
+            // TODO: use this.Content to load your game content here
             houseModel = Content.Load<Model>("farmhouse_obj");
             houseTexture = Content.Load<Texture2D>("farmhouse-texture");
             blobModel = Content.Load<Model>("Blob");
@@ -79,8 +80,6 @@ namespace Assignment3._1
             CreateHouse(3, new Vector3(50, 0, 20));
             CreateBlob(4, new Vector3(70, 20, 50));
             CreateGround(5, new Vector3(50, -5, 20));
-
-            // TODO: use this.Content to load your game content here
         }
 
         /// <summary>
@@ -102,8 +101,8 @@ namespace Assignment3._1
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            SystemManager.Instance.Update(gameTime);
             // TODO: Add your update logic here
+            SystemManager.Instance.Update(gameTime);
 
             base.Update(gameTime);
         }
@@ -171,13 +170,12 @@ namespace Assignment3._1
                 * Matrix.CreateTranslation(transformComponent.Position);
 
             var effectSettingsComponent = new EffectSettingsComponent(entityId);
-            effectSettingsComponent.effect = Content.Load<Effect>("Shadow");
+            effectSettingsComponent.Effect = Content.Load<Effect>("Shadow");
 
             ComponentManager.Instance.AddComponent(modelComponent);
             ComponentManager.Instance.AddComponent(effectSettingsComponent);
             ComponentManager.Instance.AddComponent(transformComponent);
         }
-
 
         private void CreateCamera(int cameraId)
         {

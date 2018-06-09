@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq;
 using Game_Engine.Components;
 using Game_Engine.Managers;
 using Game_Engine.Systems;
@@ -16,10 +12,8 @@ namespace Assignment3._1
     {
         public CameraSystem()
         {
-            Enabled = true;
-        }
 
-        public bool Enabled { get; set; }
+        }
 
         public void Update(GameTime gameTime)
         {
@@ -94,7 +88,6 @@ namespace Assignment3._1
 
             // Set the new frustum value
             CameraComp.CameraFrustum.Matrix = CameraComp.View * CameraComp.Projection;
-            
         }
     }
 }

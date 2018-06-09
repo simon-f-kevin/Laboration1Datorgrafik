@@ -1,20 +1,10 @@
-﻿using Game_Engine.Components;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Game_Engine.Components
 {
     public class LightSettingsComponent : EntityComponent
     {
-        public LightSettingsComponent(int entityID) : base(entityID)
-        {
-        }
-
         public Vector3 LightDirection { get; set; }
         public Matrix LightViewProjection { get; set; }
         public Vector3 DiffuseLightDirection { get; set; }
@@ -27,8 +17,9 @@ namespace Game_Engine.Components
         public float FogEnd { get; set; }
         public Vector4 FogColor { get; set; }
         public bool FogEnabled { get; set; }
+        public LightSettingsComponent(int entityID) : base(entityID)
+        {
 
-
-
+        }
     }
 }

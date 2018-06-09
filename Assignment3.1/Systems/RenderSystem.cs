@@ -10,13 +10,13 @@ namespace Assignment3._1
 {
     public class RenderSystem : IUpdateableSystem, IDrawableSystem
     {
-        private Matrix World;
-        private GraphicsDevice Graphics;
+        private Matrix worldMatrix;
+        private GraphicsDevice graphicsDevice;
 
-        public RenderSystem(GraphicsDevice graphicsDevice, Matrix world)
+        public RenderSystem(GraphicsDevice graphicsDevice, Matrix worldMatrix)
         {
-            Graphics = graphicsDevice;
-            World = world;
+            this.graphicsDevice = graphicsDevice;
+            this.worldMatrix = worldMatrix;
         }
 
         public void Update(GameTime gameTime)
@@ -38,20 +38,20 @@ namespace Assignment3._1
         public void Draw()
         {
             var lightSettingsComponent = ComponentManager.Instance.getDictionary<LightSettingsComponent>().Values.FirstOrDefault() as LightSettingsComponent;
-            var cameraComp = ComponentManager.Instance.getDictionary<CameraComponent>().Values.FirstOrDefault() as CameraComponent;
+            var cameraComponent = ComponentManager.Instance.getDictionary<CameraComponent>().Values.FirstOrDefault() as CameraComponent;
 
-            if (cameraComp == null || lightSettingsComponent == null)
+            if (cameraComponent == null || lightSettingsComponent == null)
             {
                 return;
             }
 
-            CreateLightViewProjectionMatrix(lightSettingsComponent, cameraComp);
+            CreateLightViewProjectionMatrix(lightSettingsComponent, cameraComponent);
 
-            Graphics.BlendState = BlendState.Opaque;
-            Graphics.DepthStencilState = DepthStencilState.Default;
+            graphicsDevice.BlendState = BlendState.Opaque;
+            graphicsDevice.DepthStencilState = DepthStencilState.Default;
 
-            CreateShadowMap(lightSettingsComponent, cameraComp);
-            DrawWithShadowMap(lightSettingsComponent, cameraComp);
+            CreateShadowMap(lightSettingsComponent, cameraComponent);
+            DrawWithShadowMap(lightSettingsComponent, cameraComponent);
         }
 
         private void CreateLightViewProjectionMatrix(LightSettingsComponent lightSettingsComponent, CameraComponent cameraComponent)
@@ -104,33 +104,27 @@ namespace Assignment3._1
         /// </summary>
         void CreateShadowMap(LightSettingsComponent lightSettingsComponent, CameraComponent cameraComponent)
         {
-            Graphics.SetRenderTarget(lightSettingsComponent.RenderTarget);
-            Graphics.Clear(Color.White);
+            graphicsDevice.SetRenderTarget(lightSettingsComponent.RenderTarget);
+            graphicsDevice.Clear(Color.White);
 
-            // Draw any occluders in our case that is just the dude model
-
-            // Set the models world matrix so it will rotate
-            var models = ComponentManager.Instance.getDictionary<ModelComponent>();
-            foreach (ModelComponent modelComp in models.Values)
+            var modelComponents = ComponentManager.Instance.getDictionary<ModelComponent>().Values;
+            foreach (ModelComponent modelComponent in modelComponents)
             {
-                DrawModel(modelComp, "CreateShadowMap");
+                DrawModel(modelComponent, "CreateShadowMap");
             }
-            // Draw the dude model
-            // Set render target back to the back buffer
-            Graphics.SetRenderTarget(null);
+            graphicsDevice.SetRenderTarget(null);
         }
-
 
         /// <summary>
         /// Renders the scene using the shadow map to darken the shadow areas
         /// </summary>
         void DrawWithShadowMap(LightSettingsComponent lightSettingsComponent, CameraComponent cameraComponent)
         {
-            Graphics.Clear(Color.CornflowerBlue);
-            Graphics.BlendState = BlendState.Opaque;
-            Graphics.DepthStencilState = DepthStencilState.Default;
-            Graphics.RasterizerState = RasterizerState.CullCounterClockwise;
-            Graphics.SamplerStates[0] = new SamplerState
+            graphicsDevice.Clear(Color.CornflowerBlue);
+            graphicsDevice.BlendState = BlendState.Opaque;
+            graphicsDevice.DepthStencilState = DepthStencilState.Default;
+            graphicsDevice.RasterizerState = RasterizerState.CullCounterClockwise;
+            graphicsDevice.SamplerStates[0] = new SamplerState
             {
                 AddressU = TextureAddressMode.Clamp,
                 AddressV = TextureAddressMode.Clamp,
@@ -140,10 +134,10 @@ namespace Assignment3._1
                 FilterMode = TextureFilterMode.Comparison
             };
 
-            var models = ComponentManager.Instance.getDictionary<ModelComponent>();
-            foreach (ModelComponent modelComp in models.Values)
+            var modelComponents = ComponentManager.Instance.getDictionary<ModelComponent>().Values;
+            foreach (ModelComponent modelComponent in modelComponents)
             {
-                DrawModel(modelComp, "DrawWithShadowMap");
+                DrawModel(modelComponent, "DrawWithShadowMap");
             }
         }
 
@@ -152,27 +146,23 @@ namespace Assignment3._1
         /// </summary>
         /// <param name="model">The model to draw</param>
         /// <param name="technique">The technique to use</param>
-        void DrawModel(ModelComponent modelComp, string techniqueName)
+        void DrawModel(ModelComponent modelComponent, string techniqueName)
         {
-            var model = modelComp.Model;
-            var effectSettingsComponent = ComponentManager.Instance.GetComponentsById<EffectSettingsComponent>(modelComp.EntityID);
+            var model = modelComponent.Model;
+            var effectSettingsComponent = ComponentManager.Instance.GetComponentsById<EffectSettingsComponent>(modelComponent.EntityID);
 
             Matrix[] transforms = new Matrix[model.Bones.Count];
             model.CopyAbsoluteBoneTransformsTo(transforms);
-            // Loop over meshs in the modelgraphicsDevice.RasterizerState
             foreach (ModelMesh mesh in model.Meshes)
             {
-
                 foreach (var meshPart in mesh.MeshParts)
                 {
-                    effectSettingsComponent.AddEffect(meshPart.Effect, modelComp.Texture2D);
-                    effectSettingsComponent.Techniquename = techniqueName;
-                    effectSettingsComponent.world = transforms[mesh.ParentBone.Index] * modelComp.ObjectWorld * World;
-                    effectSettingsComponent.Apply();
+                    var world = transforms[mesh.ParentBone.Index] * modelComponent.ObjectWorld * worldMatrix;
+                    effectSettingsComponent.Apply(meshPart.Effect, modelComponent.Texture2D, world, techniqueName);
 
-                    Graphics.SetVertexBuffer(meshPart.VertexBuffer);
-                    Graphics.Indices = meshPart.IndexBuffer;
-                    Graphics.DrawIndexedPrimitives(PrimitiveType.TriangleList, meshPart.VertexOffset, meshPart.StartIndex, meshPart.PrimitiveCount);
+                    graphicsDevice.SetVertexBuffer(meshPart.VertexBuffer);
+                    graphicsDevice.Indices = meshPart.IndexBuffer;
+                    graphicsDevice.DrawIndexedPrimitives(PrimitiveType.TriangleList, meshPart.VertexOffset, meshPart.StartIndex, meshPart.PrimitiveCount);
                 }
             }
         }
