@@ -113,8 +113,7 @@ namespace Assignment3._1
             var models = ComponentManager.Instance.getDictionary<ModelComponent>();
             foreach (ModelComponent modelComp in models.Values)
             {
-                var effectSettigsComponent = ComponentManager.Instance.GetComponentsById<EffectSettingsComponent>(modelComp.EntityID);
-                DrawModel(modelComp, "CreateShadowMap", effectSettigsComponent);
+                DrawModel(modelComp, "CreateShadowMap");
             }
             // Draw the dude model
             // Set render target back to the back buffer
@@ -144,8 +143,7 @@ namespace Assignment3._1
             var models = ComponentManager.Instance.getDictionary<ModelComponent>();
             foreach (ModelComponent modelComp in models.Values)
             {
-                var effectSettingsComponent = ComponentManager.Instance.GetComponentsById<EffectSettingsComponent>(modelComp.EntityID);
-                DrawModel(modelComp, "DrawWithShadowMap", effectSettingsComponent);
+                DrawModel(modelComp, "DrawWithShadowMap");
             }
         }
 
@@ -154,9 +152,10 @@ namespace Assignment3._1
         /// </summary>
         /// <param name="model">The model to draw</param>
         /// <param name="technique">The technique to use</param>
-        void DrawModel(ModelComponent modelComp, string techniqueName, EffectSettingsComponent effectSettingsComponent)
+        void DrawModel(ModelComponent modelComp, string techniqueName)
         {
             var model = modelComp.Model;
+            var effectSettingsComponent = ComponentManager.Instance.GetComponentsById<EffectSettingsComponent>(modelComp.EntityID);
 
             Matrix[] transforms = new Matrix[model.Bones.Count];
             model.CopyAbsoluteBoneTransformsTo(transforms);
