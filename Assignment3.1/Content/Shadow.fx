@@ -97,9 +97,6 @@ float4 CreateShadowMap_PixelShader(CreateShadowMap_VSOut input) : COLOR
 
 float ComputeFogFactor(float d)
 {
-	//d is the distance to the geometry sampling from the camera
-	//this simply returns a value that interpolates from 0 to 1 
-	//with 0 starting at FogStart and 1 at FogEnd 
 	return clamp((d - FogStart) / (FogEnd - FogStart), 0, 1) * FogEnabled;
 }
 
@@ -166,7 +163,6 @@ float4 DrawWithShadowMap_PixelShader(DrawWithShadowMap_VSOut input) : COLOR
 
 	if (shadowdepth < ourdepth)
 	{
-		// Shadow the pixel by lowering the intensity
 		ShadowStrenght = 1 - ShadowStrenght;
 		diffuse *= float4(ShadowStrenght, ShadowStrenght, ShadowStrenght, 0);
 	};
@@ -182,7 +178,6 @@ float4 DrawWithShadowMap_PixelShader(DrawWithShadowMap_VSOut input) : COLOR
 	return returnColor;
 }
 
-// Technique for creating the shadow map
 technique CreateShadowMap
 {
 	pass Pass1
@@ -192,7 +187,6 @@ technique CreateShadowMap
 	}
 }
 
-// Technique for drawing with the shadow map
 technique DrawWithShadowMap
 {
 	pass Pass1

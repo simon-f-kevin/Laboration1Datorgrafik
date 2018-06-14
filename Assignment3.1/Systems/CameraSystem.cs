@@ -27,11 +27,11 @@ namespace Assignment3._1
 
             if (keyboardState.IsKeyDown(Keys.Up))
             {
-                pitch += cameraComponent.CameraTurnSpeed;
+                pitch -= cameraComponent.CameraTurnSpeed;
             }
             if (keyboardState.IsKeyDown(Keys.Down))
             {
-                pitch -= cameraComponent.CameraTurnSpeed;
+                pitch += cameraComponent.CameraTurnSpeed;
             }
             if (keyboardState.IsKeyDown(Keys.Left))
             {
@@ -73,13 +73,8 @@ namespace Assignment3._1
             {
                 cameraComponent.CameraPosition -= cameraRight * cameraComponent.CameraMoveSpeed;
             }
-            if (keyboardState.IsKeyDown(Keys.R))
-            {
-                cameraComponent.CameraPosition = new Vector3(0, 50, 50);
-                cameraComponent.CameraForward = new Vector3(0, 0, -1);
-            }
-            cameraComponent.CameraForward.Normalize();
 
+            cameraComponent.CameraForward.Normalize();
             cameraComponent.UpdateView();
             cameraComponent.UpdateFrustrum();
         }
