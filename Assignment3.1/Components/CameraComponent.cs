@@ -17,10 +17,21 @@ namespace Game_Engine.Components
         public Matrix Projection { get; set; }
         public BoundingFrustum CameraFrustum { get; set; }
         public float AspectRatio { get; set; }
-
+        public float CameraTurnSpeed { get; set; }
+        public float CameraMoveSpeed { get; set; }
         public CameraComponent(int entityID) : base(entityID)
         {
+            
+        }
 
+        public void UpdateView()
+        {
+            View = Matrix.CreateLookAt(CameraPosition, this.CameraPosition + this.CameraForward, Vector3.Up);
+        }
+
+        public void UpdateFrustrum()
+        {
+            CameraFrustum.Matrix = this.View * this.Projection;
         }
     }
 }

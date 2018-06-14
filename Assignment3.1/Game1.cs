@@ -179,15 +179,17 @@ namespace Assignment3._1
 
         private void CreateCamera(int cameraId)
         {
-            var cameraComp = new CameraComponent(cameraId);
-            cameraComp.CameraPosition = new Vector3(0, 70, 100);
-            cameraComp.CameraForward = new Vector3(0, -0.4472136f, -0.8944272f);
-            cameraComp.CameraFrustum = new BoundingFrustum(Matrix.Identity);
-            cameraComp.AspectRatio = (float)windowWidth / (float)windowHeight;
-            cameraComp.Projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver4,
-                                                             cameraComp.AspectRatio,
+            var cameraComponent = new CameraComponent(cameraId);
+            cameraComponent.CameraPosition = new Vector3(0, 70, 100);
+            cameraComponent.CameraForward = new Vector3(0, -0.4472136f, -0.8944272f);
+            cameraComponent.CameraFrustum = new BoundingFrustum(Matrix.Identity);
+            cameraComponent.AspectRatio = (float)windowWidth / (float)windowHeight;
+            cameraComponent.Projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver4,
+                                                             cameraComponent.AspectRatio,
                                                              1.0f, 1000.0f);
-            ComponentManager.Instance.AddComponent(cameraComp);
+            cameraComponent.CameraTurnSpeed = 0.01f;
+            cameraComponent.CameraMoveSpeed = 1f;
+            ComponentManager.Instance.AddComponent(cameraComponent);
         }
 
         private void CreateLighting(int lightID)

@@ -17,77 +17,71 @@ namespace Assignment3._1
 
         public void Update(GameTime gameTime)
         {
-            var currentKeyboardState = Keyboard.GetState();
-            var currentGamePadState = GamePad.GetState(0);
-            var CameraComp = ComponentManager.Instance.getDictionary<CameraComponent>().Values.FirstOrDefault() as CameraComponent;
-            float time = (float)gameTime.ElapsedGameTime.TotalMilliseconds;
+            var keyboardState = Keyboard.GetState();
+            var cameraComponent = ComponentManager.Instance.getDictionary<CameraComponent>().Values.FirstOrDefault() as CameraComponent;
+            
 
             // Check for input to rotate the camera.
-            float pitch = -currentGamePadState.ThumbSticks.Right.Y * time * 0.001f;
-            float turn = -currentGamePadState.ThumbSticks.Right.X * time * 0.001f;
+            float pitch = 0;
+            float turn = 0;
 
-            if (currentKeyboardState.IsKeyDown(Keys.Up))
-                pitch += time * 0.001f;
+            if (keyboardState.IsKeyDown(Keys.Up))
+            {
+                pitch += cameraComponent.CameraTurnSpeed;
+            }
+            if (keyboardState.IsKeyDown(Keys.Down))
+            {
+                pitch -= cameraComponent.CameraTurnSpeed;
+            }
+            if (keyboardState.IsKeyDown(Keys.Left))
+            {
+                turn += cameraComponent.CameraTurnSpeed;
+            }
+            if (keyboardState.IsKeyDown(Keys.Right))
+            {
+                turn -= cameraComponent.CameraTurnSpeed;
+            }
 
-            if (currentKeyboardState.IsKeyDown(Keys.Down))
-                pitch -= time * 0.001f;
-
-            if (currentKeyboardState.IsKeyDown(Keys.Left))
-                turn += time * 0.001f;
-
-            if (currentKeyboardState.IsKeyDown(Keys.Right))
-                turn -= time * 0.001f;
-
-            Vector3 cameraRight = Vector3.Cross(Vector3.Up, CameraComp.CameraForward);
+            Vector3 cameraRight = Vector3.Cross(Vector3.Up, cameraComponent.CameraForward);
             Vector3 flatFront = Vector3.Cross(cameraRight, Vector3.Up);
 
             Matrix pitchMatrix = Matrix.CreateFromAxisAngle(cameraRight, pitch);
             Matrix turnMatrix = Matrix.CreateFromAxisAngle(Vector3.Up, turn);
 
-            Vector3 tiltedFront = Vector3.TransformNormal(CameraComp.CameraForward, pitchMatrix *
-                                                            turnMatrix);
+            Vector3 tiltedFront = Vector3.TransformNormal(cameraComponent.CameraForward, pitchMatrix * turnMatrix);
 
             // Check angle so we cant flip over
             if (Vector3.Dot(tiltedFront, flatFront) > 0.001f)
             {
-                CameraComp.CameraForward = Vector3.Normalize(tiltedFront);
+                cameraComponent.CameraForward = Vector3.Normalize(tiltedFront);
             }
 
             // Check for input to move the camera around.
-            if (currentKeyboardState.IsKeyDown(Keys.W))
-                CameraComp.CameraPosition += CameraComp.CameraForward * time * 0.1f;
-
-            if (currentKeyboardState.IsKeyDown(Keys.S))
-                CameraComp.CameraPosition -= CameraComp.CameraForward * time * 0.1f;
-
-            if (currentKeyboardState.IsKeyDown(Keys.A))
-                CameraComp.CameraPosition += cameraRight * time * 0.1f;
-
-            if (currentKeyboardState.IsKeyDown(Keys.D))
-                CameraComp.CameraPosition -= cameraRight * time * 0.1f;
-
-            CameraComp.CameraPosition += CameraComp.CameraForward *
-                                currentGamePadState.ThumbSticks.Left.Y * time * 0.1f;
-
-            CameraComp.CameraPosition -= cameraRight *
-                                currentGamePadState.ThumbSticks.Left.X * time * 0.1f;
-
-            if (currentGamePadState.Buttons.RightStick == ButtonState.Pressed ||
-                currentKeyboardState.IsKeyDown(Keys.R))
+            if (keyboardState.IsKeyDown(Keys.W))
             {
-                CameraComp.CameraPosition = new Vector3(0, 50, 50);
-                CameraComp.CameraForward = new Vector3(0, 0, -1);
+                cameraComponent.CameraPosition += cameraComponent.CameraForward * cameraComponent.CameraMoveSpeed;
             }
+            if (keyboardState.IsKeyDown(Keys.S))
+            {
+                cameraComponent.CameraPosition -= cameraComponent.CameraForward * cameraComponent.CameraMoveSpeed;
+            }
+            if (keyboardState.IsKeyDown(Keys.A))
+            {
+                cameraComponent.CameraPosition += cameraRight * cameraComponent.CameraMoveSpeed;
+            }
+            if (keyboardState.IsKeyDown(Keys.D))
+            {
+                cameraComponent.CameraPosition -= cameraRight * cameraComponent.CameraMoveSpeed;
+            }
+            if (keyboardState.IsKeyDown(Keys.R))
+            {
+                cameraComponent.CameraPosition = new Vector3(0, 50, 50);
+                cameraComponent.CameraForward = new Vector3(0, 0, -1);
+            }
+            cameraComponent.CameraForward.Normalize();
 
-            CameraComp.CameraForward.Normalize();
-
-            // Create the new view matrix
-            CameraComp.View = Matrix.CreateLookAt(CameraComp.CameraPosition,
-                                        CameraComp.CameraPosition + CameraComp.CameraForward,
-                                        Vector3.Up);
-
-            // Set the new frustum value
-            CameraComp.CameraFrustum.Matrix = CameraComp.View * CameraComp.Projection;
+            cameraComponent.UpdateView();
+            cameraComponent.UpdateFrustrum();
         }
     }
 }
