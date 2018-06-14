@@ -21,6 +21,7 @@ namespace Assignment3._1
 
         public void Update(GameTime gameTime)
         {
+            /*
             var lightSettingsComponent = ComponentManager.Instance.getDictionary<LightSettingsComponent>().Values.FirstOrDefault() as LightSettingsComponent;
             var rotationY = (float)gameTime.ElapsedGameTime.TotalMilliseconds * 0.00005f;
             var rotation = Quaternion.CreateFromAxisAngle(Vector3.UnitY, rotationY);
@@ -34,6 +35,7 @@ namespace Assignment3._1
             {
                 lightSettingsComponent.LightDirection = new Vector3(lightSettingsComponent.LightDirection.X, lightSettingsComponent.LightDirection.Y, lightSettingsComponent.LightDirection.Z + 0.002f);
             }
+            */
         }
         public void Draw()
         {

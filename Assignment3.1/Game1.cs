@@ -53,7 +53,7 @@ namespace Assignment3._1
             cameraSystem = new CameraSystem();
             renderSystem = new RenderSystem(graphics.GraphicsDevice, World);
 
-            SystemManager.Instance.addToUpdateableQueue(cameraSystem, renderSystem);
+            SystemManager.Instance.addToUpdateableQueue(cameraSystem);//, renderSystem);
             SystemManager.Instance.addToDrawableQueue(renderSystem);
             base.Initialize();
         }

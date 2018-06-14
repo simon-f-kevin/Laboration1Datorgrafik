@@ -20,7 +20,6 @@ namespace Assignment3._1
             var keyboardState = Keyboard.GetState();
             var cameraComponent = ComponentManager.Instance.getDictionary<CameraComponent>().Values.FirstOrDefault() as CameraComponent;
 
-            // Check for input to rotate the camera.
             float pitch = 0;
             float turn = 0;
 
@@ -55,7 +54,6 @@ namespace Assignment3._1
                 cameraComponent.CameraForward = Vector3.Normalize(tiltedFront);
             }
 
-            // Check for input to move the camera around.
             if (keyboardState.IsKeyDown(Keys.W))
             {
                 cameraComponent.CameraPosition += cameraComponent.CameraForward * cameraComponent.CameraMoveSpeed;
