@@ -194,26 +194,26 @@ namespace Assignment3._1
 
         private void CreateLighting(int lightID)
         {
-            LightSettingsComponent lightComp = new LightSettingsComponent(lightID);
+            LightSettingsComponent lightComponent = new LightSettingsComponent(lightID);
 
-            lightComp.LightDirection = new Vector3(-0.3333333f, 0.6666667f, 0.6666667f);
-            lightComp.DiffusColor = Color.White.ToVector4();
-            lightComp.DiffuseIntensity = 0.5f;
-            lightComp.DiffuseLightDirection = lightComp.LightDirection;
-            lightComp.AmbientColor = Color.White.ToVector4();
-            lightComp.AmbientIntensity = 0.2f;
-            lightComp.RenderTarget = new RenderTarget2D(graphics.GraphicsDevice,
+            lightComponent.LightDirection = new Vector3(-0.3333333f, 0.6666667f, 0.6666667f);
+            lightComponent.DiffusColor = Color.White.ToVector4();
+            lightComponent.DiffuseIntensity = 0.5f;
+            lightComponent.DiffuseLightDirection = lightComponent.LightDirection;
+            lightComponent.AmbientColor = Color.White.ToVector4();
+            lightComponent.AmbientIntensity = 0.2f;
+            lightComponent.RenderTarget = new RenderTarget2D(graphics.GraphicsDevice,
                     shadowMapWidthHeight,
                     shadowMapWidthHeight,
                     false,
                     SurfaceFormat.Single,
                     DepthFormat.Depth24);
-            lightComp.FogColor = Color.CornflowerBlue.ToVector4();
-            lightComp.FogEnabled = true;
-            lightComp.FogStart = 200f;
-            lightComp.FogEnd = 300f;
+            lightComponent.FogColor = Color.CornflowerBlue.ToVector4();
+            lightComponent.FogEnabled = true;
+            lightComponent.FogStart = 200f;
+            lightComponent.FogEnd = 300f;
 
-            ComponentManager.Instance.AddComponent(lightComp);
+            ComponentManager.Instance.AddComponent(lightComponent);
         }
         #endregion
     }

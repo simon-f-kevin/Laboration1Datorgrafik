@@ -19,7 +19,6 @@ namespace Assignment3._1
         {
             var keyboardState = Keyboard.GetState();
             var cameraComponent = ComponentManager.Instance.getDictionary<CameraComponent>().Values.FirstOrDefault() as CameraComponent;
-            
 
             // Check for input to rotate the camera.
             float pitch = 0;
