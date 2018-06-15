@@ -59,12 +59,10 @@ namespace Assignment3._1
         private void CreateLightViewProjectionMatrix(LightSettingsComponent lightSettingsComponent, CameraComponent cameraComponent)
         {
 
-            Matrix lightRotation = Matrix.CreateLookAt(Vector3.Zero,
-                                                       -lightSettingsComponent.LightDirection,
-                                                       Vector3.Up);
+            Matrix lightRotation = Matrix.CreateLookAt(Vector3.Zero, -lightSettingsComponent.LightDirection, Vector3.Up);
 
             // Get the corners of the frustum
-            Vector3[] frustumCorners = cameraComponent.CameraFrustum.GetCorners();
+            Vector3[] frustumCorners = cameraComponent.BoundingFrustrum.GetCorners();
 
             // Transform the positions of the corners into the direction of the light
             for (int i = 0; i < frustumCorners.Length; i++)
@@ -76,29 +74,25 @@ namespace Assignment3._1
             BoundingBox lightBox = BoundingBox.CreateFromPoints(frustumCorners);
 
             Vector3 boxSize = lightBox.Max - lightBox.Min;
-            Vector3 halfBoxSize = boxSize * 0.5f;
 
-            // The position of the light should be in the center of the back
-            // pannel of the box. 
-            Vector3 lightPosition = lightBox.Min + halfBoxSize;
+            // The position of the light should be in the center of the back panel of the box. 
+            Vector3 lightPosition = lightBox.Min + (boxSize/2);
             lightPosition.Z = lightBox.Min.Z;
 
             // We need the position back in world coordinates so we transform 
             // the light position by the inverse of the lights rotation
-            lightPosition = Vector3.Transform(lightPosition,
-                                              Matrix.Invert(lightRotation));
+            lightPosition = Vector3.Transform(lightPosition, Matrix.Invert(lightRotation));
 
             // Create the view matrix for the light
-            Matrix lightView = Matrix.CreateLookAt(lightPosition,
+            Matrix lightViewMatrix = Matrix.CreateLookAt(lightPosition,
                                                    lightPosition - lightSettingsComponent.LightDirection,
                                                    Vector3.Up);
 
             // Create the projection matrix for the light
             // The projection is orthographic since we are using a directional light
-            Matrix lightProjection = Matrix.CreateOrthographic(boxSize.X, boxSize.Y,
-                                                               -boxSize.Z, boxSize.Z);
+            Matrix lightProjectionMatrix = Matrix.CreateOrthographic(boxSize.X, boxSize.Y, -boxSize.Z, boxSize.Z);
 
-            lightSettingsComponent.LightViewProjection = lightView * lightProjection;
+            lightSettingsComponent.LightViewProjection = lightViewMatrix * lightProjectionMatrix;
         }
         /// <summary>
         /// Renders the scene to the floating point render target then 

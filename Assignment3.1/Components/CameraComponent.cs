@@ -15,7 +15,7 @@ namespace Game_Engine.Components
         public Vector3 CameraForward { get; set; }
         public Matrix View { get; set; }
         public Matrix Projection { get; set; }
-        public BoundingFrustum CameraFrustum { get; set; }
+        public BoundingFrustum BoundingFrustrum { get; set; }
         public float AspectRatio { get; set; }
         public float CameraTurnSpeed { get; set; }
         public float CameraMoveSpeed { get; set; }
@@ -26,12 +26,12 @@ namespace Game_Engine.Components
 
         public void UpdateView()
         {
-            View = Matrix.CreateLookAt(CameraPosition, this.CameraPosition + this.CameraForward, Vector3.Up);
+            this.View = Matrix.CreateLookAt(CameraPosition, this.CameraPosition + this.CameraForward, Vector3.Up);
         }
 
         public void UpdateFrustrum()
         {
-            CameraFrustum.Matrix = this.View * this.Projection;
+            this.BoundingFrustrum.Matrix = this.View * this.Projection;
         }
     }
 }

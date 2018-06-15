@@ -77,9 +77,11 @@ namespace Assignment3._1
             CreateCamera(1);
             CreateLighting(2);
 
-            CreateHouse(3, new Vector3(50, 0, 20));
-            CreateBlob(4, new Vector3(70, 20, 50));
-            CreateGround(5, new Vector3(50, -5, 20));
+            CreateGround(3, new Vector3(50, 0, 20));
+
+            CreateHouse(4, new Vector3(60, 0, 50));
+            CreateBlob(5, new Vector3(30, 20, 50));
+            CreateBlock(6, new Vector3(35, 10, 40));
         }
 
         /// <summary>
@@ -155,6 +157,10 @@ namespace Assignment3._1
         {
             CreateShadedModel(blobId, position, blobModel, CreateTexture(Color.PaleVioletRed));
         }
+        private void CreateBlock(int blockId, Vector3 position)
+        {
+            CreateShadedModel(blockId, position, blockModel, CreateTexture(Color.MediumAquamarine));
+        }
 
         private void CreateShadedModel(int entityId, Vector3 position, Model model, Texture2D texture)
         {
@@ -182,7 +188,7 @@ namespace Assignment3._1
             var cameraComponent = new CameraComponent(cameraId);
             cameraComponent.CameraPosition = new Vector3(0, 70, 100);
             cameraComponent.CameraForward = new Vector3(0, -0.4472136f, -0.8944272f);
-            cameraComponent.CameraFrustum = new BoundingFrustum(Matrix.Identity);
+            cameraComponent.BoundingFrustrum = new BoundingFrustum(Matrix.Identity);
             cameraComponent.AspectRatio = (float)windowWidth / (float)windowHeight;
             cameraComponent.Projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver4,
                                                              cameraComponent.AspectRatio,
