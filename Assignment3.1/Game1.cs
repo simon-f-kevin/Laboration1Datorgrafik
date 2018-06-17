@@ -186,8 +186,8 @@ namespace Assignment3._1
         private void CreateCamera(int cameraId)
         {
             var cameraComponent = new CameraComponent(cameraId);
-            cameraComponent.CameraPosition = new Vector3(0, 70, 100);
-            cameraComponent.CameraForward = new Vector3(0, -0.4472136f, -0.8944272f);
+            cameraComponent.CameraPosition = new Vector3(40, 60, -30);
+            cameraComponent.CameraForward = new Vector3(0, -0.4472136f, 0.8944272f);
             cameraComponent.BoundingFrustrum = new BoundingFrustum(Matrix.Identity);
             cameraComponent.AspectRatio = (float)windowWidth / (float)windowHeight;
             cameraComponent.Projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver4,

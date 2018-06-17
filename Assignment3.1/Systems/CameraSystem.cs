@@ -48,7 +48,6 @@ namespace Assignment3._1
 
             Vector3 tiltedFront = Vector3.TransformNormal(cameraComponent.CameraForward, pitchMatrix * turnMatrix);
 
-            // Check angle so we cant flip over
             if (Vector3.Dot(tiltedFront, flatFront) > 0.001f)
             {
                 cameraComponent.CameraForward = Vector3.Normalize(tiltedFront);
