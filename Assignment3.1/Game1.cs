@@ -20,7 +20,8 @@ namespace Assignment3._1
 
         Matrix World = Matrix.Identity;
 
-        const int shadowMapWidthHeight = 2048;
+        private const int shadowMapWidth = 2048;
+        private const int shadowMapHeight = 2048;
 
         const int windowWidth = 800;
         const int windowHeight = 480;
@@ -209,8 +210,8 @@ namespace Assignment3._1
             lightComponent.AmbientColor = Color.White.ToVector4();
             lightComponent.AmbientIntensity = 0.2f;
             lightComponent.RenderTarget = new RenderTarget2D(graphics.GraphicsDevice,
-                    shadowMapWidthHeight,
-                    shadowMapWidthHeight,
+                    shadowMapWidth,
+                    shadowMapHeight,
                     false,
                     SurfaceFormat.Single,
                     DepthFormat.Depth24);
