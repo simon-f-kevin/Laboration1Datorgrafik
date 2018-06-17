@@ -80,8 +80,8 @@ namespace Assignment3._1
             CreateGround(3, new Vector3(50, 0, 20));
 
             CreateHouse(4, new Vector3(60, 0, 50));
-            CreateBlob(5, new Vector3(30, 20, 50));
-            CreateBlock(6, new Vector3(35, 10, 40));
+            CreateBlob(5, new Vector3(30, 5, 50));
+            CreateBlock(6, new Vector3(35, 10, 10));
         }
 
         /// <summary>
@@ -186,13 +186,13 @@ namespace Assignment3._1
         private void CreateCamera(int cameraId)
         {
             var cameraComponent = new CameraComponent(cameraId);
-            cameraComponent.CameraPosition = new Vector3(40, 60, -30);
+            cameraComponent.CameraPosition = new Vector3(40, 30, -30);
             cameraComponent.CameraForward = new Vector3(0, -0.4472136f, 0.8944272f);
             cameraComponent.BoundingFrustrum = new BoundingFrustum(Matrix.Identity);
             cameraComponent.AspectRatio = (float)windowWidth / (float)windowHeight;
             cameraComponent.Projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver4,
                                                              cameraComponent.AspectRatio,
-                                                             1.0f, 1000.0f);
+                                                             1.0f, 200.0f);
             cameraComponent.CameraTurnSpeed = 0.01f;
             cameraComponent.CameraMoveSpeed = 1f;
             ComponentManager.Instance.AddComponent(cameraComponent);
@@ -211,13 +211,13 @@ namespace Assignment3._1
             lightComponent.RenderTarget = new RenderTarget2D(graphics.GraphicsDevice,
                     shadowMapWidth,
                     shadowMapHeight,
-                    false,
+                    true,
                     SurfaceFormat.Single,
                     DepthFormat.Depth24);
             lightComponent.FogColor = Color.CornflowerBlue.ToVector4();
             lightComponent.FogEnabled = true;
-            lightComponent.FogStart = 200f;
-            lightComponent.FogEnd = 300f;
+            lightComponent.FogStart = 80f;
+            lightComponent.FogEnd = 200f;
 
             ComponentManager.Instance.AddComponent(lightComponent);
         }
