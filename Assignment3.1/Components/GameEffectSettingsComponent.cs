@@ -11,19 +11,19 @@ using Game_Engine.Managers;
 
 namespace Game_Engine.Components
 {
-    public class EffectSettingsComponent : EntityComponent
+    public class GameEffectSettingsComponent : EffectSettingsComponent
     {
         private LightSettingsComponent lightComponent;
         private CameraComponent cameraComponent;
         public Effect Effect { get; set; }
 
-        public EffectSettingsComponent(int EntityID) : base(EntityID)
+        public GameEffectSettingsComponent(int EntityID) : base(EntityID)
         {
             cameraComponent = ComponentManager.Instance.getDictionary<CameraComponent>().Values.FirstOrDefault() as CameraComponent;
             lightComponent = ComponentManager.Instance.getDictionary<LightSettingsComponent>().Values.FirstOrDefault() as LightSettingsComponent;
         }
 
-        public void Apply(Effect effectIN, Texture2D texture2D, Matrix worldMatrix, string techniqueName)
+        public override void Apply(Effect effectIN, Texture2D texture2D, Matrix worldMatrix, string techniqueName)
         {
             Effect.Parameters["Texture"].SetValue(effectIN.Parameters["Texture"].GetValueTexture2D());
             if (Effect.Parameters["Texture"] == null || Effect.Parameters["Texture"].GetValueTexture2D() == null)

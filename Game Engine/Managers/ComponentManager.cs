@@ -82,15 +82,16 @@ namespace Game_Engine.Managers
             return _freeIds.Dequeue();
         }
 
-        public void AddComponent(EntityComponent component)
+        public void AddComponent(EntityComponent component, Type componentType = null)
         {
+            if(componentType == null) { componentType = component.GetType(); }
             Dictionary<int, EntityComponent> tempDict;
-            if (!_componentsByType.TryGetValue(component.GetType(), out tempDict))
+            if (!_componentsByType.TryGetValue(componentType, out tempDict))
             {
                 tempDict = new Dictionary<int, EntityComponent>();
-                _componentsByType[component.GetType()] = tempDict;
+                _componentsByType[componentType] = tempDict;
             }
-            _componentsByType[component.GetType()][component.EntityID] = component;
+            _componentsByType[componentType][component.EntityID] = component;
             List<EntityComponent> list;
             if (!_componentsById.TryGetValue(component.EntityID, out list))
             {

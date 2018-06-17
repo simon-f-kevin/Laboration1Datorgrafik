@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace Assignment3._1
 {
-    public class RenderSystem : IUpdateableSystem, IDrawableSystem
+    public class RenderSystem : IDrawableSystem
     {
         private Matrix worldMatrix;
         private GraphicsDevice graphicsDevice;
@@ -19,24 +19,6 @@ namespace Assignment3._1
             this.worldMatrix = worldMatrix;
         }
 
-        public void Update(GameTime gameTime)
-        {
-            /*
-            var lightSettingsComponent = ComponentManager.Instance.getDictionary<LightSettingsComponent>().Values.FirstOrDefault() as LightSettingsComponent;
-            var rotationY = (float)gameTime.ElapsedGameTime.TotalMilliseconds * 0.00005f;
-            var rotation = Quaternion.CreateFromAxisAngle(Vector3.UnitY, rotationY);
-
-            lightSettingsComponent.LightDirection = Vector3.Transform(lightSettingsComponent.LightDirection, rotation);
-            if (Keyboard.GetState().IsKeyDown(Keys.F))
-            {
-                lightSettingsComponent.LightDirection = new Vector3(lightSettingsComponent.LightDirection.X, lightSettingsComponent.LightDirection.Y, lightSettingsComponent.LightDirection.Z - 0.002f);
-            }
-            if (Keyboard.GetState().IsKeyDown(Keys.G))
-            {
-                lightSettingsComponent.LightDirection = new Vector3(lightSettingsComponent.LightDirection.X, lightSettingsComponent.LightDirection.Y, lightSettingsComponent.LightDirection.Z + 0.002f);
-            }
-            */
-        }
         public void Draw()
         {
             var lightSettingsComponent = ComponentManager.Instance.getDictionary<LightSettingsComponent>().Values.FirstOrDefault() as LightSettingsComponent;

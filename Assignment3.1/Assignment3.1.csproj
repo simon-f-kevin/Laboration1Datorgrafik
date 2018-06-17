@@ -50,7 +50,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Systems\RenderSystem.cs" />
-    <Compile Include="Components\EffectSettingsComponent.cs" />
+    <Compile Include="Components\GameEffectSettingsComponent.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MonoGame.Framework">

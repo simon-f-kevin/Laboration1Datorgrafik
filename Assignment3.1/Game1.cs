@@ -54,7 +54,7 @@ namespace Assignment3._1
             cameraSystem = new CameraSystem();
             renderSystem = new RenderSystem(graphics.GraphicsDevice, World);
 
-            SystemManager.Instance.addToUpdateableQueue(cameraSystem);//, renderSystem);
+            SystemManager.Instance.addToUpdateableQueue(cameraSystem);
             SystemManager.Instance.addToDrawableQueue(renderSystem);
             base.Initialize();
         }
@@ -176,11 +176,11 @@ namespace Assignment3._1
                 * Matrix.CreateScale(new Vector3(transformComponent.Scale)) 
                 * Matrix.CreateTranslation(transformComponent.Position);
 
-            var effectSettingsComponent = new EffectSettingsComponent(entityId);
+            var effectSettingsComponent = new GameEffectSettingsComponent(entityId);
             effectSettingsComponent.Effect = Content.Load<Effect>("Shadow");
 
             ComponentManager.Instance.AddComponent(modelComponent);
-            ComponentManager.Instance.AddComponent(effectSettingsComponent);
+            ComponentManager.Instance.AddComponent(effectSettingsComponent, typeof(EffectSettingsComponent));
             ComponentManager.Instance.AddComponent(transformComponent);
         }
 
