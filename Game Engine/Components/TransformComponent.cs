@@ -1,7 +1,7 @@
 ﻿using Game_Engine.Components;
 using Microsoft.Xna.Framework;
 
-namespace Assignment3._1.Components
+namespace Game_Engine.Components
 {
     public class TransformComponent : EntityComponent
     {

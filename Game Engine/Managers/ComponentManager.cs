@@ -1,9 +1,6 @@
 ﻿using Game_Engine.Components;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 /*
  * Ska ha en (eller två) Dictionary innehållande alla componenter av typ EntityComponent

@@ -1,12 +1,10 @@
 ﻿using Game_Engine.Components;
 using Game_Engine.Managers;
-using Game_Engine.Systems;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using System.Linq;
 
-namespace Assignment3._1
+namespace Game_Engine.Systems
 {
     public class RenderSystem : IDrawableSystem
     {

@@ -1,11 +1,7 @@
 ﻿using Game_Engine.Systems;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 
 /*
  * Innehåller två köer med system. En för renderbara och en för uppdateringsbara system

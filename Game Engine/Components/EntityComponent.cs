@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Game_Engine.Components
+﻿namespace Game_Engine.Components
 {
     public abstract class EntityComponent
     {
