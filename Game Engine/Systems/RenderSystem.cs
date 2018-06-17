@@ -27,34 +27,13 @@ namespace Game_Engine.Systems
                 return;
             }
 
-            CreateLightViewProjection(lightSettingsComponent, cameraComponent);
+            lightSettingsComponent.UpdateLightViewProjection(cameraComponent.BoundingFrustrum.GetCorners());
 
             graphicsDevice.BlendState = BlendState.Opaque;
             graphicsDevice.DepthStencilState = DepthStencilState.Default;
 
             CreateShadowMap(lightSettingsComponent, cameraComponent);
             DrawWithShadowMap(lightSettingsComponent, cameraComponent);
-        }
-
-        private void CreateLightViewProjection(LightSettingsComponent lightSettingsComponent, CameraComponent cameraComponent)
-        {
-            Matrix lightRotationMatrix = Matrix.CreateLookAt(Vector3.Zero, -lightSettingsComponent.LightDirection, Vector3.Up);
-            Vector3[] frustumCornerPositions = cameraComponent.BoundingFrustrum.GetCorners();
-            for (int i = 0; i < frustumCornerPositions.Length; i++)
-            {
-                frustumCornerPositions[i] = Vector3.Transform(frustumCornerPositions[i], lightRotationMatrix);
-            }
-
-            BoundingBox lightBox = BoundingBox.CreateFromPoints(frustumCornerPositions);
-            Vector3 lightBoxSize = lightBox.Max - lightBox.Min;
-            Vector3 lightBoxPosition = lightBox.Min + (lightBoxSize/2);
-            lightBoxPosition = Vector3.Transform(lightBoxPosition, Matrix.Invert(lightRotationMatrix));
-
-            Matrix lightViewMatrix = Matrix.CreateLookAt(lightBoxPosition,
-                                                   lightBoxPosition - lightSettingsComponent.LightDirection,
-                                                   Vector3.Up);
-            Matrix lightProjectionMatrix = Matrix.CreateOrthographic(lightBoxSize.X, lightBoxSize.Y, -lightBoxSize.Z, lightBoxSize.Z);
-            lightSettingsComponent.LightViewProjection = lightViewMatrix * lightProjectionMatrix;
         }
 
         void CreateShadowMap(LightSettingsComponent lightSettingsComponent, CameraComponent cameraComponent)

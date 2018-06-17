@@ -21,5 +21,22 @@ namespace Game_Engine.Components
         {
 
         }
+
+        public void UpdateLightViewProjection(Vector3[] frustumCornerPositions)
+        {
+            Matrix lightRotationMatrix = Matrix.CreateLookAt(Vector3.Zero, -this.LightDirection, Vector3.Up);
+            for (int i = 0; i < frustumCornerPositions.Length; i++)
+            {
+                frustumCornerPositions[i] = Vector3.Transform(frustumCornerPositions[i], lightRotationMatrix);
+            }
+
+            BoundingBox lightBox = BoundingBox.CreateFromPoints(frustumCornerPositions);
+            Vector3 lightBoxSize = lightBox.Max - lightBox.Min;
+            Vector3 lightBoxPosition = Vector3.Transform(lightBox.Min + (lightBoxSize / 2), Matrix.Invert(lightRotationMatrix));
+
+            Matrix lightViewMatrix = Matrix.CreateLookAt(lightBoxPosition, lightBoxPosition - this.LightDirection, Vector3.Up);
+            Matrix lightProjectionMatrix = Matrix.CreateOrthographic(lightBoxSize.X, lightBoxSize.Y, -lightBoxSize.Z, lightBoxSize.Z);
+            this.LightViewProjection = lightViewMatrix * lightProjectionMatrix;
+        }
     }
 }
