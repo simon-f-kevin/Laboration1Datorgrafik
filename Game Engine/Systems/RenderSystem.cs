@@ -29,7 +29,7 @@ namespace Assignment3._1
                 return;
             }
 
-            CreateLightViewProjectionMatrix(lightSettingsComponent, cameraComponent);
+            CreateLightViewProjection(lightSettingsComponent, cameraComponent);
 
             graphicsDevice.BlendState = BlendState.Opaque;
             graphicsDevice.DepthStencilState = DepthStencilState.Default;
@@ -38,7 +38,7 @@ namespace Assignment3._1
             DrawWithShadowMap(lightSettingsComponent, cameraComponent);
         }
 
-        private void CreateLightViewProjectionMatrix(LightSettingsComponent lightSettingsComponent, CameraComponent cameraComponent)
+        private void CreateLightViewProjection(LightSettingsComponent lightSettingsComponent, CameraComponent cameraComponent)
         {
             Matrix lightRotationMatrix = Matrix.CreateLookAt(Vector3.Zero, -lightSettingsComponent.LightDirection, Vector3.Up);
             Vector3[] frustumCornerPositions = cameraComponent.BoundingFrustrum.GetCorners();
@@ -48,15 +48,14 @@ namespace Assignment3._1
             }
 
             BoundingBox lightBox = BoundingBox.CreateFromPoints(frustumCornerPositions);
-            Vector3 boxSize = lightBox.Max - lightBox.Min;
-            Vector3 lightPosition = lightBox.Min + (boxSize/2);
-            lightPosition.Z = lightBox.Min.Z;
-            lightPosition = Vector3.Transform(lightPosition, Matrix.Invert(lightRotationMatrix));
+            Vector3 lightBoxSize = lightBox.Max - lightBox.Min;
+            Vector3 lightBoxPosition = lightBox.Min + (lightBoxSize/2);
+            lightBoxPosition = Vector3.Transform(lightBoxPosition, Matrix.Invert(lightRotationMatrix));
 
-            Matrix lightViewMatrix = Matrix.CreateLookAt(lightPosition,
-                                                   lightPosition - lightSettingsComponent.LightDirection,
+            Matrix lightViewMatrix = Matrix.CreateLookAt(lightBoxPosition,
+                                                   lightBoxPosition - lightSettingsComponent.LightDirection,
                                                    Vector3.Up);
-            Matrix lightProjectionMatrix = Matrix.CreateOrthographic(boxSize.X, boxSize.Y, -boxSize.Z, boxSize.Z);
+            Matrix lightProjectionMatrix = Matrix.CreateOrthographic(lightBoxSize.X, lightBoxSize.Y, -lightBoxSize.Z, lightBoxSize.Z);
             lightSettingsComponent.LightViewProjection = lightViewMatrix * lightProjectionMatrix;
         }
 
